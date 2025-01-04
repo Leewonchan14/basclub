@@ -1,14 +1,12 @@
-import { DateTransFormer } from "@/entity/transformer/date.transformer";
-import type { Dayjs } from "@/share/lib/dayjs";
 import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "typeorm";
 
 export class TimeStampEntity {
-  @UpdateDateColumn({ type: "timestamptz", transformer: new DateTransFormer() })
-  updatedAt: Dayjs;
+  @UpdateDateColumn({ type: "timestamptz" })
+  updatedAt: Date;
 
-  @CreateDateColumn({ type: "timestamptz", transformer: new DateTransFormer() })
-  createdAt: Dayjs;
+  @CreateDateColumn({ type: "timestamptz" })
+  createdAt: Date;
 
-  @DeleteDateColumn({ type: "timestamptz", transformer: new DateTransFormer() })
-  deletedAt: Dayjs;
+  @DeleteDateColumn({ type: "timestamptz" })
+  deletedAt: Date;
 }
