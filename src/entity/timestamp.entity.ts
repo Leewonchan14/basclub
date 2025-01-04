@@ -1,5 +1,5 @@
 import { DateTransFormer } from "@/entity/transformer/date.transformer";
-import type { Dayjs } from "@/lib/dayjs";
+import type { Dayjs } from "@/share/lib/dayjs";
 import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "typeorm";
 
 export class TimeStampEntity {

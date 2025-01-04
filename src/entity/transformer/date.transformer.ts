@@ -1,4 +1,4 @@
-import { day_js } from "@/lib/dayjs";
+import { day_js } from "@/share/lib/dayjs";
 import { Dayjs } from "dayjs";
 import { ValueTransformer } from "typeorm";
 
