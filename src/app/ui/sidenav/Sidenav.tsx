@@ -1,19 +1,21 @@
 "use client";
 
 import { LogoImage } from "@/app/ui/logo/LogoImage";
+import ProfileLogin from "@/app/ui/sidenav/ProfileLogin";
 import { NextPage } from "next";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { FC, Suspense, useState } from "react";
 
-const NAV_LINKS = {
+interface NAV_LINK_ITEM {
+  name: string;
+  path: string;
+}
+
+const NAV_LINKS: { [k: string]: NAV_LINK_ITEM } = {
   events: {
     name: "일정 보기",
     path: "/events",
-  },
-  login: {
-    name: "로그인",
-    path: "/login",
   },
 } as const;
 
@@ -49,30 +51,29 @@ export const Sidenav: NextPage<{}> = ({}) => {
         </svg>
       </div>
       <div
-        className={`fixed h-screen px-6 transition-transform duration-300 ease-in-out -translate-x-full bg-white min-w-sidenav-width md:translate-x-0 z-10 ${
+        className={`fixed z-10 flex flex-col h-screen px-6 py-12 transition-transform duration-300 shadow-lg ease-in-out -translate-x-full bg-white w-sidenav-width md:translate-x-0 ${
           isOpen && "translate-x-0"
         }`}
       >
-        <Link
-          className="flex flex-col gap-4 my-12 font-bold text-black"
-          href={"/events"}
-        >
+        <div className="flex flex-col mb-12">
           <LogoImage />
-        </Link>
+        </div>
         <div className="flex flex-col gap-6">
           <Suspense>
-            {Object.entries(NAV_LINKS).map(([k]) => (
-              <SideLink key={k} nav={k as keyof typeof NAV_LINKS} />
+            {Object.entries(NAV_LINKS).map(([k, v]) => (
+              <SideLink key={k} item={v} />
             ))}
           </Suspense>
         </div>
+
+        <ProfileLogin />
       </div>
     </React.Fragment>
   );
 };
 
-const SideLink: FC<{ nav: keyof typeof NAV_LINKS }> = ({ nav }) => {
-  const { name, path } = NAV_LINKS[nav];
+export const SideLink: FC<{ item: NAV_LINK_ITEM }> = ({ item }) => {
+  const { name, path } = item;
   const searchParam = useSearchParams();
 
   const preQuery = new URLSearchParams(
@@ -82,8 +83,8 @@ const SideLink: FC<{ nav: keyof typeof NAV_LINKS }> = ({ nav }) => {
   const isActive = path === usePathname();
   return (
     <Link
-      className={`bg-gray-300 p-4 rounded-lg font-bold ${
-        isActive && "!bg-blue-500 text-white"
+      className={`block bg-gray-300 p-4 rounded-lg font-bold ${
+        isActive && "!bg-orange-500 text-white"
       }`}
       href={`${path}?${preQuery}`}
     >

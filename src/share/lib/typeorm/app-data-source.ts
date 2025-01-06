@@ -38,3 +38,4 @@ export class AppDataSource {
 }
 
 export const dataSource = AppDataSource.getInstance;
+export const syncDataSource: DataSource | null = originDataSource;
