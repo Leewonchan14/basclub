@@ -11,7 +11,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 
-@Entity()
+@Entity({ name: "score" })
 export class Score extends TimeStampEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;

@@ -1,24 +1,33 @@
 import { Events } from "@/entity/event.entity";
 import { Member } from "@/entity/member.entity";
 import { TimeStampEntity } from "@/entity/timestamp.entity";
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
 @Entity({ name: "team" })
 export class Team extends TimeStampEntity {
-  @PrimaryColumn({ primary: true, name: "eventsId" })
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
   @ManyToOne(() => Events, (event) => event.teams, {
     lazy: true,
     nullable: false,
     onDelete: "CASCADE",
   })
+  @JoinColumn({ name: "eventsId" })
   events: Promise<Events>;
 
-  @PrimaryColumn({ primary: true, name: "memberId" })
   @ManyToOne(() => Member, {
     eager: true,
     nullable: false,
     onDelete: "CASCADE",
   })
+  @JoinColumn({ name: "memberId" })
   member: Member;
 
   @Column()
