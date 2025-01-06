@@ -1,4 +1,5 @@
 import SideNavLayout from "@/app/ui/sidenav/Sidenav";
+import QueryProviders from "@/share/lib/tasntack-query/query-providers";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -29,7 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
-        <SideNavLayout>{children}</SideNavLayout>
+        <QueryProviders>
+          <SideNavLayout>{children}</SideNavLayout>
+        </QueryProviders>
       </body>
     </html>
   );
