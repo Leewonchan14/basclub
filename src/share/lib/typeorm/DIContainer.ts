@@ -39,7 +39,7 @@ class DIContainer {
         syncDataSource!.getRepository(entity)
       );
     }
-    return DIContainer.repositories.get(entity.name);
+    return DIContainer.repositories.get(entity.name) as Repository<Entity>;
   }
 
   static setService<T extends ObjectLiteral>(
@@ -87,3 +87,7 @@ export function InjectRepository<Entity extends Class>(entity: Entity) {
 }
 
 export const getService = DIContainer.getService;
+export const getRepository = DIContainer.getRepository;
+export interface IService<T extends ObjectLiteral> {
+  getRepository: () => Promise<Repository<T>>;
+}

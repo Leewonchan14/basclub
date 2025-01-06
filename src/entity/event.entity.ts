@@ -21,5 +21,5 @@ export class Events extends TimeStampEntity {
   @OneToMany(() => Team, (team) => team.events, {
     lazy: true,
   })
-  teams: Promise<Team[]>;
+  teams: Promise<Team[]> = Promise.resolve([]);
 }

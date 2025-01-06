@@ -16,7 +16,6 @@ export class Team extends TimeStampEntity {
 
   @ManyToOne(() => Events, (event) => event.teams, {
     lazy: true,
-    nullable: false,
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "eventsId" })
@@ -30,9 +29,9 @@ export class Team extends TimeStampEntity {
   @JoinColumn({ name: "memberId" })
   member: Member;
 
-  @Column()
+  @Column({ nullable: false })
   avgScore: number;
 
-  @Column()
+  @Column({ nullable: false })
   group: number;
 }

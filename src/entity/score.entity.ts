@@ -20,7 +20,12 @@ export class Score extends TimeStampEntity {
   @JoinColumn({ name: "memberId" })
   member: Promise<Member>;
 
-  @ManyToOne(() => Events, { cascade: true, lazy: true, onDelete: "CASCADE" })
+  @ManyToOne(() => Events, {
+    cascade: true,
+    lazy: true,
+    onDelete: "CASCADE",
+    nullable: false,
+  })
   @JoinColumn({ name: "eventsId" })
   events: Promise<Events>;
 
