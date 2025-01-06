@@ -1,7 +1,7 @@
 import { Events } from "@/entity/event.entity";
 import { Member } from "@/entity/member.entity";
 import { TimeStampEntity } from "@/entity/timestamp.entity";
-import { Column, Entity, ManyToOne, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 
 @Entity({ name: "team" })
 export class Team extends TimeStampEntity {
