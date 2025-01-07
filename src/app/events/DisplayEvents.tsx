@@ -1,53 +1,35 @@
 "use client";
 
+import DisplayMap from "@/app/events/create/DisplayMap";
+import { JoinEventsButton } from "@/app/events/JoinEventsButton";
+import { DisplayParticipants } from "@/app/teams/DisplayParticipants";
+import { DisplayTeams } from "@/app/teams/DisplayTeams";
 import { useSelectedDate } from "@/app/ui/share/SelectedDate";
-import Spinner from "@/app/ui/share/Spinner";
-import { NextPage } from "next";
-import { useRouter } from "next/navigation";
+import { useFetchEventsByDate } from "@/feature/events/event-query";
 
-interface Props {
-  isAdmin: boolean;
-}
+export const DisplayEvents = () => {
+  const { selectedDate } = useSelectedDate();
+  const { events, members } = useFetchEventsByDate(selectedDate);
 
-const DisplayEvents: NextPage<Props> = ({ isAdmin }) => {
-  const { selectedDate, getSearchParam } = useSelectedDate();
-  const router = useRouter();
-
-  const isExist = false;
-  const isLoading = false;
-
-  if (!selectedDate) {
+  if (!events || !selectedDate) {
     return null;
   }
 
-  if (isLoading) {
-    return (
-      <Spinner>
-        <Spinner.Spin />
-        <Spinner.Text className="text-lg" text="가져오는중..." />
-      </Spinner>
-    );
-  }
-
-  if (!isExist) {
-    return (
-      <div className="flex flex-col items-center justify-center h-40 gap-12 text-gray-500">
-        <p>관련 일정이 없습니다.</p>
-        {isAdmin && (
-          <button
-            onClick={() => {
-              router.push(`/events/create?${getSearchParam()}`);
-            }}
-            className="p-2 text-white bg-orange-600 rounded-lg font-bold"
-          >
-            일정 만들러 가기
-          </button>
-        )}
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-2">
+        <div className="text-2xl font-bold">장소</div>
+        <div>{events.address}</div>
+        <DisplayMap address={events.address} point={events.coordinates} />
       </div>
-    );
-  }
 
-  return <div>display</div>;
+      <div className="flex flex-col gap-2">
+        <div className="text-2xl font-bold">참가 인원 <span className="text-orange-500">{members.length}</span> 명</div>
+        <DisplayParticipants />
+      </div>
+      <JoinEventsButton eventsId={events.id} />
+
+      <DisplayTeams />
+    </div>
+  );
 };
-
-export default DisplayEvents;
