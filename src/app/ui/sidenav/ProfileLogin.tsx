@@ -1,5 +1,3 @@
-"use client";
-
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { SideLink } from "@/app/ui/sidenav/Sidenav";
 import { authMutateOption } from "@/feature/auth/auth-mutation";
@@ -8,21 +6,19 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
 
-interface Props {}
+interface Props {
+  isLogin: boolean;
+}
 
-export const ProfileLogin: NextPage<Props> = ({}) => {
-  const { data: member, isLoading } = useQuery(memberQueryApi.findOwn);
-
-  const isLogin = !!member;
-
-  if (isLoading) return null;
-
+export const ProfileLogin: NextPage<Props> = ({ isLogin }) => {
   return (
     <div className="mt-auto">{isLogin ? <Profile /> : <LoginButton />}</div>
   );
 };
 
 const Profile: React.FC<{}> = () => {
+  "use client";
+
   const router = useRouter();
   const { mutateAsync, isPending } = useMutation(authMutateOption.logout);
   const { data: member, isLoading } = useQuery(memberQueryApi.findOwn);
@@ -45,8 +41,8 @@ const Profile: React.FC<{}> = () => {
   );
 };
 
-const LoginButton: React.FC<{}> = () => {
+const LoginButton = () => {
+  "use client";
   return <SideLink item={{ name: "로그인", path: "/login" }} />;
 };
-
 export default ProfileLogin;

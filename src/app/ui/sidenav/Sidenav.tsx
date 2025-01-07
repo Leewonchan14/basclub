@@ -19,7 +19,7 @@ const NAV_LINKS: { [k: string]: NAV_LINK_ITEM } = {
   },
 } as const;
 
-export const Sidenav: NextPage<{}> = ({}) => {
+export const Sidenav: NextPage<{ isLogin: boolean }> = ({ isLogin }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -66,7 +66,7 @@ export const Sidenav: NextPage<{}> = ({}) => {
           </Suspense>
         </div>
 
-        <ProfileLogin />
+        <ProfileLogin isLogin={isLogin} />
       </div>
     </React.Fragment>
   );
@@ -93,21 +93,23 @@ export const SideLink: FC<{ item: NAV_LINK_ITEM }> = ({ item }) => {
   );
 };
 
-interface Props {
+interface PropsRender {
   children: React.ReactNode;
+  isLogin: boolean;
 }
 
-export const SideNavLayout: NextPage<Props> = ({ children }) => {
+export const RenderLayout: React.FC<PropsRender> = ({ children, isLogin }) => {
+  "use client";
+
   const pathname = usePathname();
   if (pathname.endsWith("login") || pathname.endsWith("redirect")) {
     return children;
   }
+
   return (
     <div>
-      <Sidenav />
+      <Sidenav isLogin={isLogin} />
       <div className="md:ml-sidenav-width">{children}</div>
     </div>
   );
 };
-
-export default SideNavLayout;

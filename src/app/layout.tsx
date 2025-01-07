@@ -1,4 +1,4 @@
-import SideNavLayout from "@/app/ui/sidenav/Sidenav";
+import { SideNavLayout } from "@/app/ui/sidenav/SideNavLayout";
 import QueryProviders from "@/share/lib/tasntack-query/query-providers";
 import type { Metadata } from "next";
 import localFont from "next/font/local";

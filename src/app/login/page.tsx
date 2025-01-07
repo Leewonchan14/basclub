@@ -1,13 +1,16 @@
-"use client";
-
 import { LogoImage } from "@/app/ui/logo/LogoImage";
+import { getPayload } from "@/feature/auth/auth-action";
 import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect, RedirectType } from "next/navigation";
 
 interface Props {}
 
-const LoginPage: NextPage<Props> = () => {
+const LoginPage: NextPage<Props> = async () => {
+  if (await getPayload()) {
+    redirect("/events", RedirectType.replace);
+  }
   return (
     <div className="flex items-center justify-center h-screen mx-auto bg-white">
       <div className="flex flex-col justify-center items-center w-full h-screen max-w-80">
@@ -19,6 +22,8 @@ const LoginPage: NextPage<Props> = () => {
 };
 
 const KakaoLoginButton = () => {
+  "use client";
+
   const url = "https://kauth.kakao.com/oauth/authorize";
   const params = new URLSearchParams({
     client_id: process.env.NEXT_PUBLIC_CLIENT_ID!,
