@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@/app/ui/share/Spinner";
+import Spinner from "@/app/ui/share/Spinner";
 import { setToken } from "@/feature/auth/auth-action";
 import { NextPage } from "next";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -30,7 +30,10 @@ const Redirect = () => {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <Spinner text="로그인 중" />
+      <Spinner>
+        <Spinner.Text text="로그인중" />
+        <Spinner.Spin />
+      </Spinner>
     </div>
   );
 };

@@ -92,24 +92,3 @@ export const SideLink: FC<{ item: NAV_LINK_ITEM }> = ({ item }) => {
     </Link>
   );
 };
-
-interface PropsRender {
-  children: React.ReactNode;
-  isLogin: boolean;
-}
-
-export const RenderLayout: React.FC<PropsRender> = ({ children, isLogin }) => {
-  "use client";
-
-  const pathname = usePathname();
-  if (pathname.endsWith("login") || pathname.endsWith("redirect")) {
-    return children;
-  }
-
-  return (
-    <div>
-      <Sidenav isLogin={isLogin} />
-      <div className="md:ml-sidenav-width">{children}</div>
-    </div>
-  );
-};

@@ -1,3 +1,5 @@
+"use client";
+
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { SideLink } from "@/app/ui/sidenav/Sidenav";
 import { authMutateOption } from "@/feature/auth/auth-mutation";

@@ -1,6 +1,6 @@
 import {
-  memberFindById,
-  memberOwn,
+  getMemberById,
+  getMemberOwn,
 } from "@/feature/member/member-query.actions";
 import { queryOptions } from "@tanstack/react-query";
 
@@ -8,7 +8,7 @@ export const memberQueryApi = {
   findOwn: queryOptions({
     queryKey: ["member", "own"],
     queryFn: async () => {
-      return memberOwn();
+      return getMemberOwn();
     },
     staleTime: 1000 * 30,
   }),
@@ -17,7 +17,7 @@ export const memberQueryApi = {
     queryOptions({
       queryKey: ["member", id],
       queryFn: () => {
-        return memberFindById(id);
+        return getMemberById(id);
       },
       staleTime: 1000 * 60 * 60 * 24,
     }),

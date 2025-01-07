@@ -1,4 +1,4 @@
-import { RenderLayout } from "@/app/ui/sidenav/Sidenav";
+import { RenderLayout } from "@/app/ui/sidenav/RenderLayout";
 import { getPayload } from "@/feature/auth/auth-action";
 import { NextPage } from "next";
 

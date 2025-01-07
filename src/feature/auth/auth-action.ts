@@ -1,5 +1,6 @@
 "use server";
 
+import { ERole } from "@/entity/enum/role";
 import { jwtHandler, JWTHandler } from "@/feature/auth/jwt-handler";
 import { MemberService } from "@/feature/member/member.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
@@ -69,6 +70,10 @@ export const getPayload = async () => {
   const token = await getToken();
   return jwtHandler.verifyToken(token);
 };
+
+export const getIsAdmin = async () => {
+  return (await getPayload())?.role === ERole.ADMIN
+}
 
 export const logout = async () => {
   await cookies().set(JWTHandler.STORE_KEY, "", {
