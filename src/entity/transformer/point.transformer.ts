@@ -14,7 +14,7 @@ export class GeoPointTransFormer implements ValueTransformer {
     };
   }
   from(db: Point) {
-    const [lat, lon] = db.coordinates;
-    return { lat, lon };
+    const [lat, lng] = db.coordinates;
+    return { lat, lng };
   }
 }

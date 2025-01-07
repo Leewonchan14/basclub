@@ -7,7 +7,7 @@ import { NextPage } from "next";
 
 interface Props {}
 
-const InputPlace: NextPage<Props> = ({}) => {
+export const InputPlace: NextPage<Props> = ({}) => {
   const { address, point } = useEventCreateContext();
   return (
     <div className="flex flex-col">
@@ -23,5 +23,3 @@ const InputPlace: NextPage<Props> = ({}) => {
     </div>
   );
 };
-
-export default InputPlace;

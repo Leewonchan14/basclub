@@ -11,7 +11,7 @@ import { useState } from "react";
 
 interface Props {}
 
-const EventCreateButton: NextPage<Props> = ({}) => {
+export const EventCreateButton: NextPage<Props> = ({}) => {
   const router = useRouter();
   const [message, setMessage] = useState("");
   const { address, point, selectedDate, timeSlot } = useEventCreateContext();
@@ -50,5 +50,3 @@ const EventCreateButton: NextPage<Props> = ({}) => {
     </div>
   );
 };
-
-export default EventCreateButton;

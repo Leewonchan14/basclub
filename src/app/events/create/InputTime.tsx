@@ -6,7 +6,7 @@ import { day_js } from "@/share/lib/dayjs";
 import { TimePicker } from "@mui/x-date-pickers";
 import { NextPage } from "next";
 
-const InputTime: NextPage<{}> = ({}) => {
+export const InputTime: NextPage<{}> = ({}) => {
   return (
     <div className="flex flex-col">
       <div className="mb-2 text-2xl font-bold">일정 시간</div>
@@ -59,5 +59,3 @@ const TPicker: React.FC<TPickerProps> = ({ tKey, text }) => {
     />
   );
 };
-
-export default InputTime;

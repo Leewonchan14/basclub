@@ -34,4 +34,14 @@ export class Team extends TimeStampEntity {
 
   @Column({ nullable: false })
   group: number;
+
+  toPlain() {
+    return {
+      id: this.id,
+      events: this.events,
+      member: this.member.toPlain(),
+      avgScore: this.avgScore,
+      group: this.group,
+    };
+  }
 }

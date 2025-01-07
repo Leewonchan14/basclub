@@ -9,9 +9,7 @@ export const useSelectedDate = () => {
   const router = useRouter();
   const params = useSearchParams();
 
-  const selectedDate = params.get(SELECTED_DATE_KEY)
-    ? day_js(params.get(SELECTED_DATE_KEY))
-    : undefined;
+  const selectedDate = day_js(params.get(SELECTED_DATE_KEY) ?? undefined);
 
   const setSelectedDate = useCallback((date?: Date) => {
     const former = day_js(date).format("YYYY-MM-DD");

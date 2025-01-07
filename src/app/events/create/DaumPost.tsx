@@ -40,7 +40,7 @@ interface AddressInterface {
 }
 
 const getAddress = async (data: AddressInterface) => {
-  let address = data.address;
+  const address = data.address;
   let fullAddress = data.address;
   let extraAddress = "";
 
@@ -65,7 +65,7 @@ const getGeoCode = async (address: string): Promise<GeoPoint> => {
     page: "1",
     size: "1",
   }).toString();
-  let response = await fetch(
+  const response = await fetch(
     `https://dapi.kakao.com/v2/local/search/address.json?${query}`,
     {
       headers: {

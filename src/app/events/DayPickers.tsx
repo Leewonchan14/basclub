@@ -1,7 +1,9 @@
 "use client";
 
 import { useSelectedDate } from "@/app/ui/share/SelectedDate";
+import { eventsQueryApi } from "@/feature/events/event-query";
 import { day_js } from "@/share/lib/dayjs";
+import { useQuery } from "@tanstack/react-query";
 import { ButtonHTMLAttributes } from "react";
 import {
   CalendarDay,
@@ -15,7 +17,7 @@ import "react-day-picker/style.css";
 
 export const DayPickers = () => {
   const defaultClassNames = getDefaultClassNames();
-  const {selectedDate, setSelectedDate} = useSelectedDate();
+  const { selectedDate, setSelectedDate } = useSelectedDate();
 
   return (
     <DayPicker
@@ -23,8 +25,11 @@ export const DayPickers = () => {
       mode="single"
       showOutsideDays
       locale={ko}
-      selected={selectedDate?.toDate()}
-      onSelect={setSelectedDate}
+      selected={selectedDate.toDate()}
+      onSelect={(date) => date && setSelectedDate(date)}
+      onMonthChange={(month) => {
+        setSelectedDate(day_js(month).startOf("month").toDate());
+      }}
       classNames={{
         today: `${defaultClassNames.today} !text-orange-600`,
         month_grid: `${defaultClassNames.month_grid} w-full`,
@@ -54,16 +59,31 @@ const CustomNode: React.FC<CustomNodeProps> = ({
   modifiers: _,
   ...props
 }) => {
+  const { selectedDate } = useSelectedDate();
   const { selected } = useDayPicker();
   const isSelected = selected && day_js(selected).isSame(day.date, "day");
-  const isExist = day_js("2025-01-02").isSame(day.date, "day");
+  const { isLoading, data: eventsExists } = useQuery(
+    eventsQueryApi.findByMonthExist(day_js(selectedDate), !!selectedDate)
+  );
+
+  const isExist = day_js(day.date).format("YYYY-MM-DD") in (eventsExists ?? {});
 
   return (
     <button
-      className={className + " " + (isSelected && "!bg-orange-600 !text-white")}
+      disabled={isLoading}
+      className={`${className} ${
+        isSelected && "relative !bg-orange-600 !text-white"
+      } disabled:opacity-50`}
       {...props}
     >
       {props.children}
+
+      <div
+        className={`absolute bottom-0 w-2 h-2 text-xs rounded-full bg-gray-200 animate-pulse ${
+          !isLoading && "invisible"
+        }`}
+      />
+
       {isExist && (
         <div
           className={`absolute w-2 h-2 bg-orange-600 rounded-full bottom-1 ${

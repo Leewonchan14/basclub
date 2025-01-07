@@ -2,7 +2,7 @@
 
 import { SELECTED_DATE_KEY } from "@/app/ui/share/SelectedDate";
 import type { GeoPoint } from "@/entity/transformer/point.transformer";
-import { TimeSlot } from "@/entity/transformer/timSlot.transformer";
+import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
 import { day_js } from "@/share/lib/dayjs";
 import { useSearchParams } from "next/navigation";
 import { createContext, useCallback, useContext, useState } from "react";

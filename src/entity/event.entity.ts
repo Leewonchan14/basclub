@@ -1,7 +1,6 @@
 import { Team } from "@/entity/team.entity";
 import { TimeStampEntity } from "@/entity/timestamp.entity";
 import { DateTransFormer } from "@/entity/transformer/date.transformer";
-import { Properties } from "@/entity/transformer/pain-object";
 import type { GeoPoint } from "@/entity/transformer/point.transformer";
 import { GeoPointTransFormer } from "@/entity/transformer/point.transformer";
 import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
@@ -39,7 +38,16 @@ export class Events
   teams: Promise<Team[]> = Promise.resolve([]);
 
   toPlain() {
-    return Object.assign({}, this) as Properties<typeof this>;
+    return {
+      id: this.id,
+      address: this.address,
+      coordinates: this.coordinates,
+      date: this.date.toDate().toISOString(),
+      timeSlot: {
+        start: this.timeSlot.start.toDate().toISOString(),
+        end: this.timeSlot.end.toDate().toISOString(),
+      },
+    };
   }
 }
 
