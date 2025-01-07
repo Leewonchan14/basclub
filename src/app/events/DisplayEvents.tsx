@@ -9,7 +9,7 @@ import { useFetchEventsByDate } from "@/feature/events/event-query";
 
 export const DisplayEvents = () => {
   const { selectedDate } = useSelectedDate();
-  const { events, members } = useFetchEventsByDate(selectedDate);
+  const { events, members } = useFetchEventsByDate();
 
   if (!events || !selectedDate) {
     return null;
@@ -24,10 +24,12 @@ export const DisplayEvents = () => {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="text-2xl font-bold">참가 인원 <span className="text-orange-500">{members.length}</span> 명</div>
+        <div className="text-2xl font-bold">
+          참가 인원 <span className="text-orange-500">{members.length}</span> 명
+        </div>
         <DisplayParticipants />
       </div>
-      <JoinEventsButton eventsId={events.id} />
+      <JoinEventsButton />
 
       <DisplayTeams />
     </div>

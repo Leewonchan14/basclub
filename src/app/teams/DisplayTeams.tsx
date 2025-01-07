@@ -1,11 +1,9 @@
 "use client";
 
-import { useSelectedDate } from "@/app/ui/share/SelectedDate";
 import { useFetchEventsByDate } from "@/feature/events/event-query";
 
 export const DisplayTeams = () => {
-  const { selectedDate } = useSelectedDate();
-  const { events, teams, isLoading } = useFetchEventsByDate(selectedDate);
+  const { events, teams, isLoading } = useFetchEventsByDate();
 
   if (isLoading || !teams) return null;
 

@@ -1,3 +1,4 @@
+import { useSelectedDate } from "@/app/ui/share/SelectedDate";
 import {
   getEventByDate,
   getEventsExistInMonth,
@@ -30,7 +31,9 @@ export const eventsQueryApi = {
     }),
 };
 
-export const useFetchEventsByDate = (selectedDate: Dayjs | undefined) => {
+export const useFetchEventsByDate = () => {
+  const { selectedDate } = useSelectedDate();
+
   const { data: eventsExists, isLoading: isLoadingExist } = useQuery(
     eventsQueryApi.findByMonthExist(day_js(selectedDate), !!selectedDate)
   );
@@ -45,6 +48,7 @@ export const useFetchEventsByDate = (selectedDate: Dayjs | undefined) => {
   );
 
   const { data: teams, isLoading: isLoadingTeam } = useQuery(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     teamsQueryApi.findByEventsId(events?.id!, !!events)
   );
 

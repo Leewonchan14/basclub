@@ -1,9 +1,10 @@
 import { memberQueryApi } from "@/feature/member/member-query";
 import { useQuery } from "@tanstack/react-query";
 
-export const JoinEventsButton = ({ eventsId }: { eventsId: string }) => {
-  const { isLoading, data } = useQuery(memberQueryApi.findOwn);
-  if (isLoading) return null;
+export const JoinEventsButton = () => {
+  const { data: own } = useQuery(memberQueryApi.findOwn);
+
+  console.log(own);
 
   return (
     <div className="flex flex-col items-center gap-6">

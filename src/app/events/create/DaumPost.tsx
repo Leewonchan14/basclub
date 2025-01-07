@@ -53,6 +53,7 @@ const getAddress = async (data: AddressInterface) => {
         extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
   }
 

@@ -14,7 +14,7 @@ interface Props {
 
 export const RenderEvents: NextPage<Props> = ({ isAdmin }) => {
   const { selectedDate } = useSelectedDate();
-  const { events, isLoading } = useFetchEventsByDate(selectedDate);
+  const { events, isLoading } = useFetchEventsByDate();
 
   if (!selectedDate) {
     return null;

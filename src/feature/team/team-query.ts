@@ -1,4 +1,3 @@
-import { Team } from "@/entity/team.entity";
 import { getTeamsByEventsId } from "@/feature/team/team-query.actions";
 import { queryOptions } from "@tanstack/react-query";
 import _ from "lodash";
