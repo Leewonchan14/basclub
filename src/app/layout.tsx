@@ -25,9 +25,9 @@ export const metadata: Metadata = {
       url: "/basclub_backgroud_logo.jpeg",
     },
   ],
-  // openGraph: {
-  //   images: [{ url: "/backgroud_group.jpeg" }],
-  // },
+  openGraph: {
+    images: [{ url: "/backgroud_group.jpeg" }],
+  },
 };
 
 export default function RootLayout({
