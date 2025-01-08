@@ -4,5 +4,6 @@
     "Kakao",
     "tasntack",
     "timestamptz"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

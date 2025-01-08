@@ -1,6 +1,6 @@
 "use client";
 
-import { day_js } from "@/share/lib/dayjs";
+import { Dayjs, day_js } from "@/share/lib/dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
@@ -26,5 +26,12 @@ export const useSelectedDate = () => {
     return new URLSearchParams(params.toString());
   }, [params]);
 
-  return { selectedDate, setSelectedDate, getSearchParam };
+  const isSelectedDate = useCallback(
+    (date: Dayjs) => {
+      return date.isSame(selectedDate, "day");
+    },
+    [selectedDate]
+  );
+
+  return { selectedDate, setSelectedDate, getSearchParam, isSelectedDate };
 };

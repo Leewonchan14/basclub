@@ -2,7 +2,7 @@ import { EventCreateButton } from "@/app/events/create/EventCreateButton";
 import { EventCreateProvider } from "@/app/events/create/EventCreateContext";
 import { InputPlace } from "@/app/events/create/InputPlace";
 import { InputTime } from "@/app/events/create/InputTime";
-import { SELECTED_DATE_KEY } from "@/app/ui/share/SelectedDate";
+import { SELECTED_DATE_KEY } from "@/app/ui/share/useSelectedDate";
 import { getIsAdmin } from "@/feature/auth/auth-action";
 import { NextPage } from "next";
 import { redirect } from "next/navigation";

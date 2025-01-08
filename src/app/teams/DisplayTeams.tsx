@@ -1,9 +1,9 @@
 "use client";
 
-import { useFetchEventsByDate } from "@/feature/events/event-query";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 
 export const DisplayTeams = () => {
-  const { events, teams, isLoading } = useFetchEventsByDate();
+  const { events, teams, isLoading } = useFetchSelectedEvents();
 
   if (isLoading || !teams) return null;
 

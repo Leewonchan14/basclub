@@ -5,14 +5,11 @@ import { dayjsZod } from "@/share/lib/dayjs";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 import _ from "lodash";
 
-export const getEventByDate = async (date: string) => {
-  const day = dayjsZod().parse(date);
-
+export const getEventById = async (id: string) => {
   const eventsService = getService(EventsService);
-  const findEvent = await eventsService.findByDate(day);
-  const plain = findEvent?.toPlain();
+  const findEvent = await eventsService.findById(id);
 
-  return plain;
+  return findEvent?.toPlain();
 };
 
 export const getEventsExistInMonth = async (date: string) => {
@@ -20,5 +17,5 @@ export const getEventsExistInMonth = async (date: string) => {
   const eventsService = getService(EventsService);
   const events = await eventsService.findByMonth(day);
 
-  return { ..._.mapValues(events, (_e) => true) };
+  return { ..._.mapValues(events, (e) => e.id) };
 };

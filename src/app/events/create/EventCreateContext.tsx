@@ -1,6 +1,6 @@
 "use client";
 
-import { SELECTED_DATE_KEY } from "@/app/ui/share/SelectedDate";
+import { SELECTED_DATE_KEY } from "@/app/ui/share/useSelectedDate";
 import type { GeoPoint } from "@/entity/transformer/point.transformer";
 import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
 import { day_js } from "@/share/lib/dayjs";

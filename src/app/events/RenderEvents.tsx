@@ -1,9 +1,9 @@
 "use client";
 
 import { DisplayEvents } from "@/app/events/DisplayEvents";
-import { useSelectedDate } from "@/app/ui/share/SelectedDate";
 import Spinner from "@/app/ui/share/Spinner";
-import { useFetchEventsByDate } from "@/feature/events/event-query";
+import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -14,7 +14,7 @@ interface Props {
 
 export const RenderEvents: NextPage<Props> = ({ isAdmin }) => {
   const { selectedDate } = useSelectedDate();
-  const { events, isLoading } = useFetchEventsByDate();
+  const { events, isLoading } = useFetchSelectedEvents();
 
   if (!selectedDate) {
     return null;

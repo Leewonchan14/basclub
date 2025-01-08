@@ -1,9 +1,8 @@
 "use client";
 
-import { useSelectedDate } from "@/app/ui/share/SelectedDate";
-import { eventsQueryApi } from "@/feature/events/event-query";
+import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
+import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { day_js } from "@/share/lib/dayjs";
-import { useQuery } from "@tanstack/react-query";
 import { ButtonHTMLAttributes } from "react";
 import {
   CalendarDay,
@@ -59,14 +58,11 @@ const CustomNode: React.FC<CustomNodeProps> = ({
   modifiers: _,
   ...props
 }) => {
-  const { selectedDate } = useSelectedDate();
   const { selected } = useDayPicker();
-  const isSelected = selected && day_js(selected).isSame(day.date, "day");
-  const { isLoading, data: eventsExists } = useQuery(
-    eventsQueryApi.findByMonthExist(day_js(selectedDate), !!selectedDate)
-  );
 
-  const isExist = day_js(day.date).format("YYYY-MM-DD") in (eventsExists ?? {});
+  const isSelected = selected && day_js(selected).isSame(day.date, "day");
+
+  const { isLoading, isExist } = useFetchEventsExist();
 
   return (
     <button
@@ -84,7 +80,7 @@ const CustomNode: React.FC<CustomNodeProps> = ({
         }`}
       />
 
-      {isExist && (
+      {isExist(day_js(day.date)) && (
         <div
           className={`absolute w-2 h-2 bg-orange-600 rounded-full bottom-1 ${
             isSelected && "!bg-white"

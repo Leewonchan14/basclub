@@ -1,18 +1,16 @@
-import { useSelectedDate } from "@/app/ui/share/SelectedDate";
 import {
-  getEventByDate,
+  getEventById,
   getEventsExistInMonth,
 } from "@/feature/events/event-query.action";
-import { teamsQueryApi } from "@/feature/team/team-query";
-import { day_js, Dayjs } from "@/share/lib/dayjs";
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import { Dayjs } from "@/share/lib/dayjs";
+import { queryOptions } from "@tanstack/react-query";
 
 export const eventsQueryApi = {
-  findByDate: (date: Dayjs, enabled: boolean) =>
+  findById: (eventsId: string, enabled: boolean) =>
     queryOptions({
-      queryKey: ["events", date.format("YYYY-MM-DD")],
+      queryKey: ["events", eventsId],
       queryFn: async () => {
-        return await getEventByDate(date.toISOString());
+        return await getEventById(eventsId);
       },
       staleTime: 1000 * 60 * 30,
       enabled,
@@ -31,33 +29,4 @@ export const eventsQueryApi = {
     }),
 };
 
-export const useFetchEventsByDate = () => {
-  const { selectedDate } = useSelectedDate();
 
-  const { data: eventsExists, isLoading: isLoadingExist } = useQuery(
-    eventsQueryApi.findByMonthExist(day_js(selectedDate), !!selectedDate)
-  );
-  const { data: events, isLoading } = useQuery(
-    eventsQueryApi.findByDate(
-      day_js(selectedDate),
-      !!(
-        eventsExists &&
-        day_js(selectedDate).format("YYYY-MM-DD") in eventsExists
-      )
-    )
-  );
-
-  const { data: teams, isLoading: isLoadingTeam } = useQuery(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    teamsQueryApi.findByEventsId(events?.id!, !!events)
-  );
-
-  const members = Object.values(teams ?? {}).flat();
-
-  return {
-    events,
-    teams,
-    members,
-    isLoading: isLoadingExist || isLoading || isLoadingTeam,
-  };
-};

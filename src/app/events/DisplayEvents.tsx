@@ -4,12 +4,12 @@ import DisplayMap from "@/app/events/create/DisplayMap";
 import { JoinEventsButton } from "@/app/events/JoinEventsButton";
 import { DisplayParticipants } from "@/app/teams/DisplayParticipants";
 import { DisplayTeams } from "@/app/teams/DisplayTeams";
-import { useSelectedDate } from "@/app/ui/share/SelectedDate";
-import { useFetchEventsByDate } from "@/feature/events/event-query";
+import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 
 export const DisplayEvents = () => {
   const { selectedDate } = useSelectedDate();
-  const { events, members } = useFetchEventsByDate();
+  const { events, members } = useFetchSelectedEvents();
 
   if (!events || !selectedDate) {
     return null;

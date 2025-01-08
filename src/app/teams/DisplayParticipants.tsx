@@ -1,10 +1,10 @@
 "use client";
 
-import { useFetchEventsByDate } from "@/feature/events/event-query";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 
 // 참가 인원들
 export const DisplayParticipants = () => {
-  const { members } = useFetchEventsByDate();
+  const { members } = useFetchSelectedEvents();
 
   if (members.length === 0) return <NoParticipants />;
 
