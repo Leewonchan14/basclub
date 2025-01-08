@@ -64,7 +64,8 @@ class DIContainer {
 }
 
 export function Service(constructor: new (...args: any[]) => any) {
-  // @Service  데코레이션,  Provider 에  해등 클래스가 스캔되면 등록된다
+  console.log("constructor.name: ", constructor.name);
+
   DIContainer.setService(constructor);
 }
 
@@ -86,8 +87,14 @@ export function InjectRepository<Entity extends Class>(entity: Entity) {
   };
 }
 
-export const getService = DIContainer.getService;
-export const getRepository = DIContainer.getRepository;
+export const getService = <Service extends ObjectLiteral>(
+  constructor: new (...args: any[]) => Service
+) => {
+  console.log(DIContainer["services"]);
+  console.log("constructor.name: ", constructor.name);
+  Object.getOwnPropertyNames(Object.getPrototypeOf(new constructor()));
+  return DIContainer.getService(constructor);
+};
 export interface IService<T extends ObjectLiteral> {
   getRepository: () => Promise<Repository<T>>;
 }
