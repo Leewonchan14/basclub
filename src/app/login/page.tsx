@@ -12,12 +12,21 @@ const LoginPage: NextPage<Props> = async () => {
     redirect("/events", RedirectType.replace);
   }
   return (
-    <div className="flex items-center justify-center h-screen mx-auto bg-white">
-      <div className="flex flex-col justify-center items-center w-full h-screen max-w-80">
-        <LogoImage />
-        <KakaoLoginButton />
+    <>
+      <Image
+        src="/background_group.jpeg"
+        alt="background"
+        width={2520}
+        height={1602}
+        className="fixed object-contain w-full h-full opacity-30"
+      />
+      <div className="z-10 flex items-center justify-center h-screen mx-auto">
+        <div className="z-10 flex flex-col items-center justify-center w-full h-screen max-w-80">
+          <LogoImage />
+          <KakaoLoginButton />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
