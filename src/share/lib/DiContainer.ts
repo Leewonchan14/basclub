@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EntityInterface } from "@/entity/interface/EntityInterface";
 import {
@@ -30,7 +31,7 @@ export class DIContainer {
   private static repositories: Map<string, Repository<ObjectLiteral>> =
     new Map();
 
-  private static services: Map<string, ObjectLiteral> = new Map();
+  private static services: Map<Function, ObjectLiteral> = new Map();
 
   static getRepository<Entity extends Class>(entity: Entity) {
     if (!DIContainer.repositories.has(entity.name)) {
@@ -44,27 +45,26 @@ export class DIContainer {
   }
 
   static setService<Service extends EntityInterface>(
-    key: string,
     constructor: new (...args: any[]) => Service
   ) {
-    if (!DIContainer.services.has(key)) {
-      DIContainer.services.set(key, setAsyncAllMethod(new constructor()));
+    if (!DIContainer.services.has(constructor)) {
+      DIContainer.services.set(
+        constructor,
+        setAsyncAllMethod(new constructor())
+      );
     }
   }
 
-  static getService<Service>(
-    key: string,
-    _constructor: new (...args: any[]) => Service
-  ) {
-    return DIContainer.services.get(key) as Service;
+  static getService<Service>(_constructor: new (...args: any[]) => Service) {
+    return DIContainer.services.get(_constructor) as Service;
   }
 }
 
-export function Service(key: string) {
+export function Service(_key: string) {
   // @Service  데코레이션,  Provider 에  해등 클래스가 스캔되면 등록된다
 
   return (constructor: new (...args: any[]) => any) => {
-    DIContainer.setService(key, constructor);
+    DIContainer.setService(constructor);
   };
 }
 

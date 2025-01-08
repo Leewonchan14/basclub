@@ -6,8 +6,8 @@ import Image from "next/image";
 import { ScoreService } from "@/feature/score/score.service";
 
 export default async function Home() {
-  const memberService = getService("MemberService", MemberService);
-  const scoreService = getService("ScoreService", ScoreService);
+  const memberService = getService(MemberService);
+  const scoreService = getService(ScoreService);
 
   // console.log("memberService", memberService);
   // console.log("scoreService", scoreService);
