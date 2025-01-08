@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   dataSource,
@@ -25,29 +26,29 @@ const setAsyncAllMethod = (target: any) => {
   });
 };
 
-class DIContainer {
-  private static repositories: Map<string, Repository<ObjectLiteral>> =
+export class DIContainer {
+  private static repositories: Map<Function, Repository<ObjectLiteral>> =
     new Map();
 
-  private static services: Map<string, ObjectLiteral> = new Map();
+  private static services: Map<Function, ObjectLiteral> = new Map();
 
   static getRepository<Entity extends Class>(entity: Entity) {
-    if (!DIContainer.repositories.has(entity.name)) {
+    if (!DIContainer.repositories.has(entity)) {
       DIContainer.repositories.set(
-        entity.name,
+        entity,
         // getRepository를 호출하는 service에서는 무조건 dataSource를 호출하게 된다
         syncDataSource!.getRepository(entity)
       );
     }
-    return DIContainer.repositories.get(entity.name) as Repository<Entity>;
+    return DIContainer.repositories.get(entity) as Repository<Entity>;
   }
 
   static setService<T extends ObjectLiteral>(
     constructor: new (...args: any[]) => T
   ) {
-    if (!DIContainer.services.has(constructor.name)) {
+    if (!DIContainer.services.has(constructor)) {
       DIContainer.services.set(
-        constructor.name,
+        constructor,
         setAsyncAllMethod(new constructor())
       );
     }
@@ -56,10 +57,10 @@ class DIContainer {
   static getService<Service extends ObjectLiteral>(
     constructor: new (...args: any[]) => Service
   ) {
-    if (!DIContainer.services.has(constructor.name)) {
-      DIContainer.services.set(constructor.name, new constructor());
+    if (!DIContainer.services.has(constructor)) {
+      DIContainer.services.set(constructor, new constructor());
     }
-    return DIContainer.services.get(constructor.name) as Service;
+    return DIContainer.services.get(constructor) as Service;
   }
 }
 
