@@ -1,11 +1,13 @@
 import { ERole } from "@/entity/enum/role";
+import { EntityInterface } from "@/entity/interface/EntityInterface";
 import { TimeStampEntity } from "@/entity/timestamp.entity";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity({ name: "member" })
-export class Member extends TimeStampEntity {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+export class Member extends TimeStampEntity implements EntityInterface {
+  ClassId: string = "Member";
+  @PrimaryColumn({ type: "bigint" })
+  id: number;
 
   @Column({ length: 50, nullable: false })
   nickname: string;

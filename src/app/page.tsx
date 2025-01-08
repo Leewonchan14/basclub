@@ -1,6 +1,28 @@
-import Image from "next/image";
+import "reflect-metadata";
 
-export default function Home() {
+import { MemberService } from "@/feature/member/member.service";
+import { DIContainer, getService } from "@/share/lib/DiContainer";
+import Image from "next/image";
+import { ScoreService } from "@/feature/score/score.service";
+
+export default async function Home() {
+  const memberService = getService("MemberService", MemberService);
+  const scoreService = getService("ScoreService", ScoreService);
+
+  // console.log("memberService", memberService);
+  // console.log("scoreService", scoreService);
+
+  // console.log("MemberService.name: ", MemberService.name);
+  // console.log("ScoreService.name: ", ScoreService.name);
+
+  console.log('DIContainer["services"]: ', DIContainer["services"]);
+
+  console.log("memberService");
+  console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(memberService)));
+
+  console.log("scoreService");
+  console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(scoreService)));
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">

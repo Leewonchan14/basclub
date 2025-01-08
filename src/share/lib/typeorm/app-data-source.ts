@@ -1,17 +1,16 @@
-import { Events } from "@/entity/event.entity";
-import { Member } from "@/entity/member.entity";
-import { Team } from "@/entity/team.entity";
-import { DataSource } from "typeorm";
-import { Score } from "./../../../entity/score.entity";
+import "reflect-metadata";
 
-const originDataSource = new DataSource({
+import { Member } from "@/entity/member.entity";
+import { DataSource } from "typeorm";
+
+export const originDataSource = new DataSource({
   type: "postgres",
   host: process.env.POSTGRES_HOST,
   port: 5432,
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
-  entities: [Member, Team, Events, Score],
+  entities: [Member],
   synchronize: false,
   logging: ["query", "error"],
   migrations: [],
@@ -22,6 +21,7 @@ const originDataSource = new DataSource({
 export class AppDataSource {
   private static instance: DataSource | null = null;
   public static async getInstance() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     if (!AppDataSource.instance || !AppDataSource.instance.isInitialized) {
       try {
         await originDataSource.initialize();
