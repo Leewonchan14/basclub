@@ -1,7 +1,14 @@
+import { EditTeam } from "@/app/teams/edit/EditTeam";
+import { EditTeamProvider } from "@/app/teams/edit/EditTeamContext";
+import { MutateButton } from "@/app/teams/edit/MutateButton";
 import { getIsAdmin } from "@/feature/auth/auth-action";
 import { getEventById } from "@/feature/events/event-query.action";
+import { getScoreByEventsId } from "@/feature/score/score-query.actions";
+import { getTeamsByEventsId } from "@/feature/team/team-query.actions";
+import _ from "lodash";
 import { NextPage } from "next";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 interface Props {
   searchParams: { eventsId?: string };
@@ -9,14 +16,29 @@ interface Props {
 
 const Page: NextPage<Props> = async ({ searchParams: { eventsId } }) => {
   const isAdmin = await getIsAdmin();
-  if (!eventsId || !isAdmin) {
-    // admin 아니면 events로 redirect
-    redirect("/events");
-  }
+  if (!eventsId) redirect("/events");
   const events = await getEventById(eventsId);
   if (!events) redirect("/events");
 
-  return <div></div>;
+  const scoreMap = await getScoreByEventsId(eventsId);
+  const teamsArr = await getTeamsByEventsId(eventsId);
+  const grouped = { ..._.groupBy(teamsArr, (t) => t.group) };
+
+  const max = Math.max(...Object.keys(grouped).map(Number));
+
+  const teams = _.range(max + 1).map((_, i) => {
+    if (i in grouped) return grouped[i];
+    return [];
+  });
+
+  return (
+    <Suspense>
+      <EditTeamProvider initTeams={teams} scoreMap={scoreMap}>
+        <EditTeam />
+        {isAdmin && <MutateButton date={events.date} eventsId={eventsId} />}
+      </EditTeamProvider>
+    </Suspense>
+  );
 };
 
 export default Page;

@@ -1,16 +1,17 @@
 import Spinner from "@/app/ui/share/Spinner";
-import { Member } from "@/entity/member.entity";
-import { Properties } from "@/entity/transformer/pain-object";
 import Image from "next/image";
 import React from "react";
 
 export const MemberProfile: React.FC<{
-  member: Properties<Member>;
+  member: { nickname: string; profileUrl: string };
   avgScore?: number;
   isLoading: boolean;
-}> = ({ member: { nickname, profileUrl }, avgScore, isLoading }) => {
+  className?: string;
+}> = ({ member: { nickname, profileUrl }, avgScore, isLoading, className }) => {
   return (
-    <div className="flex items-center flex-shrink-0 gap-4 p-3 bg-gray-100 rounded-lg">
+    <div
+      className={`flex items-center flex-shrink-0 gap-4 p-3 bg-gray-100 rounded-lg ${className}`}
+    >
       <div className="relative overflow-hidden border-2 border-orange-600 rounded-full w-14 h-14">
         <Image
           draggable={false}
@@ -24,7 +25,7 @@ export const MemberProfile: React.FC<{
         <div className="text-lg font-bold text-gray-800 text-nowrap">
           {nickname}
         </div>
-        <div className="flex flex-col text-sm text-gray-600">
+        <div className="flex flex-col text-sm text-gray-600 text-nowrap">
           평균 득점
           {isLoading && (
             <Spinner>

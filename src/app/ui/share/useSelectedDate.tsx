@@ -33,5 +33,21 @@ export const useSelectedDate = () => {
     [selectedDate]
   );
 
-  return { selectedDate, setSelectedDate, getSearchParam, isSelectedDate };
+  const goToDay = useCallback(
+    (date: Dayjs) => {
+      const param = new URLSearchParams({
+        selectedDate: date.format("YYYY-MM-DD"),
+      }).toString();
+      router.push(`/events?${param}`);
+    },
+    [router]
+  );
+
+  return {
+    selectedDate,
+    setSelectedDate,
+    getSearchParam,
+    goToDay,
+    isSelectedDate,
+  };
 };

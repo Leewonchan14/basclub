@@ -11,8 +11,7 @@ export const useNeedLogin = () => {
     new Promise<Properties<Member>>((resolve) => {
       if (isLoading) return;
       if (isLogin) return resolve(own);
-      console.log("로그인이 필요합니다.");
-      router.replace("/login");
+      router.push("/login");
     });
 
   return { own, isLoading, needLoginPromise };

@@ -1,3 +1,4 @@
+import { PlainTeam } from "@/app/teams/edit/EditTeam";
 import { Team } from "@/entity/team.entity";
 import { EventsService } from "@/feature/events/events.service";
 import { MemberService } from "@/feature/member/member.service";
@@ -34,6 +35,7 @@ export class TeamService implements IService<Team> {
       order: {
         createdAt: "ASC",
       },
+      relations: { events: true },
     });
   }
 
@@ -75,5 +77,11 @@ export class TeamService implements IService<Team> {
     newTeam.member = findMember;
 
     return await this.teamRepository.save(newTeam);
+  }
+
+  async upsertTeams(teams: PlainTeam[][]) {
+    teams = teams.map((team, i) => team.map((t) => ({ ...t, group: i })));
+
+    await this.teamRepository.upsert(teams.flat(), ["id"]);
   }
 }

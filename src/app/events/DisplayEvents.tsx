@@ -4,6 +4,7 @@ import DisplayMap from "@/app/events/create/DisplayMap";
 import { JoinEventsButton } from "@/app/events/JoinEventsButton";
 import { DisplayParticipants } from "@/app/teams/DisplayParticipants";
 import { DisplayTeams } from "@/app/teams/DisplayTeams";
+import { UpsertTeamButton } from "@/app/teams/UpsertTeamButton";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 
@@ -32,6 +33,7 @@ export const DisplayEvents = () => {
       <JoinEventsButton />
 
       <DisplayTeams />
+      <UpsertTeamButton />
     </div>
   );
 };
