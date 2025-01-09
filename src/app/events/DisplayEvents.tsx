@@ -25,7 +25,7 @@ export const DisplayEvents = () => {
 
       <div className="gap-2 text-2xl font-bold">
         참가 인원 <span className="text-orange-500">{members.length}</span>명
-        {isJoin && <span className="text-lg text-orange-500"> (본인 참가중)</span>}
+        {isJoin && <span className="text-lg text-orange-500"> (참가중)</span>}
       </div>
 
       <DisplayParticipants />

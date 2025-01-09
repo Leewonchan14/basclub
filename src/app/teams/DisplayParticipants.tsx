@@ -2,11 +2,14 @@
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchScoreByEvents } from "@/feature/score/hooks/useFetchScoreByEvents";
 import React, { useEffect, useRef } from "react";
 
 // 참가 인원들
 export const DisplayParticipants = () => {
-  const { members } = useFetchSelectedEvents();
+  const { teamsArr } = useFetchSelectedEvents();
+  const { scoreMap, isLoading: isLoadingScore } = useFetchScoreByEvents();
+
   const sliderRef = useRef<HTMLDivElement>(null);
   const isMouseEnter = useRef(false);
   useEffect(() => {
@@ -29,7 +32,7 @@ export const DisplayParticipants = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (members.length === 0) return <NoParticipants />;
+  if (teamsArr.length === 0) return <NoParticipants />;
 
   return (
     <div
@@ -50,10 +53,18 @@ export const DisplayParticipants = () => {
       ref={sliderRef}
       className="flex items-center gap-4 p-4 overflow-x-auto bg-gray-100 rounded-lg"
     >
-      {members.map((member, index) => (
-        <React.Fragment key={member.id}>
-          <MemberProfile member={member} avgScore={13} />
-          {index !== members.length - 1 && (
+      {teamsArr.map((teamMember, index) => (
+        <React.Fragment key={teamMember.id}>
+          <MemberProfile
+            member={teamMember.member}
+            avgScore={
+              scoreMap && teamMember.member.id in scoreMap
+                ? scoreMap[teamMember.member.id]
+                : undefined
+            }
+            isLoading={isLoadingScore}
+          />
+          {index !== teamsArr.length - 1 && (
             <div className="border-l-2 border-black border-dotted h-14" />
           )}
         </React.Fragment>

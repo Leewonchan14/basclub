@@ -50,6 +50,7 @@ export const useFetchSelectedEvents = () => {
     events,
     teams,
     members,
+    teamsArr,
     notGroupedTeam,
     groupedTeam,
     isJoin,

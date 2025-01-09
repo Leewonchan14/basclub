@@ -4,6 +4,7 @@ import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { SideLink } from "@/app/ui/sidenav/Sidenav";
 import { authMutateOption } from "@/feature/auth/auth-mutation";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
+import { useFetchScore } from "@/feature/score/hooks/useFetchScore";
 import { useMutation } from "@tanstack/react-query";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
@@ -26,11 +27,12 @@ const Profile: React.FC<{}> = () => {
   const router = useRouter();
   const { mutateAsync, isPending } = useMutation(authMutateOption.logout);
   const { own, isLoading } = useFetchOwn();
+  const { score, isLoading: isLoadingScore } = useFetchScore(own?.id ?? 0);
   if (isLoading || !own) return null;
 
   return (
     <div className="flex flex-col gap-4">
-      <MemberProfile member={own} avgScore={13} />
+      <MemberProfile member={own} avgScore={score} isLoading={isLoadingScore} />
       <button
         disabled={isPending}
         className="w-1/2 p-2 ml-auto font-bold text-center text-white bg-orange-500 rounded-lg"

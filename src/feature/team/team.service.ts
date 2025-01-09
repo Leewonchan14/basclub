@@ -31,6 +31,9 @@ export class TeamService implements IService<Team> {
   async findTeamsByEventId(eventId: string) {
     return this.teamRepository.find({
       where: { events: { id: eventId } },
+      order: {
+        createdAt: "ASC",
+      },
     });
   }
 

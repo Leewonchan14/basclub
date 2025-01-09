@@ -14,7 +14,7 @@ export const JoinEventsButton = () => {
   const isPending = isMutating || isFetching;
 
   return (
-    <div className="flex gap-6">
+    <div className="flex items-center gap-6">
       <button
         disabled={isPending}
         onClick={async () => {

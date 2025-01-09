@@ -32,6 +32,35 @@ export class ScoreService implements IService<Score> {
     return avg;
   }
 
+  async findScoresByEventsId(eventsId: string) {
+    const data = (await this.scoreRepository
+      .createQueryBuilder("score")
+      .select([
+        "score.memberId as memberId",
+        "avg(score.score2 * 2 + score.score3 * 3) as average",
+      ])
+      .where((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select("score.memberId")
+          .from(Score, "score")
+          .where("score.eventsId = :eventsId", { eventsId })
+          .getQuery();
+        return `score.memberId IN ${subQuery}`;
+      })
+      .groupBy("memberId")
+      .getRawMany()) as {
+      memberid: number;
+      average: number;
+    }[];
+
+    const rt: { [k: number]: number } = Object.fromEntries(
+      data.map((d) => Object.values(d).map(Number))
+    );
+
+    return rt;
+  }
+
   async addScore(
     memberId: number,
     eventsId: string,
