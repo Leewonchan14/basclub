@@ -29,3 +29,5 @@ export class Member extends TimeStampEntity {
     return Object.assign({}, this) as Properties<typeof this>;
   }
 }
+
+export type PlainMember = ReturnType<Member["toPlain"]>;

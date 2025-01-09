@@ -1,12 +1,11 @@
 "use client";
 import { useEditTeamContext } from "@/app/teams/edit/EditTeamContext";
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
-import { Member } from "@/entity/member.entity";
-import { Properties } from "@/entity/transformer/pain-object";
+import { PlainMember } from "@/entity/member.entity";
 import { Draggable } from "@hello-pangea/dnd";
 
 export const DraggableMember: React.FC<{
-  member: Properties<Member>;
+  member: PlainMember;
   index: number;
 }> = ({ member, index }) => {
   const { scoreMap } = useEditTeamContext();

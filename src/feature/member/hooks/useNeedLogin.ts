@@ -1,5 +1,4 @@
-import { Member } from "@/entity/member.entity";
-import { Properties } from "@/entity/transformer/pain-object";
+import { PlainMember } from "@/entity/member.entity";
 import { useRouter } from "next/navigation";
 import { useFetchOwn } from "./useFetchOwn";
 
@@ -8,7 +7,7 @@ export const useNeedLogin = () => {
   const isLogin = !isLoading && !!own;
   const router = useRouter();
   const needLoginPromise = () =>
-    new Promise<Properties<Member>>((resolve) => {
+    new Promise<PlainMember>((resolve) => {
       if (isLoading) return;
       if (isLogin) return resolve(own);
       router.push("/login");
