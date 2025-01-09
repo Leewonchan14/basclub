@@ -9,6 +9,17 @@ import { dayjsZod, type Dayjs } from "@/share/lib/dayjs";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { z } from "zod";
 
+export interface PlainEvents {
+  id: string;
+  address: string;
+  coordinates: GeoPoint;
+  date: string;
+  timeSlot: {
+    start: string;
+    end: string;
+  };
+}
+
 @Entity({ name: "events" })
 export class Events
   extends TimeStampEntity

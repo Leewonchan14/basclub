@@ -27,6 +27,10 @@ export class EventsService implements IService<Events> {
     return this.eventsRepository.upsert(obj, ["id"]);
   }
 
+  async removeById(id: string) {
+    return this.eventsRepository.delete(id);
+  }
+
   async findById(id: string) {
     return this.eventsRepository.findOne({ where: { id } });
   }

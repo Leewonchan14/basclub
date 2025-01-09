@@ -1,6 +1,7 @@
-import { Events } from "@/entity/event.entity";
+import { PlainEvents } from "@/entity/event.entity";
 import { eventsQueryApi } from "@/feature/events/event-query";
 import {
+  removeEvent,
   joinEvent as toggleJoinEvent,
   upsertEvent,
 } from "@/feature/events/events-mutate.action";
@@ -9,10 +10,10 @@ import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
 export const eventsMutateOption = {
   upsert: {
     mutationKey: ["events", "upsert"],
-    mutationFn: async (data: Partial<Events>) => {
+    mutationFn: async (data: Partial<PlainEvents>) => {
       return await upsertEvent(data);
     },
-    onSuccess: (_data: unknown, _variables: Partial<Events>) => {
+    onSuccess: (_data: unknown, _variables: Partial<PlainEvents>) => {
       getQueryClient().invalidateQueries({
         queryKey: ["events"],
       });
@@ -30,9 +31,7 @@ export const eventsMutateOption = {
     }) => {
       return await toggleJoinEvent(eventsId, memberId);
     },
-    onMutate: ()=> {
-
-    },
+    onMutate: () => {},
     onSuccess: (
       _data: unknown,
       variables: {
@@ -42,6 +41,18 @@ export const eventsMutateOption = {
     ) => {
       getQueryClient().invalidateQueries({
         queryKey: eventsQueryApi.findById(variables.eventsId, true).queryKey,
+      });
+    },
+  },
+
+  remove: {
+    mutationKey: ["events", "remove"],
+    mutationFn: async (id: string) => {
+      return await removeEvent(id);
+    },
+    onSuccess: (_data: unknown, _variables: string) => {
+      getQueryClient().invalidateQueries({
+        queryKey: ["events"],
       });
     },
   },

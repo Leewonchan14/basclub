@@ -1,13 +1,20 @@
 "use server";
 
 import { EventsService } from "@/feature/events/events.service";
-import { dayjsZod } from "@/share/lib/dayjs";
+import { day_js, dayjsZod } from "@/share/lib/dayjs";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 import _ from "lodash";
 
 export const getEventById = async (id: string) => {
   const eventsService = getService(EventsService);
   const findEvent = await eventsService.findById(id);
+
+  return findEvent?.toPlain();
+};
+
+export const getEventByDate = async (date: string) => {
+  const eventsService = getService(EventsService);
+  const findEvent = await eventsService.findByDate(day_js(date));
 
   return findEvent?.toPlain();
 };

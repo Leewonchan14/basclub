@@ -21,7 +21,6 @@ const DaumPost: NextPage<Props> = ({ buttonText, className }) => {
   };
 
   const handleClick = () => {
-    console.log("click");
     open({ onComplete: handleComplete });
   };
 

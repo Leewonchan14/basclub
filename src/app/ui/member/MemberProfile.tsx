@@ -8,6 +8,7 @@ export const MemberProfile: React.FC<{
   isLoading: boolean;
   className?: string;
 }> = ({ member: { nickname, profileUrl }, avgScore, isLoading, className }) => {
+  const score = avgScore ? Number(avgScore).toFixed(2) : "없음";
   return (
     <div
       className={`flex items-center flex-shrink-0 gap-4 p-3 bg-gray-100 rounded-lg ${className}`}
@@ -34,7 +35,7 @@ export const MemberProfile: React.FC<{
           )}
           {!isLoading && (
             <span className="font-semibold text-blue-600 text-nowrap">
-              {Number(avgScore)?.toFixed(2) ?? "없음"}
+              {score}
             </span>
           )}
         </div>

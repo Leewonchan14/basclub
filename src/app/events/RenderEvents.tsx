@@ -21,27 +21,23 @@ export const RenderEvents: NextPage<Props> = ({ isAdmin }) => {
   }
 
   if (isLoading) {
-    return <LoadingComponent />;
-  }
-
-  if (!events) {
     return (
-      <React.Fragment>
-        <NoEvents />
-        {isAdmin && <UpdateEventButton />}
-      </React.Fragment>
+      <Spinner>
+        <Spinner.Spin />
+        <Spinner.Text className="text-lg" text="가져오는중..." />
+      </Spinner>
     );
   }
 
-  return <DisplayEvents />;
-};
+  if (!events) {
+    return <NoEvents />;
+  }
 
-const LoadingComponent = () => {
   return (
-    <Spinner>
-      <Spinner.Spin />
-      <Spinner.Text className="text-lg" text="가져오는중..." />
-    </Spinner>
+    <>
+      <DisplayEvents />
+      {isAdmin && <UpdateEventButton />}
+    </>
   );
 };
 
@@ -64,7 +60,7 @@ const UpdateEventButton = () => {
         }}
         className="p-2 font-bold text-white bg-orange-600 rounded-lg"
       >
-        일정 만들러 가기
+        일정 수정 및 만들러 가기
       </button>
     </div>
   );
