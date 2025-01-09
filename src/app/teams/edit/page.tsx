@@ -24,7 +24,8 @@ const Page: NextPage<Props> = async ({ searchParams: { eventsId } }) => {
   const teamsArr = await getTeamsByEventsId(eventsId);
   const grouped = { ..._.groupBy(teamsArr, (t) => t.group) };
 
-  const max = Math.max(...Object.keys(grouped).map(Number));
+  let max = Math.max(...Object.keys(grouped).map(Number));
+  max = Math.max(0, max);
 
   const teams = _.range(max + 1).map((_, i) => {
     if (i in grouped) return grouped[i];

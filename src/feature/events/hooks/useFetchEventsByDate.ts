@@ -37,18 +37,24 @@ export const useFetchSelectedEvents = () => {
 
   const teamsArr = teamData ?? [];
 
-  const teams: { [k: number]: typeof teamsArr } = {
+  const teamsMap: { [k: string]: typeof teamsArr } = {
     ..._.groupBy(teamsArr, (t) => t.group),
   };
-  const notGroupedTeam = teams[0] ?? [];
-  const groupedTeam = { ..._.omit(teams, "0") };
+
+  let max = Math.max(...Object.keys(teamsMap).map((k) => Number(k)));
+  max = Math.max(0, max);
+
+  const notGroupedTeam = teamsMap[0] ?? [];
+  const groupedTeam = _.range(max + 1)
+    .map((_, i) => teamsMap[i] ?? [])
+    .slice(1);
 
   const members = (teamsArr ?? []).map((t) => t.member);
   const isJoin = members.some((m) => m.id === own?.id);
 
   return {
     events,
-    teams,
+    teamsMap,
     members,
     teamsArr,
     notGroupedTeam,

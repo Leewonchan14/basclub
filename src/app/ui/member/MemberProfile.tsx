@@ -5,7 +5,7 @@ import React from "react";
 export const MemberProfile: React.FC<{
   member: { nickname: string; profileUrl: string };
   avgScore?: number;
-  isLoading: boolean;
+  isLoading?: boolean;
   className?: string;
 }> = ({ member: { nickname, profileUrl }, avgScore, isLoading, className }) => {
   const score = avgScore ? Number(avgScore).toFixed(2) : "없음";
@@ -13,7 +13,7 @@ export const MemberProfile: React.FC<{
     <div
       className={`flex items-center flex-shrink-0 gap-4 p-3 bg-gray-100 rounded-lg ${className}`}
     >
-      <div className="relative overflow-hidden border-2 border-orange-600 rounded-full w-14 h-14">
+      <div className="relative flex-shrink-0 overflow-hidden border-2 border-orange-600 rounded-full w-14 h-14">
         <Image
           draggable={false}
           alt="프로필 이미지"
