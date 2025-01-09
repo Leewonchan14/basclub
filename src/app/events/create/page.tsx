@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { EventMutateButton } from "@/app/events/create/EventCreateButton";
 import { EventCreateProvider } from "@/app/events/create/EventCreateContext";
 import { InputPlace } from "@/app/events/create/InputPlace";
@@ -19,14 +21,13 @@ const Page: NextPage<Props> = async ({ searchParams: { selectedDate } }) => {
   if (!isAdmin) redirect("/events");
 
   const event = await getEventByDate(selectedDate);
-  if (!event) redirect("/events");
 
   return (
     <div className="flex flex-col gap-12">
       <Suspense>
-        <EventCreateProvider events={event}>
+        <EventCreateProvider events={{ ...event }}>
           <div className="text-3xl font-bold">
-            {day_js(event.date).format("YYYY년 MM월 DD일")}
+            {day_js(selectedDate).format("YYYY년 MM월 DD일")}
           </div>
           <InputPlace />
           <InputTime />

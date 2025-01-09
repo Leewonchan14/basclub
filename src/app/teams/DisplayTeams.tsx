@@ -8,7 +8,6 @@ import React from "react";
 
 export const DisplayTeams = () => {
   const { groupedTeam, isLoading } = useFetchSelectedEvents();
-  console.log("groupedTeam: ", groupedTeam);
   const { isLoading: isLoadingScore } = useFetchScoreByEvents();
 
   if (isLoading || isLoadingScore) return null;

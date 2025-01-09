@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { DayPickers } from "@/app/events/DayPickers";
 import { RenderEvents } from "@/app/events/RenderEvents";
 import { getIsAdmin } from "@/feature/auth/auth-action";

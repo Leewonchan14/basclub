@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { EditTeam } from "@/app/teams/edit/EditTeam";
 import { EditTeamProvider } from "@/app/teams/edit/EditTeamContext";
 import { MutateButton } from "@/app/teams/edit/MutateButton";
