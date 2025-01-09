@@ -12,19 +12,10 @@ interface Props {
   searchParams: { [SELECTED_DATE_KEY]: string };
 }
 
-const Page: NextPage<Props> = async ({ searchParams }) => {
+const Page: NextPage<Props> = async ({ searchParams: _ }) => {
   const isAdmin = await getIsAdmin();
   if (!isAdmin) {
     // admin 아니면 events로 redirect
-    redirect("/events");
-  }
-
-  const isSelected = !Object.keys(searchParams).find(
-    (k) => k === SELECTED_DATE_KEY
-  );
-
-  // 또는 selectedDate가 없으면 redirect
-  if (!isSelected) {
     redirect("/events");
   }
 

@@ -8,16 +8,21 @@ interface PropsRender {
   isLogin: boolean;
 }
 
-export const RenderLayout: React.FC<PropsRender> = ({ children, isLogin }) => {
+const NOT_RENDER_PATHS = ["login", "redirect", "edit"];
+
+export const RenderSideNavLayout: React.FC<PropsRender> = ({
+  children,
+  isLogin,
+}) => {
   const pathname = usePathname();
-  if (pathname.endsWith("login") || pathname.endsWith("redirect")) {
+  if (NOT_RENDER_PATHS.some((path) => pathname.endsWith(path))) {
     return children;
   }
 
   return (
     <div>
       <Sidenav isLogin={isLogin} />
-      <div className="md:ml-sidenav-width p-4 md:p-14">{children}</div>
+      <div className="p-4 md:ml-sidenav-width md:p-14">{children}</div>
     </div>
   );
 };
