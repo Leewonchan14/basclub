@@ -1,4 +1,4 @@
-import { PlainTeam } from "@/app/teams/edit/EditTeam";
+import { PlainTeam } from "@/entity/team.entity";
 import { Team } from "@/entity/team.entity";
 import { EventsService } from "@/feature/events/events.service";
 import { MemberService } from "@/feature/member/member.service";

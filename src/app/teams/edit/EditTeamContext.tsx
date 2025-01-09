@@ -1,6 +1,6 @@
 "use client";
 
-import { PlainTeam } from "@/app/teams/edit/EditTeam";
+import { PlainTeam } from "@/entity/team.entity";
 import { createContext, useContext, useState } from "react";
 
 interface EditTeamContextType {

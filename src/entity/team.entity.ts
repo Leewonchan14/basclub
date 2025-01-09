@@ -44,3 +44,4 @@ export class Team extends TimeStampEntity {
     };
   }
 }
+export type PlainTeam = ReturnType<Team["toPlain"]>;

@@ -1,6 +1,6 @@
 "use server";
 
-import { PlainTeam } from "@/app/teams/edit/EditTeam";
+import { PlainTeam } from "@/entity/team.entity";
 import { TeamService } from "@/feature/team/team.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 

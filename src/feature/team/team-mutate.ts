@@ -1,4 +1,4 @@
-import { PlainTeam } from "@/app/teams/edit/EditTeam";
+import { PlainTeam } from "@/entity/team.entity";
 import { eventsQueryApi } from "@/feature/events/event-query";
 import { upsertTeam } from "@/feature/team/team-mutate.actions";
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";

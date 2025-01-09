@@ -1,6 +1,6 @@
 "use client";
 
-import { PlainTeam } from "@/app/teams/edit/EditTeam";
+import { PlainTeam } from "@/entity/team.entity";
 import { useEditTeamContext } from "@/app/teams/edit/EditTeamContext";
 import { Droppable } from "@hello-pangea/dnd";
 import { DraggableMember } from "./DraggableMember";

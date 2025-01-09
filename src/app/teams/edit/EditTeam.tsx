@@ -1,13 +1,10 @@
 "use client";
 
 import { useEditTeamContext } from "@/app/teams/edit/EditTeamContext";
-import { Team } from "@/entity/team.entity";
 import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
 import _ from "lodash";
 import { DroppableNotJoinTeam } from "./DroppableNotJoinTeam";
 import { DroppableTeam } from "./DroppableTeam";
-
-export type PlainTeam = ReturnType<Team["toPlain"]>;
 
 export const EditTeam: React.FC<{}> = () => {
   const { teams, setTeams, scoreMap } = useEditTeamContext();
