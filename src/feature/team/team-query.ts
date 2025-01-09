@@ -1,15 +1,16 @@
+import { eventsQueryApi } from "@/feature/events/event-query";
 import { getTeamsByEventsId } from "@/feature/team/team-query.actions";
 import { queryOptions } from "@tanstack/react-query";
-import _ from "lodash";
 
 export const teamsQueryApi = {
   findByEventsId: (eventsId: string, enabled: boolean) =>
     queryOptions({
-      queryKey: ["teams", eventsId],
+      queryKey: [
+        ...eventsQueryApi.findById(eventsId, enabled).queryKey,
+        "teams",
+      ],
       queryFn: async () => {
-        return {
-          ..._.groupBy(await getTeamsByEventsId(eventsId), (e) => e.group),
-        };
+        return await getTeamsByEventsId(eventsId);
       },
       staleTime: 1000 * 60 * 30,
       enabled,

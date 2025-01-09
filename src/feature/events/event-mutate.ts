@@ -1,5 +1,9 @@
 import { Events } from "@/entity/event.entity";
-import { joinEvent, upsertEvent } from "@/feature/events/events-mutate.action";
+import { eventsQueryApi } from "@/feature/events/event-query";
+import {
+  joinEvent as toggleJoinEvent,
+  upsertEvent,
+} from "@/feature/events/events-mutate.action";
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
 
 export const eventsMutateOption = {
@@ -8,16 +12,15 @@ export const eventsMutateOption = {
     mutationFn: async (data: Partial<Events>) => {
       return await upsertEvent(data);
     },
-    onSuccess: () => {
+    onSuccess: (_data: unknown, _variables: Partial<Events>) => {
       getQueryClient().invalidateQueries({
-        // TODO: events 관련 쿼리 키로 변경
-        // queryKey: memberQueryApi.findOwn.queryKey,
+        queryKey: ["events"],
       });
     },
   },
 
-  join: {
-    mutationKey: ["events", "join"],
+  toggleJoin: {
+    mutationKey: ["events", "toggleJoin"],
     mutationFn: async ({
       eventsId,
       memberId,
@@ -25,12 +28,20 @@ export const eventsMutateOption = {
       eventsId: string;
       memberId: number;
     }) => {
-      return await joinEvent(eventsId, memberId);
+      return await toggleJoinEvent(eventsId, memberId);
     },
-    onSuccess: () => {
+    onMutate: ()=> {
+
+    },
+    onSuccess: (
+      _data: unknown,
+      variables: {
+        eventsId: string;
+        memberId: number;
+      }
+    ) => {
       getQueryClient().invalidateQueries({
-        // TODO: events, team 관련 쿼리 키로 변경
-        // queryKey: memberQueryApi.findOwn.queryKey,
+        queryKey: eventsQueryApi.findById(variables.eventsId, true).queryKey,
       });
     },
   },

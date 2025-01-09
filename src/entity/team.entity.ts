@@ -29,7 +29,7 @@ export class Team extends TimeStampEntity {
   @JoinColumn({ name: "memberId" })
   member: Member;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: "float" })
   avgScore: number;
 
   @Column({ nullable: false })
@@ -38,7 +38,6 @@ export class Team extends TimeStampEntity {
   toPlain() {
     return {
       id: this.id,
-      events: this.events,
       member: this.member.toPlain(),
       avgScore: this.avgScore,
       group: this.group,

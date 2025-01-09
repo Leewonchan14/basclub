@@ -17,7 +17,7 @@ export const RenderLayout: React.FC<PropsRender> = ({ children, isLogin }) => {
   return (
     <div>
       <Sidenav isLogin={isLogin} />
-      <div className="md:ml-sidenav-width p-2 md:p-14">{children}</div>
+      <div className="md:ml-sidenav-width p-4 md:p-14">{children}</div>
     </div>
   );
 };

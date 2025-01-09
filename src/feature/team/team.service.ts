@@ -42,13 +42,17 @@ export class TeamService implements IService<Team> {
     return findTeam;
   }
 
-  async join(eventId: string, memberId: number) {
+  async toggleJoin(eventId: string, memberId: number) {
     const findTeam = await this.findTeamsByEventIdAndMemberId(
       eventId,
       memberId
     );
 
-    if (findTeam) return null;
+    // 이미 있다면 삭제
+    if (findTeam) {
+      await this.teamRepository.remove(findTeam);
+      return;
+    }
 
     const findEvent = await this.eventsService.findById(eventId);
     const findMember = await this.memberService.findById(memberId);

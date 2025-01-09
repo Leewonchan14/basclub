@@ -14,7 +14,7 @@ export const upsertEvent = async (obj: DeepPartial<Events>) => {
 
 export const joinEvent = async (eventsId: string, memberId: number) => {
   const eventsService = getService(TeamService);
-  await eventsService.join(eventsId, memberId);
+  await eventsService.toggleJoin(eventsId, memberId);
   return;
 };
 

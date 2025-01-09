@@ -9,7 +9,7 @@ import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByD
 
 export const DisplayEvents = () => {
   const { selectedDate } = useSelectedDate();
-  const { events, members } = useFetchSelectedEvents();
+  const { events, members, isJoin } = useFetchSelectedEvents();
 
   if (!events || !selectedDate) {
     return null;
@@ -23,12 +23,12 @@ export const DisplayEvents = () => {
         <DisplayMap address={events.address} point={events.coordinates} />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="text-2xl font-bold">
-          참가 인원 <span className="text-orange-500">{members.length}</span> 명
-        </div>
-        <DisplayParticipants />
+      <div className="gap-2 text-2xl font-bold">
+        참가 인원 <span className="text-orange-500">{members.length}</span>명
+        {isJoin && <span className="text-lg text-orange-500"> (본인 참가중)</span>}
       </div>
+
+      <DisplayParticipants />
       <JoinEventsButton />
 
       <DisplayTeams />
