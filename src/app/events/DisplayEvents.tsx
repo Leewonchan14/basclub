@@ -1,13 +1,15 @@
 "use client";
 
-import DisplayMap from "@/app/events/create/DisplayMap";
 import { JoinEventsButton } from "@/app/events/JoinEventsButton";
+import DisplayMap from "@/app/events/create/DisplayMap";
 import { DisplayParticipants } from "@/app/teams/DisplayParticipants";
 import { DisplayTeams } from "@/app/teams/DisplayTeams";
 import { UpsertTeamButton } from "@/app/teams/UpsertTeamButton";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { day_js } from "@/share/lib/dayjs";
+import { ScoreRecord } from "./score/ScoreRecord";
+import { ScoreList } from "@/app/events/score/ScoreList";
 
 export const DisplayEvents = () => {
   const { selectedDate } = useSelectedDate();
@@ -24,16 +26,16 @@ export const DisplayEvents = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <div className="text-2xl font-bold">시간 및 장소</div>
-        <div className="mt-4 text-xl font-bold">
+      <div className="flex flex-col gap-2 font-bold">
+        <div className="text-2xl ">시간 및 장소</div>
+        <div className="mt-4 text-xl">
           {day_js(events.date).format("YYYY년 MM월 DD일 ddd요일")}
         </div>
-        <div className="flex mb-4">
-          <div>{timeSlot.start.format("HH시 mm분")}</div>~
-          <div>{timeSlot.end.format("HH시 mm분")}</div>
+        <div className="text-orange-600">
+          {timeSlot.start.format("HH시 mm분")} ~{" "}
+          {timeSlot.end.format("HH시 mm분")}
+          <div>{events.address}</div>
         </div>
-        <div>{events.address}</div>
         <DisplayMap address={events.address} point={events.coordinates} />
       </div>
 
@@ -47,6 +49,8 @@ export const DisplayEvents = () => {
 
       <DisplayTeams />
       <UpsertTeamButton />
+
+      <ScoreRecord />
     </div>
   );
 };

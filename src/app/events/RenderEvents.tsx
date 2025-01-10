@@ -30,13 +30,18 @@ export const RenderEvents: NextPage<Props> = ({ isAdmin }) => {
   }
 
   if (!events) {
-    return <NoEvents />;
+    return (
+      <React.Fragment>
+        <NoEvents />
+        <UpdateEventButton text={"일정 수정 하기"} />
+      </React.Fragment>
+    );
   }
 
   return (
     <>
       <DisplayEvents />
-      {isAdmin && <UpdateEventButton />}
+      {isAdmin && <UpdateEventButton text={"일정 수정 하기"} />}
     </>
   );
 };
@@ -49,7 +54,7 @@ const NoEvents = () => {
   );
 };
 
-const UpdateEventButton = () => {
+const UpdateEventButton = ({ text }: { text: string }) => {
   const { getSearchParam } = useSelectedDate();
   const router = useRouter();
   return (
@@ -60,7 +65,7 @@ const UpdateEventButton = () => {
         }}
         className="p-2 font-bold text-white bg-orange-600 rounded-lg"
       >
-        일정 수정 및 만들러 가기
+        {text}
       </button>
     </div>
   );

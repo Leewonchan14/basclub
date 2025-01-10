@@ -4,10 +4,17 @@ import React from "react";
 
 export const MemberProfile: React.FC<{
   member: { nickname: string; profileUrl: string };
+  isNotScore?: boolean;
   avgScore?: number;
   isLoading?: boolean;
   className?: string;
-}> = ({ member: { nickname, profileUrl }, avgScore, isLoading, className }) => {
+}> = ({
+  member: { nickname, profileUrl },
+  avgScore,
+  isNotScore,
+  isLoading,
+  className,
+}) => {
   const score = avgScore ? Number(avgScore).toFixed(2) : "없음";
   return (
     <div
@@ -26,19 +33,21 @@ export const MemberProfile: React.FC<{
         <div className="text-lg font-bold text-gray-800 text-nowrap">
           {nickname}
         </div>
-        <div className="flex flex-col text-sm text-gray-600 text-nowrap">
-          평균 득점
-          {isLoading && (
-            <Spinner>
-              <Spinner.Spin className="!w-4 !h-4" />
-            </Spinner>
-          )}
-          {!isLoading && (
-            <span className="font-semibold text-blue-600 text-nowrap">
-              {score}
-            </span>
-          )}
-        </div>
+        {!isNotScore && (
+          <div className="flex flex-col text-sm text-gray-600 text-nowrap">
+            평균 득점
+            {isLoading && (
+              <Spinner>
+                <Spinner.Spin className="!w-4 !h-4" />
+              </Spinner>
+            )}
+            {!isLoading && (
+              <span className="font-semibold text-blue-600 text-nowrap">
+                {score}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
