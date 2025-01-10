@@ -9,7 +9,6 @@ import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { day_js } from "@/share/lib/dayjs";
 import { ScoreRecord } from "./score/ScoreRecord";
-import { ScoreList } from "@/app/events/score/ScoreList";
 
 export const DisplayEvents = () => {
   const { selectedDate } = useSelectedDate();

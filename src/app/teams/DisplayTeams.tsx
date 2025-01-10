@@ -3,12 +3,12 @@
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { PlainTeam } from "@/entity/team.entity";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
-import { useFetchScoreByEvents } from "@/feature/score/hooks/useFetchScoreByEvents";
+import { useFetchAvgScoreByEvents } from "@/feature/score/hooks/useFetchAvgScoreByEvents";
 import React from "react";
 
 export const DisplayTeams = () => {
   const { groupedTeam, isLoading } = useFetchSelectedEvents();
-  const { isLoading: isLoadingScore } = useFetchScoreByEvents();
+  const { isLoading: isLoadingScore } = useFetchAvgScoreByEvents();
 
   if (isLoading || isLoadingScore) return null;
   const isNoTeam = groupedTeam.length === 0;
@@ -32,7 +32,7 @@ const TeamCard: React.FC<{ teams: PlainTeam[]; idx: number }> = ({
   teams,
   idx,
 }) => {
-  const { scoreMap } = useFetchScoreByEvents();
+  const { scoreMap } = useFetchAvgScoreByEvents();
   if (!scoreMap) return;
 
   const totalScore = teams.reduce(

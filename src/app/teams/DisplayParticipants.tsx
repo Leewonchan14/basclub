@@ -2,13 +2,13 @@
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
-import { useFetchScoreByEvents } from "@/feature/score/hooks/useFetchScoreByEvents";
+import { useFetchAvgScoreByEvents } from "@/feature/score/hooks/useFetchAvgScoreByEvents";
 import React, { useEffect, useRef } from "react";
 
 // 참가 인원들
 export const DisplayParticipants = () => {
   const { teamsArr } = useFetchSelectedEvents();
-  const { scoreMap, isLoading: isLoadingScore } = useFetchScoreByEvents();
+  const { scoreMap, isLoading: isLoadingScore } = useFetchAvgScoreByEvents();
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const isMouseEnter = useRef(false);

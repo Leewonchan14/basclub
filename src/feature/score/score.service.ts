@@ -1,13 +1,14 @@
 import { Score } from "@/entity/score.entity";
 import { EventsService } from "@/feature/events/events.service";
 import { MemberService } from "@/feature/member/member.service";
+import { day_js } from "@/share/lib/dayjs";
 import {
   Inject,
   InjectRepository,
   IService,
   Service,
 } from "@/share/lib/typeorm/DIContainer";
-import { Repository } from "typeorm";
+import { FindManyOptions, LessThan, Repository } from "typeorm";
 
 @Service
 export class ScoreService implements IService<Score> {
@@ -32,7 +33,7 @@ export class ScoreService implements IService<Score> {
     return avg;
   }
 
-  async findScoresByEventsId(eventsId: string) {
+  async findAvgScoresByEventsId(eventsId: string) {
     const data = (await this.scoreRepository
       .createQueryBuilder("score")
       .select([
@@ -78,6 +79,30 @@ export class ScoreService implements IService<Score> {
     newScore.events = Promise.resolve(findEvents!);
 
     return await this.scoreRepository.save(newScore);
+  }
+
+  async findPageScoresByCursor(eventsId: string, cursor?: string) {
+    // 가장 최근 score 조회
+    let findOption: FindManyOptions<Score> = {
+      where: {
+        events: { id: eventsId },
+      },
+      order: { createdAt: "DESC" },
+      relations: {
+        member: true,
+      },
+      take: 5,
+    };
+
+    // cursor가 있으면 cursor 이전의 데이터만 조회
+    if (cursor) {
+      findOption.where = {
+        ...findOption.where,
+        createdAt: LessThan(day_js(cursor).toDate()),
+      };
+    }
+
+    return await this.scoreRepository.find(findOption);
   }
 
   getRepository = async () => this.scoreRepository;

@@ -5,7 +5,7 @@ import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { SideLink } from "@/app/ui/sidenav/Sidenav";
 import { authMutateOption } from "@/feature/auth/auth-mutation";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
-import { useFetchScore } from "@/feature/score/hooks/useFetchScore";
+import { useFetchScoreByMemberId } from "@/feature/score/hooks/useFetchScoreByMemberId";
 import { useMutation } from "@tanstack/react-query";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,9 @@ const Profile: React.FC<{}> = () => {
   const router = useRouter();
   const { mutateAsync, isPending } = useMutation(authMutateOption.logout);
   const { own, isLoading } = useFetchOwn();
-  const { score, isLoading: isLoadingScore } = useFetchScore(own?.id ?? 0);
+  const { score, isLoading: isLoadingScore } = useFetchScoreByMemberId(
+    own?.id ?? 0
+  );
   if (isLoading || !own) return null;
 
   return (

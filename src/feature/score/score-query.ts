@@ -1,6 +1,6 @@
 import { eventsQueryApi } from "@/feature/events/event-query";
 import {
-  getScoreByEventsId,
+  getAvgScoresByEventsId,
   getScoreByMemberId,
 } from "@/feature/score/score-query.actions";
 import { queryOptions } from "@tanstack/react-query";
@@ -20,11 +20,11 @@ export const scoreQueryApi = {
       enabled: !!id,
     }),
 
-  findAllByEvents: (eventsId: string) =>
+  findAvgScoresByEvents: (eventsId: string) =>
     queryOptions({
       queryKey: [...eventsQueryApi.findById(eventsId, false).queryKey, "score"],
       queryFn: async () => {
-        return getScoreByEventsId(eventsId);
+        return getAvgScoresByEventsId(eventsId);
       },
       staleTime: 1000 * 30,
       enabled: !!eventsId,

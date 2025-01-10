@@ -5,7 +5,7 @@ import { EditTeamProvider } from "@/app/teams/edit/EditTeamContext";
 import { MutateButton } from "@/app/teams/edit/MutateButton";
 import { getIsAdmin } from "@/feature/auth/auth-action";
 import { getEventById } from "@/feature/events/event-query.action";
-import { getScoreByEventsId } from "@/feature/score/score-query.actions";
+import { getAvgScoresByEventsId } from "@/feature/score/score-query.actions";
 import { getTeamsByEventsId } from "@/feature/team/team-query.actions";
 import _ from "lodash";
 import { NextPage } from "next";
@@ -23,7 +23,7 @@ const Page: NextPage<Props> = async ({ searchParams: { eventsId } }) => {
   const events = await getEventById(eventsId);
   if (!events) redirect("/events");
 
-  const scoreMap = await getScoreByEventsId(eventsId);
+  const scoreMap = await getAvgScoresByEventsId(eventsId);
   const teamsArr = await getTeamsByEventsId(eventsId);
   const grouped = { ..._.groupBy(teamsArr, (t) => t.group) };
 

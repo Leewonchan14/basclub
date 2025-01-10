@@ -1,93 +1,81 @@
 "use client";
 import { ScoreList } from "@/app/events/score/ScoreList";
-import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
-import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
-import React from "react";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
+import { scoreMutateOption } from "@/feature/score/score-mutate";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { AddScoreForm } from "./AddScoreForm";
 
 /**
  * 득점 기록 컴포넌트
  * - memberId, eventsId, score2, score3 를 저장할 수 있음
  */
 
-export const ScoreRecord = () => {
-  // 날짜, 이벤트 정보, 멤버 정보를 가져오는 훅 (이미 구현되어 있다고 가정)
-  // 스코어 상태를 관리 (멤버별로 2점, 3점 득점 정보를 넣기 위해 배열/객체 형태 사용)
-  // 초기값은 members 배열을 기반으로 세팅
+export interface InputScore {
+  score2: number;
+  score3: number;
+}
 
-  // 입력값이 바뀔 때 상태 업데이트하는 함수
-  // const handleScoreChange = (
-  //   e: ChangeEvent<HTMLInputElement>,
-  //   memberId: number,
-  //   scoreType: "score2" | "score3"
-  // ) => {
-  //   const { value } = e.target;
-  //   setScores((prevScores) =>
-  //     prevScores.map((score) =>
-  //       score.memberId === memberId
-  //         ? { ...score, [scoreType]: Number(value) }
-  //         : score
-  //     )
-  //   );
-  // };
+export const ScoreRecord = () => {
+  const { events } = useFetchSelectedEvents();
+  const { own, needLoginPromise } = useNeedLogin();
+  const { mutateAsync, isPending } = useMutation(
+    scoreMutateOption.addScore(events?.id ?? "", own?.id ?? 0)
+  );
+  const [score, setScore] = useState<InputScore>({
+    score2: 0,
+    score3: 0,
+  });
+
+  if (!events) return null;
+
+  const onChange = (name: keyof InputScore, value: number) => {
+    setScore({ ...score, [name]: Number(value) });
+  };
 
   return (
-    <>
-      <h2 className="text-2xl font-bold text-gray-800">득점 기록 입력</h2>
-      <div className="flex flex-col items-start gap-6 p-6 bg-white border border-gray-200 rounded-md shadow-sm">
-        <div className="flex gap-6">
-          <AddScoreForm memberId={1} />
-          <PrimaryButton onClick={() => {}} className="self-end">
-            기록
+    <div>
+      <h2 className="flex gap-2 text-2xl font-bold text-gray-800">
+        <div>득점 기록</div>
+        <div className="flex items-end text-base text-orange-600">
+          (한 경기당 득점)
+        </div>
+      </h2>
+      <div className="flex flex-col items-center !shadow-none">
+        <div className="flex flex-col gap-4">
+          {own && (
+            <AddScoreForm score={score} member={own} onChange={onChange} />
+          )}
+          <PrimaryButton
+            disabled={isPending}
+            onClick={async () => {
+              const own = await needLoginPromise();
+              await mutateAsync({
+                eventsId: events.id,
+                memberId: own.id,
+                ...score,
+              });
+              window.alert("득점이 기록되었습니다.");
+            }}
+            className="self-end"
+          >
+            본인 기록
           </PrimaryButton>
         </div>
-        <ScoreList />
-      </div>
-    </>
-  );
-};
-
-const AddScoreForm: React.FC<{ memberId: number }> = ({ memberId }) => {
-  const { own, isLoading } = useFetchOwn();
-  if (isLoading || !own) return null;
-  return (
-    <div
-      key={memberId}
-      className="flex items-center gap-4 p-4 transition-shadow bg-gray-100 border border-gray-100 rounded-md shadow-sm hover:shadow"
-    >
-      {/* 멤버 이름 */}
-      <MemberProfile member={own} className="!bg-none" isNotScore />
-      {/* 2점, 3점 입력 필드 */}
-      <div className="flex items-center gap-6">
-        {/* 2점 입력 */}
-        <div className="flex flex-col">
-          <label
-            // htmlFor={`score2_${score.memberId}`}
-            className="mb-1 text-sm text-gray-600"
-          >
-            2점
-          </label>
-          <input
-            type="number"
-            min={0}
-            className="w-20 p-2 transition-colors border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
-          />
-        </div>
-
-        {/* 3점 입력 */}
-        <div className="flex flex-col">
-          <label
-            // htmlFor={`score3_${score.memberId}`}
-            className="mb-1 text-sm text-gray-600"
-          >
-            3점
-          </label>
-          <input
-            type="number"
-            min={0}
-            className="w-20 p-2 transition-colors border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
-          />
-        </div>
+        <Accordion style={{ boxShadow: "0" }} className="!shadow-none mt-10">
+          <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
+            <div className="font-bold text-orange-500">
+              열어서 다른 득점 기록 확인
+            </div>
+          </AccordionSummary>
+          <AccordionDetails>
+            <ScoreList />
+          </AccordionDetails>
+        </Accordion>
       </div>
     </div>
   );

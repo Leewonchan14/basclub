@@ -7,20 +7,17 @@ export const getScoreByMemberId = async (memberId: number) => {
   return await getService(ScoreService).findScoresAVGByMemberId(memberId);
 };
 
-export const getScoreByEventsId = async (eventsId: string) => {
-  return await getService(ScoreService).findScoresByEventsId(eventsId);
+export const getAvgScoresByEventsId = async (eventsId: string) => {
+  return await getService(ScoreService).findAvgScoresByEventsId(eventsId);
 };
 
-export const addScore = async (
-  memberId: number,
+export const getPageScoresByEventsId = async (
   eventsId: string,
-  score2: number,
-  score3: number
+  cursor?: string
 ) => {
-  return await getService(ScoreService).addScore(
-    memberId,
+  const scores = await getService(ScoreService).findPageScoresByCursor(
     eventsId,
-    score2,
-    score3
+    cursor
   );
+  return await Promise.all(scores.map(async (s) => s.toPlain()));
 };

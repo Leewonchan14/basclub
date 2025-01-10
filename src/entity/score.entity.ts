@@ -1,5 +1,5 @@
 import { Events } from "@/entity/event.entity";
-import { Member } from "@/entity/member.entity";
+import { Member, PlainMember } from "@/entity/member.entity";
 import { TimeStampEntity } from "@/entity/timestamp.entity";
 import {
   Column,
@@ -31,4 +31,22 @@ export class Score extends TimeStampEntity {
 
   @Column({ default: 0 })
   score3: number;
+
+  async toPlain(): Promise<PlainScore> {
+    return {
+      id: this.id,
+      member: (await this.member).toPlain(),
+      score2: this.score2,
+      score3: this.score3,
+      createdAt: this.createdAt.toISOString(),
+    };
+  }
+}
+
+export interface PlainScore {
+  id: string;
+  member: PlainMember;
+  score2: number;
+  score3: number;
+  createdAt: string;
 }
