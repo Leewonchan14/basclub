@@ -35,6 +35,9 @@ export class Team extends TimeStampEntity {
   @Column({ nullable: false })
   group: number;
 
+  @Column({ name: "guestCnt", nullable: false, default: 0 })
+  guestCnt: number;
+
   toPlain() {
     return {
       id: this.id,
