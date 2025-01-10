@@ -16,15 +16,15 @@ export const DraggableMember: React.FC<{
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="border-2 border-blue-100 rounded-lg shadow"
+          className={`border-2 border-blue-100 rounded-lg shadow`}
         >
           <MemberProfile
             member={member}
             isLoading={false}
             avgScore={scoreMap[member.id]}
-            className={`bg-blue-500 rounded-lg cursor-pointer ${
-              snapshot.isDragging && "!text-white bg-gray-300"
-            }`}
+            className={`bg-blue-500 rounded-lg cursor-pointer transition-transform ${
+              snapshot.isDragging && "!text-white bg-gray-300 scale-125"
+            } ${snapshot.isDropAnimating && "!scale-100"}`}
           />
         </div>
       )}
