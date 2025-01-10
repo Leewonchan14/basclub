@@ -21,7 +21,7 @@ export const MutateButton: React.FC<{ eventsId: string; date: string }> = ({
     <div className="flex justify-center">
       <button
         disabled={isPending}
-        className="inline-flex gap-2 p-3 font-bold text-white bg-orange-600 rounded-lg disabled:opacity-50"
+        className="inline-flex justify-center gap-2 p-3 font-bold text-white bg-orange-600 rounded-lg min-w-40 disabled:opacity-50"
         onClick={async () => {
           await mutateAsync(teams);
           goToDay(day_js(date));

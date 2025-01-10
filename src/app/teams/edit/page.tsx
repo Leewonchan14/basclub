@@ -11,6 +11,7 @@ import _ from "lodash";
 import { NextPage } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import { BackButton } from "./BackButton";
 
 interface Props {
   searchParams: { eventsId?: string };
@@ -38,7 +39,10 @@ const Page: NextPage<Props> = async ({ searchParams: { eventsId } }) => {
     <Suspense>
       <EditTeamProvider initTeams={teams} scoreMap={scoreMap}>
         <EditTeam />
-        {isAdmin && <MutateButton date={events.date} eventsId={eventsId} />}
+        <div className="flex justify-center w-full gap-4">
+          <BackButton />
+          {isAdmin && <MutateButton date={events.date} eventsId={eventsId} />}
+        </div>
       </EditTeamProvider>
     </Suspense>
   );

@@ -3,6 +3,7 @@
 import { useEditTeamContext } from "@/app/teams/edit/EditTeamContext";
 import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
 import _ from "lodash";
+import { useCallback } from "react";
 import { DroppableNotJoinTeam } from "./DroppableNotJoinTeam";
 import { DroppableTeam } from "./DroppableTeam";
 
@@ -57,16 +58,40 @@ export const EditTeam: React.FC<{}> = () => {
 };
 
 const Teams = () => {
-  const { groupedTeam, setTeams } = useEditTeamContext();
+  const { groupedTeam, setTeams, scoreMap } = useEditTeamContext();
 
   const addTeam = () => {
     setTeams((teams) => [...teams, []]);
   };
 
+  const getTotalScore = useCallback(
+    (group: number) => {
+      const total = groupedTeam[group].reduce(
+        (sum, { member }) => sum + (scoreMap[member.id] ?? 0),
+        0
+      );
+      const avg = groupedTeam[group].length
+        ? total / groupedTeam[group].length
+        : 0;
+      return avg.toFixed(2);
+    },
+    [groupedTeam, scoreMap]
+  );
+
   return (
     <div className="flex gap-4">
       {groupedTeam.map((teams, idx) => (
-        <DroppableTeam key={idx + 1} teams={teams} group={idx + 1} />
+        <div key={idx + 1}>
+          <DroppableTeam teams={teams} group={idx + 1} />
+          <div className="mt-4 text-right">
+            <span className="text-sm font-medium text-gray-600">
+              팀 평균 득점:{" "}
+              <span className="text-lg font-bold text-green-600">
+                {getTotalScore(idx)}
+              </span>
+            </span>
+          </div>
+        </div>
       ))}
       <AddTeamButton addTeam={addTeam} />
     </div>

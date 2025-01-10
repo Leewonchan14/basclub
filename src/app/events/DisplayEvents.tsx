@@ -25,9 +25,7 @@ export const DisplayEvents = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <div className="text-2xl font-bold">장소 및 시간</div>
-        <div>{events.address}</div>
-        <DisplayMap address={events.address} point={events.coordinates} />
+        <div className="text-2xl font-bold">시간 및 장소</div>
         <div className="mt-4 text-xl font-bold">
           {day_js(events.date).format("YYYY년 MM월 DD일 ddd요일")}
         </div>
@@ -35,6 +33,8 @@ export const DisplayEvents = () => {
           <div>{timeSlot.start.format("HH시 mm분")}</div>~
           <div>{timeSlot.end.format("HH시 mm분")}</div>
         </div>
+        <div>{events.address}</div>
+        <DisplayMap address={events.address} point={events.coordinates} />
       </div>
 
       <div className="gap-2 text-2xl font-bold">
