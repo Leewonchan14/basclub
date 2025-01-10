@@ -1,8 +1,10 @@
+import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import Spinner from "@/app/ui/share/Spinner";
 import { eventsMutateOption } from "@/feature/events/event-mutate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
 import { useMutation } from "@tanstack/react-query";
+import React from "react";
 
 export const JoinEventsButton = () => {
   const { own, needLoginPromise } = useNeedLogin();
@@ -15,7 +17,7 @@ export const JoinEventsButton = () => {
 
   return (
     <div className="flex items-center gap-6">
-      <button
+      <PrimaryButton
         disabled={isPending}
         onClick={async () => {
           await needLoginPromise();
@@ -31,7 +33,7 @@ export const JoinEventsButton = () => {
             <Spinner.Spin />
           </Spinner>
         )}
-      </button>
+      </PrimaryButton>
     </div>
   );
 };

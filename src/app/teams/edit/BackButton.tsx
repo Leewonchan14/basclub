@@ -1,17 +1,18 @@
 "use client";
 
+import { DeleteButton } from "@/app/ui/share/DeleteButton";
 import { useRouter } from "next/navigation";
 
 export const BackButton = () => {
   const router = useRouter();
   return (
-    <button
+    <DeleteButton
       onClick={() => {
         router.back();
       }}
-      className="font-bold text-white bg-orange-500 rounded-lg min-w-40"
+      className="min-w-40 "
     >
       뒤로가기
-    </button>
+    </DeleteButton>
   );
 };

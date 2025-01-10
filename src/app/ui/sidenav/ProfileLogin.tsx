@@ -1,6 +1,7 @@
 "use client";
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
+import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { SideLink } from "@/app/ui/sidenav/Sidenav";
 import { authMutateOption } from "@/feature/auth/auth-mutation";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
@@ -32,17 +33,23 @@ const Profile: React.FC<{}> = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <MemberProfile member={own} avgScore={score} isLoading={isLoadingScore} />
-      <button
+      <div className="transition-shadow rounded-lg hover:shadow-xl">
+        <MemberProfile
+          member={own}
+          avgScore={score}
+          isLoading={isLoadingScore}
+        />
+      </div>
+      <PrimaryButton
         disabled={isPending}
-        className="w-1/2 p-2 ml-auto font-bold text-center text-white bg-orange-500 rounded-lg"
+        className="self-end"
         onClick={async () => {
           await mutateAsync();
           router.replace("/");
         }}
       >
         로그아웃
-      </button>
+      </PrimaryButton>
     </div>
   );
 };

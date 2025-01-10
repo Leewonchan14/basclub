@@ -1,6 +1,7 @@
 "use client";
 import { ScoreList } from "@/app/events/score/ScoreList";
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
+import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import React from "react";
 
@@ -36,10 +37,9 @@ export const ScoreRecord = () => {
       <div className="flex flex-col items-start gap-6 p-6 bg-white border border-gray-200 rounded-md shadow-sm">
         <div className="flex gap-6">
           <AddScoreForm memberId={1} />
-
-          <button className="self-end px-6 py-2 font-bold text-white transition-shadow rounded-md shadow-md bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 hover:shadow-xl">
+          <PrimaryButton onClick={() => {}} className="self-end">
             기록
-          </button>
+          </PrimaryButton>
         </div>
         <ScoreList />
       </div>

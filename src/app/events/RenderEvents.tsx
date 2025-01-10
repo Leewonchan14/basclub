@@ -1,6 +1,7 @@
 "use client";
 
 import { DisplayEvents } from "@/app/events/DisplayEvents";
+import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import Spinner from "@/app/ui/share/Spinner";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
@@ -59,14 +60,13 @@ const UpdateEventButton = ({ text }: { text: string }) => {
   const router = useRouter();
   return (
     <div className="flex justify-center">
-      <button
+      <PrimaryButton
         onClick={() => {
           router.push(`/events/create?${getSearchParam()}`);
         }}
-        className="p-2 font-bold text-white bg-orange-600 rounded-lg"
       >
         {text}
-      </button>
+      </PrimaryButton>
     </div>
   );
 };

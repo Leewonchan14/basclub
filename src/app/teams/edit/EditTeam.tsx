@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditTeamContext } from "@/app/teams/edit/EditTeamContext";
+import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
 import _ from "lodash";
 import { useCallback } from "react";
@@ -100,11 +101,8 @@ const Teams = () => {
 
 const AddTeamButton = ({ addTeam }: { addTeam: () => void }) => {
   return (
-    <button
-      onClick={addTeam}
-      className="p-2 font-bold text-white bg-orange-500 rounded-lg"
-    >
+    <PrimaryButton onClick={addTeam} className="self-start">
       팀추가
-    </button>
+    </PrimaryButton>
   );
 };

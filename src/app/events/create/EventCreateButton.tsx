@@ -1,6 +1,8 @@
 "use client";
 
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
+import { DeleteButton } from "@/app/ui/share/DeleteButton";
+import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import Spinner from "@/app/ui/share/Spinner";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { eventsMutateOption } from "@/feature/events/event-mutate";
@@ -24,7 +26,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
 
   return (
     <div className="flex items-center justify-center gap-4">
-      <button
+      <PrimaryButton
         disabled={isPendingCreate}
         onClick={async () => {
           setMessage("");
@@ -43,15 +45,15 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
             <Spinner.Spin />
           </Spinner>
         )}
-      </button>
+      </PrimaryButton>
       {plainEvents.id && (
-        <button
+        <DeleteButton
           disabled={isPendingDelete}
           onClick={async () => {
             await remove(plainEvents.id);
             goToDay(selectedDate);
           }}
-          className="inline-flex justify-center w-32 p-2 font-bold text-white bg-red-600 rounded-lg disabled:opacity-50"
+          className="w-32"
         >
           일정 삭제
           {isPendingDelete && (
@@ -59,7 +61,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
               <Spinner.Spin />
             </Spinner>
           )}
-        </button>
+        </DeleteButton>
       )}
       {message && <div className="ml-2 text-red-600">{message}</div>}
     </div>
