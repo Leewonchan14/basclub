@@ -32,39 +32,51 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({
   children,
   events,
 }) => {
+  const params = useSearchParams();
+  const selectedDate = params.get(SELECTED_DATE_KEY);
   const [address, setAddress] = useState(events.address ?? "");
   const [point, setPoint] = useState<GeoPoint>({
     lat: events.coordinates?.lat ?? 0,
     lng: events.coordinates?.lng ?? 0,
   });
 
+  const eventDate = selectedDate ? day_js(selectedDate) : day_js();
+
   const [timeSlot, _setTimeSlot] = useState<TimeSlot>({
     start: events.timeSlot?.start
       ? day_js(events.timeSlot?.start)
-      : day_js().startOf("date"),
+      : eventDate.startOf("date"),
 
     end: events.timeSlot?.end
       ? day_js(events.timeSlot?.end)
-      : day_js().endOf("date").startOf("hour"),
+      : eventDate.endOf("date").startOf("hour"),
   });
-
-  const params = useSearchParams();
-  const selectedDate = params.get(SELECTED_DATE_KEY);
 
   const setAddressPoint = useCallback((address: string, point: GeoPoint) => {
     setAddress(address);
     setPoint(point);
   }, []);
 
-  const setTimeSlot = useCallback((timeSlot: TimeSlot) => {
-    _setTimeSlot(timeSlot);
-  }, []);
+  const setTimeSlot = useCallback(
+    (timeSlot: TimeSlot) => {
+      const eydm = eventDate.format("YYYY-MM-DD");
+      const tshm = timeSlot.start.format("HH:mm");
+      const tehm = timeSlot.end.format("HH:mm");
+
+      const newTimeSlot: TimeSlot = {
+        start: day_js(`${eydm} ${tshm}`),
+        end: day_js(`${eydm} ${tehm}`),
+      };
+      _setTimeSlot(newTimeSlot);
+    },
+    [eventDate]
+  );
 
   const plainEvents: PlainEvents = {
     id: events.id ?? "",
     address,
     coordinates: point,
-    date: selectedDate ? day_js(selectedDate).toISOString() : "",
+    date: eventDate.toISOString(),
     timeSlot: {
       start: timeSlot.start.toISOString(),
       end: timeSlot.end.toISOString(),

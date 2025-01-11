@@ -1,4 +1,4 @@
-import { addScore } from "@/feature/score/score-mutate.actions";
+import { addScore, deleteScore } from "@/feature/score/score-mutate.actions";
 
 interface PlainScore {
   eventsId: string;
@@ -20,4 +20,18 @@ export const scoreMutateOption = {
       // });
     },
   }),
+
+  deleteScore: () => {
+    return {
+      mutationKey: ["score", "delete"],
+      mutationFn: async (scoreId: string) => {
+        await deleteScore(scoreId);
+      },
+      onSuccess: (_data: unknown, _variables: string) => {
+        // getQueryClient().invalidateQueries({
+        //   queryKey: [...scoreQueryApi.findScoreByEvents("").queryKey],
+        // });
+      },
+    };
+  },
 };

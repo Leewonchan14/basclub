@@ -31,8 +31,8 @@ export const DisplayEvents = () => {
           {day_js(events.date).format("YYYY년 MM월 DD일 ddd요일")}
         </div>
         <div className="text-orange-600">
-          {timeSlot.start.format("HH시 mm분")} ~{" "}
-          {timeSlot.end.format("HH시 mm분")}
+          {timeSlot.start.format("a h시 mm분")} ~{" "}
+          {timeSlot.end.format("a h시 mm분")}
           <div>{events.address}</div>
         </div>
         <DisplayMap address={events.address} point={events.coordinates} />

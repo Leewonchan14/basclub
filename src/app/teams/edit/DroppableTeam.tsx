@@ -1,7 +1,8 @@
 "use client";
 
-import { PlainTeam } from "@/entity/team.entity";
 import { useEditTeamContext } from "@/app/teams/edit/EditTeamContext";
+import { SmallDeleteButton } from "@/app/ui/share/SmallDeleteButton";
+import { PlainTeam } from "@/entity/team.entity";
 import { Droppable } from "@hello-pangea/dnd";
 import { DraggableMember } from "./DraggableMember";
 
@@ -33,12 +34,7 @@ export const DroppableTeam: React.FC<{ teams: PlainTeam[]; group: number }> = ({
         >
           <h2 className="flex items-center mb-2 text-lg font-bold text-nowrap">
             팀 {group}
-            <button
-              className="inline-block w-4 h-4 ml-auto text-xs text-white bg-red-600 rounded-full"
-              onClick={() => removeTeam(group)}
-            >
-              x
-            </button>
+            <SmallDeleteButton onClick={() => removeTeam(group)} />
           </h2>
           <ul>
             {teams.map((t, index) => (

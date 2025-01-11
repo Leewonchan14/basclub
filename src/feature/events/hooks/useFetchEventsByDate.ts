@@ -5,6 +5,7 @@ import { teamsQueryApi } from "@/feature/team/team-query";
 import { day_js } from "@/share/lib/dayjs";
 import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
+import { useCallback, useEffect } from "react";
 import { eventsQueryApi } from "../event-query";
 
 export const useFetchSelectedEvents = () => {
@@ -52,6 +53,26 @@ export const useFetchSelectedEvents = () => {
   const members = (teamsArr ?? []).map((t) => t.member);
   const isJoin = members.some((m) => m.id === own?.id);
 
+  // 이벤트의 일정시간에만 득점 기록 및 삭제 가능
+  const isCanUpdateScore =
+    events &&
+    day_js().isBetween(
+      day_js(events.timeSlot.start),
+      day_js(events.date).endOf("day")
+    );
+
+  useEffect(() => {
+    console.log("isCanUpdateScore: ", isCanUpdateScore);
+  }, [isCanUpdateScore]);
+
+  const checkCanUpdateScore = useCallback(() => {
+    if (!isCanUpdateScore) {
+      alert("득점 기록 및 삭제는 경기 시작 ~ 모임 종료 시간에만 가능합니다.");
+    }
+
+    return isCanUpdateScore;
+  }, [isCanUpdateScore]);
+
   return {
     events,
     teamsMap,
@@ -60,6 +81,8 @@ export const useFetchSelectedEvents = () => {
     notGroupedTeam,
     groupedTeam,
     isJoin,
+    isCanUpdateScore,
+    checkCanUpdateScore,
     isLoading: isLoadingExist || isLoading || isLoadingTeam || isLoadingOwn,
     isFetching: isFetching || isFetchingTeam,
     isRefetching: isRefetching || isRefetchingTeam,

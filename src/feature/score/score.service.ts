@@ -83,7 +83,7 @@ export class ScoreService implements IService<Score> {
 
   async findPageScoresByCursor(eventsId: string, cursor?: string) {
     // 가장 최근 score 조회
-    let findOption: FindManyOptions<Score> = {
+    const findOption: FindManyOptions<Score> = {
       where: {
         events: { id: eventsId },
       },
@@ -103,6 +103,10 @@ export class ScoreService implements IService<Score> {
     }
 
     return await this.scoreRepository.find(findOption);
+  }
+
+  async deleteScore(scoreId: string) {
+    return await this.scoreRepository.delete(scoreId);
   }
 
   getRepository = async () => this.scoreRepository;
