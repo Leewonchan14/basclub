@@ -32,7 +32,11 @@ export const useAddScore = () => {
 
     const own = await needLoginPromise();
     const isConfirm = window.confirm(
-      `득점 기록을 저장하시겠습니까? \n2점: ${score.score2}개, 3점: ${score.score3}개 \n\n저장 후 오늘이 지나면 수정, 삭제할 수 없습니다. `
+      `득점 기록을 저장하시겠습니까? \n2점: ${score.score2}개, 3점: ${
+        score.score3
+      }개 == 총 ${
+        score.score2 * 2 + score.score3 * 3
+      }점 \n\n저장 후 오늘이 지나면 수정, 삭제할 수 없습니다. `
     );
     if (!isConfirm) return;
 

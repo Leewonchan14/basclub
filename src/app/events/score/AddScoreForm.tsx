@@ -17,23 +17,28 @@ export const AddScoreForm: React.FC<{
       {/* 멤버 이름 */}
       <MemberProfile member={member} className="!bg-none" isNotScore />
       {/* 2점, 3점 입력 필드 */}
-      <div className="flex flex-wrap items-center justify-center sm:gap-6">
-        {/* 2점 입력 */}
-        <ScoreInput
-          value={score.score2}
-          scoreKey={"score2"}
-          text={"2"}
-          onChange={onChange}
-          readonly={readonly}
-        />
-        {/* 3점 입력 */}
-        <ScoreInput
-          value={score.score3}
-          scoreKey={"score3"}
-          text={"3"}
-          onChange={onChange}
-          readonly={readonly}
-        />
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap items-center justify-center sm:gap-6">
+          {/* 2점 입력 */}
+          <ScoreInput
+            value={score.score2}
+            scoreKey={"score2"}
+            text={"2"}
+            onChange={onChange}
+            readonly={readonly}
+          />
+          {/* 3점 입력 */}
+          <ScoreInput
+            value={score.score3}
+            scoreKey={"score3"}
+            text={"3"}
+            onChange={onChange}
+            readonly={readonly}
+          />
+        </div>
+        <div className="font-bold text-center text-orange-500">
+          총 {score.score2 * 2 + score.score3 * 3}점
+        </div>
       </div>
     </div>
   );
