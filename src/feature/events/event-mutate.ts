@@ -2,7 +2,7 @@ import { PlainEvents } from "@/entity/event.entity";
 import { eventsQueryApi } from "@/feature/events/event-query";
 import {
   removeEvent,
-  joinEvent as toggleJoinEvent,
+  toggleJoinEvent,
   upsertEvent,
 } from "@/feature/events/events-mutate.action";
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";

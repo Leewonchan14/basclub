@@ -1,6 +1,5 @@
 import { ERole } from "@/entity/enum/role";
 import { TimeStampEntity } from "@/entity/timestamp.entity";
-import type { Properties } from "@/entity/transformer/pain-object";
 import { Column, Entity, PrimaryColumn } from "typeorm";
 import { IPayLoad } from "./../feature/auth/jwt-handler";
 
@@ -18,6 +17,9 @@ export class Member extends TimeStampEntity {
   @Column({ type: "enum", enum: ERole, default: ERole.MEMBER, nullable: false })
   role: ERole;
 
+  @Column({ type: "varchar", length: 255, nullable: true, name: "guestBy" })
+  guestBy: string;
+
   toPayload(): IPayLoad {
     return {
       id: this.id,
@@ -26,7 +28,13 @@ export class Member extends TimeStampEntity {
   }
 
   toPlain() {
-    return Object.assign({}, this) as Properties<typeof this>;
+    return {
+      id: this.id,
+      nickname: this.nickname,
+      profileUrl: this.profileUrl,
+      role: this.role,
+      guestById: this.guestBy,
+    };
   }
 }
 

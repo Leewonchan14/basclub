@@ -19,7 +19,7 @@ export const removeEvent = async (id: string) => {
   await eventsService.removeById(id);
 };
 
-export const joinEvent = async (
+export const toggleJoinEvent = async (
   eventsId: string,
   memberId: string,
   guestCnt: number

@@ -21,7 +21,12 @@ export const EditTeamProvider: React.FC<
     scoreMap: { [k: string]: number };
   }
 > = ({ children, initTeams, scoreMap }) => {
-  const [teams, setTeams] = useState(initTeams);
+  const [teams, setTeams] = useState(() => {
+    if (initTeams.length <= 1) {
+      return [...initTeams, [], []];
+    }
+    return initTeams;
+  });
   const groupedTeam = teams.slice(1);
   const notGroupedTeam = teams[0];
   return (

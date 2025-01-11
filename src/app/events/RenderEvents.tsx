@@ -5,6 +5,7 @@ import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import Spinner from "@/app/ui/share/Spinner";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { day_js } from "@/share/lib/dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -62,7 +63,7 @@ const UpdateEventButton = ({
   isAdmin: boolean;
   text: string;
 }) => {
-  const { getSearchParam } = useSelectedDate();
+  const { selectedDate, getSearchParam } = useSelectedDate();
   const router = useRouter();
 
   if (!isAdmin) return;
@@ -70,6 +71,10 @@ const UpdateEventButton = ({
     <div className="flex justify-center">
       <PrimaryButton
         onClick={() => {
+          if (selectedDate.isBefore(day_js(), "day")) {
+            alert("지난 날짜에는 일정을 추가할 수 없습니다.");
+            return;
+          }
           router.push(`/events/create?${getSearchParam()}`);
         }}
       >

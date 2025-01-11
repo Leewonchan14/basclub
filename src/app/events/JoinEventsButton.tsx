@@ -5,15 +5,31 @@ import { ChangeEvent, useCallback, useState } from "react";
 
 export const JoinEventsButton = () => {
   const [guestCnt, setGuestCnt] = useState<number>(0);
-  const { isJoin, isPending, onJoin } = useJoinEvents({ guestCnt });
+  const { isJoin, isCanJoin, isPending, onJoin } = useJoinEvents({ guestCnt });
+
+  if (!isCanJoin) {
+    return (
+      <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center justify-center h-40 text-gray-500">
+          <p>참가 기한이 지났습니다.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center gap-6">
-      {!isJoin && <InputGuest guestCnt={guestCnt} setGuestCnt={setGuestCnt} />}
+      {!isJoin && (
+        <InputGuest
+          guestCnt={guestCnt}
+          setGuestCnt={setGuestCnt}
+          isPending={isPending}
+        />
+      )}
       <PrimaryButton
-        disabled={isPending}
+        disabled={isPending || !isCanJoin}
         onClick={onJoin}
-        className="inline-flex gap-4 px-10 py-2 font-bold text-white bg-orange-600 rounded-lg text-nowrap disabled:opacity-50 self-end"
+        className="inline-flex self-end gap-4 px-10 py-2 font-bold text-white bg-orange-600 rounded-lg text-nowrap disabled:opacity-50"
       >
         {!isPending && (isJoin ? "참가취소" : "참가하기")}
         {isPending && (
@@ -29,10 +45,14 @@ export const JoinEventsButton = () => {
 interface InputGuestProps {
   guestCnt: number;
   setGuestCnt: (cnt: number) => void;
+  isPending: boolean;
 }
 
-const InputGuest: React.FC<InputGuestProps> = ({ guestCnt, setGuestCnt }) => {
-  const { isPending } = useJoinEvents({ guestCnt });
+const InputGuest: React.FC<InputGuestProps> = ({
+  guestCnt,
+  setGuestCnt,
+  isPending,
+}) => {
   const readonly = isPending;
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -51,6 +71,7 @@ const InputGuest: React.FC<InputGuestProps> = ({ guestCnt, setGuestCnt }) => {
       <input
         name={"guestCnt"}
         value={String(guestCnt)}
+        readOnly={isPending}
         onChange={onChange}
         id={"guestCnt"}
         type="number"

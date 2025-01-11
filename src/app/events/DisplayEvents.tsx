@@ -12,11 +12,20 @@ import { ScoreRecord } from "./score/ScoreRecord";
 
 export const DisplayEvents = () => {
   const { selectedDate } = useSelectedDate();
-  const { events, members, isJoin } = useFetchSelectedEvents();
+  const { events, members, isJoin, ownGuestTeams } = useFetchSelectedEvents();
 
   if (!events || !selectedDate) {
     return null;
   }
+
+  const joinStateText = () => {
+    const text = "참가중";
+    if (ownGuestTeams.length === 0) {
+      return text;
+    }
+
+    return `게스트 ${ownGuestTeams.length}명과 함께 ${text}`;
+  };
 
   const timeSlot = {
     start: day_js(events.timeSlot?.start),
@@ -40,7 +49,9 @@ export const DisplayEvents = () => {
 
       <div className="gap-2 text-2xl font-bold">
         참가 인원 <span className="text-orange-500">{members.length}</span>명
-        {isJoin && <span className="text-lg text-orange-500"> (참가중)</span>}
+        {isJoin && (
+          <span className="text-lg text-orange-500">({joinStateText()})</span>
+        )}
       </div>
 
       <DisplayParticipants />

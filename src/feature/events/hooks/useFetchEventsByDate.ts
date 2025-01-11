@@ -51,6 +51,8 @@ export const useFetchSelectedEvents = () => {
     .slice(1);
 
   const members = (teamsArr ?? []).map((t) => t.member);
+  console.log('teamsArr: ', teamsArr);
+  const ownGuestTeams = teamsArr.filter((t) => t.member.guestById === own?.id);
   const isJoin = members.some((m) => m.id === own?.id);
 
   // 이벤트의 일정시간에만 득점 기록 및 삭제 가능
@@ -74,6 +76,7 @@ export const useFetchSelectedEvents = () => {
     teamsMap,
     members,
     teamsArr,
+    ownGuestTeams,
     notGroupedTeam,
     groupedTeam,
     isJoin,

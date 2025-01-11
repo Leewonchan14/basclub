@@ -3,6 +3,7 @@
 import { eventsMutateOption } from "@/feature/events/event-mutate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
+import { day_js } from "@/share/lib/dayjs";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
 
@@ -18,6 +19,10 @@ export const useJoinEvents = ({ guestCnt }: { guestCnt: number }) => {
 
   const isPending = isMutating || isFetching;
 
+  // events 기한이 지나면 참가하지 못한다.
+  const isCanJoin =
+    events && day_js().isSameOrBefore(day_js(events.timeSlot.end));
+
   const onJoin = useCallback(async () => {
     await needLoginPromise();
     if (!memberId) return;
@@ -28,6 +33,7 @@ export const useJoinEvents = ({ guestCnt }: { guestCnt: number }) => {
   return {
     onJoin,
     isJoin,
+    isCanJoin,
     isPending,
   };
 };
