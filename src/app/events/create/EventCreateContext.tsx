@@ -76,7 +76,7 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({
     id: events.id ?? "",
     address,
     coordinates: point,
-    date: eventDate.toISOString(),
+    date: day_js(selectedDate).toISOString(),
     timeSlot: {
       start: timeSlot.start.toISOString(),
       end: timeSlot.end.toISOString(),

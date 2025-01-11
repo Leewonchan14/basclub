@@ -3,7 +3,7 @@
 import { ScoreService } from "@/feature/score/score.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 
-export const getScoreByMemberId = async (memberId: number) => {
+export const getScoreByMemberId = async (memberId: string) => {
   return await getService(ScoreService).findScoresAVGByMemberId(memberId);
 };
 

@@ -38,7 +38,7 @@ export class TeamService implements IService<Team> {
     });
   }
 
-  async findTeamsByEventIdAndMemberId(eventId: string, memberId: number) {
+  async findTeamsByEventIdAndMemberId(eventId: string, memberId: string) {
     const findTeam = await this.teamRepository.findOne({
       where: { events: { id: eventId }, member: { id: memberId } },
     });
@@ -46,7 +46,8 @@ export class TeamService implements IService<Team> {
     return findTeam;
   }
 
-  async toggleJoin(eventId: string, memberId: number, guestCnt: number) {
+  // TODO guestCnt 사용해야함
+  async toggleJoin(eventId: string, memberId: string, guestCnt: number) {
     const findTeam = await this.findTeamsByEventIdAndMemberId(
       eventId,
       memberId
@@ -70,7 +71,6 @@ export class TeamService implements IService<Team> {
     const newTeam = this.teamRepository.create({
       group: 0,
       avgScore: avgScore ?? 10,
-      guestCnt,
     });
 
     newTeam.events = Promise.resolve(findEvent);

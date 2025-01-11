@@ -21,7 +21,7 @@ export class ScoreService implements IService<Score> {
   @Inject(EventsService)
   private eventsService: EventsService;
 
-  async findScoresAVGByMemberId(memberId: number) {
+  async findScoresAVGByMemberId(memberId: string) {
     const avg = (
       await this.scoreRepository
         .createQueryBuilder("score")
@@ -51,11 +51,11 @@ export class ScoreService implements IService<Score> {
       })
       .groupBy("memberId")
       .getRawMany()) as {
-      memberid: number;
+      memberid: string;
       average: number;
     }[];
 
-    const rt: { [k: number]: number } = Object.fromEntries(
+    const rt: { [k: string]: number } = Object.fromEntries(
       data.map((d) => Object.values(d).map(Number))
     );
 
@@ -63,7 +63,7 @@ export class ScoreService implements IService<Score> {
   }
 
   async addScore(
-    memberId: number,
+    memberId: string,
     eventsId: string,
     score2: number,
     score3: number

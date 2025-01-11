@@ -11,7 +11,7 @@ export class MemberService implements IService<Member> {
   @InjectRepository(Member)
   private memberRepository: Repository<Member>;
 
-  findById(id: number) {
+  findById(id: string) {
     return this.memberRepository.findOne({ where: { id } });
   }
 

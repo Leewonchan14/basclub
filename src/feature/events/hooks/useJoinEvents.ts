@@ -8,13 +8,13 @@ import { useCallback } from "react";
 
 export const useJoinEvents = ({ guestCnt }: { guestCnt: number }) => {
   const { own, needLoginPromise } = useNeedLogin();
-  const { mutateAsync, isPending: isMutating } = useMutation({
-    ...eventsMutateOption.toggleJoin,
-  });
+  const { mutateAsync, isPending: isMutating } = useMutation(
+    eventsMutateOption.toggleJoin
+  );
 
   const { events, isJoin, isFetching } = useFetchSelectedEvents();
   const eventsId = events?.id ?? "";
-  const memberId = own?.id ?? 0;
+  const memberId = own?.id ?? "";
 
   const isPending = isMutating || isFetching;
 

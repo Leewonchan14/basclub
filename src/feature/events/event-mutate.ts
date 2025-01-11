@@ -28,7 +28,7 @@ export const eventsMutateOption = {
       guestCnt,
     }: {
       eventsId: string;
-      memberId: number;
+      memberId: string;
       guestCnt: number;
     }) => {
       return await toggleJoinEvent(eventsId, memberId, guestCnt);
@@ -37,12 +37,14 @@ export const eventsMutateOption = {
       _data: unknown,
       variables: {
         eventsId: string;
-        memberId: number;
+        memberId: string;
         guestCnt: number;
       }
     ) => {
       getQueryClient().invalidateQueries({
-        queryKey: eventsQueryApi.findById(variables.eventsId, true).queryKey,
+        queryKey: [
+          ...eventsQueryApi.findById(variables.eventsId, true).queryKey,
+        ],
       });
     },
   },

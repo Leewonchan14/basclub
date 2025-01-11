@@ -13,7 +13,7 @@ export const memberQueryApi = {
     staleTime: 1000 * 30,
   }),
 
-  findById: (id: number) =>
+  findById: (id: string) =>
     queryOptions({
       queryKey: ["member", id],
       queryFn: () => {

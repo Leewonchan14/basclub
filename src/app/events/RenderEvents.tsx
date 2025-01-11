@@ -34,7 +34,7 @@ export const RenderEvents: NextPage<Props> = ({ isAdmin }) => {
     return (
       <React.Fragment>
         <NoEvents />
-        <UpdateEventButton text={"일정 수정 하기"} />
+        <UpdateEventButton isAdmin={isAdmin} text={"일정 만들기"} />
       </React.Fragment>
     );
   }
@@ -42,7 +42,7 @@ export const RenderEvents: NextPage<Props> = ({ isAdmin }) => {
   return (
     <>
       <DisplayEvents />
-      {isAdmin && <UpdateEventButton text={"일정 수정 하기"} />}
+      <UpdateEventButton isAdmin={isAdmin} text={"일정 수정 하기"} />
     </>
   );
 };
@@ -55,9 +55,17 @@ const NoEvents = () => {
   );
 };
 
-const UpdateEventButton = ({ text }: { text: string }) => {
+const UpdateEventButton = ({
+  text,
+  isAdmin,
+}: {
+  isAdmin: boolean;
+  text: string;
+}) => {
   const { getSearchParam } = useSelectedDate();
   const router = useRouter();
+
+  if (!isAdmin) return;
   return (
     <div className="flex justify-center">
       <PrimaryButton

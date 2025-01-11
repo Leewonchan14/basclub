@@ -12,7 +12,7 @@ export const useAddScore = () => {
     useFetchSelectedEvents();
   const { own, needLoginPromise } = useNeedLogin();
   const { mutateAsync, isPending } = useMutation(
-    scoreMutateOption.addScore(events?.id ?? "", own?.id ?? 0)
+    scoreMutateOption.addScore(events?.id ?? "", own?.id ?? "")
   );
   const [score, setScore] = useState<InputScore>({
     score2: 0,

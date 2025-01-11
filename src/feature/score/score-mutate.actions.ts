@@ -5,7 +5,7 @@ import { getService } from "@/share/lib/typeorm/DIContainer";
 
 export const addScore = async (
   eventsId: string,
-  memberId: number,
+  memberId: string,
   score2: number,
   score3: number
 ) => {

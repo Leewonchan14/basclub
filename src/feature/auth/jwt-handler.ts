@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET!;
 const key = new TextEncoder().encode(JWT_SECRET);
 
 export interface IPayLoad extends JWTPayload {
-  id: number;
+  id: string;
   role: ERole;
 }
 

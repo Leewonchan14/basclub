@@ -11,7 +11,7 @@ export const getMemberOwn = async () => {
   return await getMemberById(id);
 };
 
-export const getMemberById = async (id: number) => {
+export const getMemberById = async (id: string) => {
   const findMember = await getService(MemberService).findById(id);
   return findMember?.toPlain();
 };

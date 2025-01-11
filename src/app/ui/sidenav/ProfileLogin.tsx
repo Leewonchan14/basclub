@@ -29,7 +29,7 @@ const Profile: React.FC<{}> = () => {
   const { mutateAsync, isPending } = useMutation(authMutateOption.logout);
   const { own, isLoading } = useFetchOwn();
   const { score, isLoading: isLoadingScore } = useFetchScoreByMemberId(
-    own?.id ?? 0
+    own?.id ?? ""
   );
   if (isLoading || !own) return null;
 

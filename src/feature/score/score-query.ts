@@ -13,7 +13,7 @@ import {
 } from "@tanstack/react-query";
 
 export const scoreQueryApi = {
-  findByMemberId: (id: number) =>
+  findByMemberId: (id: string) =>
     queryOptions({
       queryKey: ["member", id, "score"],
       queryFn: async () => {

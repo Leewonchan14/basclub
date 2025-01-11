@@ -4,13 +4,13 @@ import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
 
 interface PlainScore {
   eventsId: string;
-  memberId: number;
+  memberId: string;
   score2: number;
   score3: number;
 }
 
 export const scoreMutateOption = {
-  addScore: (eventsId: string, memberId: number) => ({
+  addScore: (eventsId: string, memberId: string) => ({
     mutationKey: ["events", eventsId, memberId, "addScore"],
     mutationFn: async ({ eventsId, memberId, score2, score3 }: PlainScore) => {
       await addScore(eventsId, memberId, score2, score3);
@@ -26,7 +26,7 @@ export const scoreMutateOption = {
     },
   }),
 
-  deleteScore: (eventsId: string, memberId: number) => {
+  deleteScore: (eventsId: string, memberId: string) => {
     return {
       mutationKey: ["score", "delete"],
       mutationFn: async (scoreId: string) => {

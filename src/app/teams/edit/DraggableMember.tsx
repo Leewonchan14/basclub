@@ -10,7 +10,7 @@ export const DraggableMember: React.FC<{
 }> = ({ member, index }) => {
   const { scoreMap } = useEditTeamContext();
   return (
-    <Draggable draggableId={member.id.toString()} index={index}>
+    <Draggable draggableId={member.id} index={index}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}

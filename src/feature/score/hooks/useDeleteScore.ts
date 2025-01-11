@@ -11,7 +11,7 @@ export const useDeleteScore = () => {
   const { own } = useFetchOwn();
   const { events } = useFetchSelectedEvents();
   const { mutateAsync, isPending } = useMutation(
-    scoreMutateOption.deleteScore(events?.id ?? "", own?.id ?? 0)
+    scoreMutateOption.deleteScore(events?.id ?? "", own?.id ?? "")
   );
   const { checkCanUpdateScore, isCanUpdateScore } = useFetchSelectedEvents();
 

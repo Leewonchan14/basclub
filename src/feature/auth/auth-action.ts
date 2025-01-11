@@ -43,7 +43,7 @@ export const setToken = async (code: string) => {
   );
 
   data = await response2.json();
-  const id = Number(data?.id) as number;
+  const id = data?.id;
   const nickname = data?.kakao_account?.profile?.nickname;
   const profileUrl = data?.kakao_account?.profile?.profile_image_url;
 
@@ -68,12 +68,25 @@ export const getToken = async () => {
 
 export const getPayload = async () => {
   const token = await getToken();
-  return jwtHandler.verifyToken(token);
+  const payload = await jwtHandler.verifyToken(token);
+  if (payload?.id) {
+    const findMember = await getService(MemberService).findById(payload?.id);
+
+    if (
+      !findMember ||
+      payload.id !== findMember.id ||
+      payload.role !== findMember.role
+    ) {
+      logout();
+    }
+  }
+
+  return payload;
 };
 
 export const getIsAdmin = async () => {
-  return (await getPayload())?.role === ERole.ADMIN
-}
+  return (await getPayload())?.role === ERole.ADMIN;
+};
 
 export const logout = async () => {
   await cookies().set(JWTHandler.STORE_KEY, "", {

@@ -6,8 +6,8 @@ import { IPayLoad } from "./../feature/auth/jwt-handler";
 
 @Entity({ name: "member" })
 export class Member extends TimeStampEntity {
-  @PrimaryColumn({ type: "bigint" })
-  id: number;
+  @PrimaryColumn({ type: "varchar", length: 255, nullable: false })
+  id: string;
 
   @Column({ length: 50, nullable: false })
   nickname: string;
