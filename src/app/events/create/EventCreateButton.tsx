@@ -53,7 +53,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
             await remove(plainEvents.id);
             goToDay(selectedDate);
           }}
-          className="w-32"
+          className="w-32 justify-center"
         >
           일정 삭제
           {isPendingDelete && (

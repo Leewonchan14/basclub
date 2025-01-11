@@ -9,7 +9,7 @@ export const DeleteButton: React.FC<
     <PrimaryButton
       disabled={disabled}
       onClick={onClick}
-      className={`!from-red-500 !to-red-600 !hover:from-red-700 !hover:to-red-800 ${className}`}
+      className={`inline-flex gap-2 !from-red-500 !to-red-600 !hover:from-red-700 !hover:to-red-800 ${className}`}
     >
       {children}
     </PrimaryButton>
