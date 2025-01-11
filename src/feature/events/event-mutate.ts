@@ -25,18 +25,20 @@ export const eventsMutateOption = {
     mutationFn: async ({
       eventsId,
       memberId,
+      guestCnt,
     }: {
       eventsId: string;
       memberId: number;
+      guestCnt: number;
     }) => {
-      return await toggleJoinEvent(eventsId, memberId);
+      return await toggleJoinEvent(eventsId, memberId, guestCnt);
     },
-    onMutate: () => {},
     onSuccess: (
       _data: unknown,
       variables: {
         eventsId: string;
         memberId: number;
+        guestCnt: number;
       }
     ) => {
       getQueryClient().invalidateQueries({

@@ -5,7 +5,7 @@ import { teamsQueryApi } from "@/feature/team/team-query";
 import { day_js } from "@/share/lib/dayjs";
 import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { eventsQueryApi } from "../event-query";
 
 export const useFetchSelectedEvents = () => {
@@ -60,10 +60,6 @@ export const useFetchSelectedEvents = () => {
       day_js(events.timeSlot.start),
       day_js(events.date).endOf("day")
     );
-
-  useEffect(() => {
-    console.log("isCanUpdateScore: ", isCanUpdateScore);
-  }, [isCanUpdateScore]);
 
   const checkCanUpdateScore = useCallback(() => {
     if (!isCanUpdateScore) {

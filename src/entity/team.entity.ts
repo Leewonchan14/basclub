@@ -44,6 +44,7 @@ export class Team extends TimeStampEntity {
       member: this.member.toPlain(),
       avgScore: this.avgScore,
       group: this.group,
+      guestCnt: this.guestCnt,
     };
   }
 }

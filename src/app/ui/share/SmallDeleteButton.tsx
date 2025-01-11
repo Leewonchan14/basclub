@@ -14,7 +14,7 @@ export const SmallDeleteButton: React.FC<Props> = function ({
   return (
     <button
       disabled={disabled}
-      className={`absolute inline-block w-4 h-4 ml-auto text-xs text-white bg-red-600 rounded-full disabled:opacity-30 ${className}`}
+      className={`inline-block w-4 h-4 ml-auto text-xs text-white bg-red-600 rounded-full disabled:opacity-30 ${className}`}
       onClick={onClick}
     >
       x

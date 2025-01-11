@@ -1,12 +1,11 @@
-import { PlainTeam } from "@/entity/team.entity";
-import { Team } from "@/entity/team.entity";
+import { PlainTeam, Team } from "@/entity/team.entity";
 import { EventsService } from "@/feature/events/events.service";
 import { MemberService } from "@/feature/member/member.service";
 import { ScoreService } from "@/feature/score/score.service";
 import {
+  IService,
   Inject,
   InjectRepository,
-  IService,
   Service,
 } from "@/share/lib/typeorm/DIContainer";
 import { Repository } from "typeorm";
@@ -47,7 +46,7 @@ export class TeamService implements IService<Team> {
     return findTeam;
   }
 
-  async toggleJoin(eventId: string, memberId: number) {
+  async toggleJoin(eventId: string, memberId: number, guestCnt: number) {
     const findTeam = await this.findTeamsByEventIdAndMemberId(
       eventId,
       memberId
@@ -71,6 +70,7 @@ export class TeamService implements IService<Team> {
     const newTeam = this.teamRepository.create({
       group: 0,
       avgScore: avgScore ?? 10,
+      guestCnt,
     });
 
     newTeam.events = Promise.resolve(findEvent);

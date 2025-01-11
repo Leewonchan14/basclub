@@ -26,8 +26,7 @@ export const ScoreList = () => {
 
 const RenderScoreList: React.FC<{ scores: PlainScore[] }> = ({ scores }) => {
   const { hasNext } = useFetchLastScoresByEvents();
-  const { onDeleteScore, isOwnScore, isPending, isCanUpdateScore } =
-    useDeleteScore();
+  const { onDeleteScore, isPending } = useDeleteScore();
 
   if (scores.length === 0) return <NoScore />;
 
@@ -48,7 +47,7 @@ const RenderScoreList: React.FC<{ scores: PlainScore[] }> = ({ scores }) => {
             {
               <SmallDeleteButton
                 disabled={isPending}
-                className="top-2 right-2 font-bold"
+                className="absolute top-2 right-2 font-bold"
                 onClick={() => onDeleteScore(score.id)}
               />
             }
