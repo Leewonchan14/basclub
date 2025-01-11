@@ -1,4 +1,6 @@
 import { addScore, deleteScore } from "@/feature/score/score-mutate.actions";
+import { scoreQueryApi } from "@/feature/score/score-query";
+import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
 
 interface PlainScore {
   eventsId: string;
@@ -15,22 +17,28 @@ export const scoreMutateOption = {
       return;
     },
     onSuccess: (_data: unknown, _variables: PlainScore) => {
-      // getQueryClient().invalidateQueries({
-      //   queryKey: [...eventsQueryApi.findById(eventsId, false).queryKey],
-      // });
+      getQueryClient().invalidateQueries({
+        queryKey: [...scoreQueryApi.findScoreByEvents(eventsId).queryKey],
+      });
+      getQueryClient().invalidateQueries({
+        queryKey: [...scoreQueryApi.findByMemberId(memberId ?? 0).queryKey],
+      });
     },
   }),
 
-  deleteScore: () => {
+  deleteScore: (eventsId: string, memberId: number) => {
     return {
       mutationKey: ["score", "delete"],
       mutationFn: async (scoreId: string) => {
         await deleteScore(scoreId);
       },
-      onSuccess: (_data: unknown, _variables: string) => {
-        // getQueryClient().invalidateQueries({
-        //   queryKey: [...scoreQueryApi.findScoreByEvents("").queryKey],
-        // });
+      onSuccess: (_data: unknown, _variables: string, _context: unknown) => {
+        getQueryClient().invalidateQueries({
+          queryKey: [...scoreQueryApi.findScoreByEvents(eventsId).queryKey],
+        });
+        getQueryClient().invalidateQueries({
+          queryKey: [...scoreQueryApi.findByMemberId(memberId).queryKey],
+        });
       },
     };
   },

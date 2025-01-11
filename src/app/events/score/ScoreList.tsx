@@ -26,7 +26,8 @@ export const ScoreList = () => {
 
 const RenderScoreList: React.FC<{ scores: PlainScore[] }> = ({ scores }) => {
   const { hasNext } = useFetchLastScoresByEvents();
-  const { onDeleteScore, isOwnScore } = useDeleteScore();
+  const { onDeleteScore, isOwnScore, isPending, isCanUpdateScore } =
+    useDeleteScore();
 
   if (scores.length === 0) return <NoScore />;
 
@@ -43,12 +44,14 @@ const RenderScoreList: React.FC<{ scores: PlainScore[] }> = ({ scores }) => {
               </div>
             </div>
             {isLast && <MoreButton />}
-            {isOwnScore(score) && (
+            {/* {isOwnScore(score) && isCanUpdateScore && ( */}
+            {
               <SmallDeleteButton
+                disabled={isPending}
                 className="top-2 right-2 font-bold"
                 onClick={() => onDeleteScore(score.id)}
               />
-            )}
+            }
           </div>
         );
       })}
@@ -70,7 +73,7 @@ const RefetchButton = () => {
       onClick={() => refetch({})}
       className="inline-flex gap-4 mx-auto mb-4"
     >
-      최근 득점기록 불러오기
+      득점기록 새로고침
       {isFetching && (
         <Spinner>
           <Spinner.Spin />

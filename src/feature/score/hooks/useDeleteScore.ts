@@ -8,16 +8,22 @@ import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
 
 export const useDeleteScore = () => {
-  const { mutateAsync } = useMutation(scoreMutateOption.deleteScore());
-  const { checkCanUpdateScore } = useFetchSelectedEvents();
   const { own } = useFetchOwn();
+  const { events } = useFetchSelectedEvents();
+  const { mutateAsync, isPending } = useMutation(
+    scoreMutateOption.deleteScore(events?.id ?? "", own?.id ?? 0)
+  );
+  const { checkCanUpdateScore, isCanUpdateScore } = useFetchSelectedEvents();
 
   const onDeleteScore = useCallback(
-    (scoreId: string) => {
-      if (checkCanUpdateScore()) {
+    async (scoreId: string) => {
+      if (!checkCanUpdateScore()) {
+        window.alert(
+          "득점 기록 및 삭제는 경기 시작 ~ 모임 종료까지 가능합니다."
+        );
         return;
       }
-      mutateAsync(scoreId);
+      await mutateAsync(scoreId);
     },
     [checkCanUpdateScore, mutateAsync]
   );
@@ -29,5 +35,5 @@ export const useDeleteScore = () => {
     [own?.id]
   );
 
-  return { onDeleteScore, isOwnScore };
+  return { onDeleteScore, isOwnScore, isPending, isCanUpdateScore };
 };

@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 
 export const useAddScore = () => {
-  const { events, checkCanUpdateScore, isCanUpdateScore } =
+  const { events, checkCanUpdateScore, isCanUpdateScore, isJoin } =
     useFetchSelectedEvents();
   const { own, needLoginPromise } = useNeedLogin();
   const { mutateAsync, isPending } = useMutation(
@@ -26,10 +26,13 @@ export const useAddScore = () => {
   const onAddScore = useCallback(async () => {
     if (!events) return;
     if (!checkCanUpdateScore()) return;
+    if (!isJoin) {
+      window.alert("모임에 참가하여 득점 기록을 남겨보세요.");
+    }
 
     const own = await needLoginPromise();
     const isConfirm = window.confirm(
-      `득점 기록을 저장하시겠습니까? \n2점: ${score.score2}점, 3점: ${score.score3}점 \n\n저장 후에는 수정할 수 없습니다. (삭제만 가능)`
+      `득점 기록을 저장하시겠습니까? \n2점: ${score.score2}개, 3점: ${score.score3}개 \n\n저장 후 오늘이 지나면 수정, 삭제할 수 없습니다. `
     );
     if (!isConfirm) return;
 
@@ -39,7 +42,14 @@ export const useAddScore = () => {
       ...score,
     });
     window.alert("득점이 기록되었습니다.");
-  }, [checkCanUpdateScore, events, mutateAsync, needLoginPromise, score]);
+  }, [
+    checkCanUpdateScore,
+    events,
+    isJoin,
+    mutateAsync,
+    needLoginPromise,
+    score,
+  ]);
 
   return { onChange, score, onAddScore, isPending, isCanUpdateScore };
 };
