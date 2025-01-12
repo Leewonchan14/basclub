@@ -13,6 +13,7 @@ export const KakaoShareButton = () => {
   const { getSearchParam } = useSelectedDate();
   if (!events) return;
   const onClickShare = () => {
+    const imageUrl = `${window.location.host}/background_group.jpeg`;
     const joinLink = `${window.location.host}/events?${getSearchParam()}`;
 
     const addressParam = new URLSearchParams({ k: events.detailAddress })
@@ -33,7 +34,7 @@ export const KakaoShareButton = () => {
           "a h시 mm분"
         )}`,
         description: `${events.detailAddress}에서 농구해요!`,
-        imageUrl: `${window.location.href}/background_group.jpeg`,
+        imageUrl,
         link: {
           mobileWebUrl: joinLink,
           webUrl: joinLink,
