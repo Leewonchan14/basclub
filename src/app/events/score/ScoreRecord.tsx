@@ -17,9 +17,9 @@ export const ScoreRecord = () => {
   return (
     <div>
       <h2 className="flex gap-2 text-2xl font-bold text-gray-800">
-        <div>득점 기록</div>
+        <div>스탯 기록</div>
         <div className="flex items-end text-base text-orange-600">
-          (한 경기당 득점)
+          (한 경기당 스탯)
         </div>
       </h2>
       <div className="flex flex-col items-center !shadow-none">
@@ -27,7 +27,7 @@ export const ScoreRecord = () => {
         <Accordion style={{ boxShadow: "0" }} className="!shadow-none mt-10">
           <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
             <div className="font-bold text-orange-500">
-              열어서 다른 득점 기록 확인
+              열어서 다른 스탯 기록 확인
             </div>
           </AccordionSummary>
           <AccordionDetails>
@@ -48,7 +48,7 @@ const AddScoreComp = () => {
   if (!isJoin) {
     return (
       <div className="flex flex-col items-center justify-center h-40 text-gray-500 gap-2">
-        모임에 참가하여 득점 기록을 남겨보세요.
+        모임에 참가하여 경기 스탯을 남겨보세요
       </div>
     );
   }
@@ -56,7 +56,7 @@ const AddScoreComp = () => {
   if (!isCanUpdateScore) {
     return (
       <div className="flex flex-col items-center justify-center h-40 text-gray-500 gap-2">
-        <p>득점 기록 및 삭제는</p>
+        <p>스탯 기록 및 삭제는</p>
         <p className="text-orange-500">경기 시작 ~ 모임 종료</p>
         <p>시간에만 가능합니다.</p>
       </div>
@@ -71,7 +71,7 @@ const AddScoreComp = () => {
         onClick={onAddScore}
         className="self-end"
       >
-        본인 기록
+        스탯 저장
       </PrimaryButton>
     </div>
   );

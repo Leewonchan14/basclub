@@ -27,12 +27,12 @@ export const useAddScore = () => {
     if (!events) return;
     if (!checkCanUpdateScore()) return;
     if (!isJoin) {
-      window.alert("모임에 참가하여 득점 기록을 남겨보세요.");
+      window.alert("모임에 참가하여 경기 스탯을 남겨보세요.");
     }
 
     const own = await needLoginPromise();
     const isConfirm = window.confirm(
-      `득점 기록을 저장하시겠습니까? \n2점: ${score.score2}개, 3점: ${
+      `스탯을 저장하시겠습니까? \n2점: ${score.score2}개, 3점: ${
         score.score3
       }개 == 총 ${
         score.score2 * 2 + score.score3 * 3

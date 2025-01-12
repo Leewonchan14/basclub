@@ -60,7 +60,7 @@ const RenderScoreList: React.FC<{ scores: PlainScore[] }> = ({ scores }) => {
 
 const NoScore = () => {
   return (
-    <div className="text-center text-gray-500">아직 득점 기록이 없습니다.</div>
+    <div className="text-center text-gray-500">아직 스탯 기록이 없습니다.</div>
   );
 };
 

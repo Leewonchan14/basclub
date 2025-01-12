@@ -64,7 +64,7 @@ export const useFetchSelectedEvents = () => {
 
   const checkCanUpdateScore = useCallback(() => {
     if (!isCanUpdateScore) {
-      alert("득점 기록 및 삭제는 경기 시작 ~ 모임 종료 시간에만 가능합니다.");
+      alert("스탯 기록 및 삭제는 경기 시작 ~ 모임 종료 시간에만 가능합니다.");
     }
 
     return isCanUpdateScore;

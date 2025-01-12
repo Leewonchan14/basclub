@@ -29,7 +29,7 @@ export const useJoinEvents = ({ guestCnt }: { guestCnt: number }) => {
     if (!eventsId) return;
 
     if (isJoin) {
-      window.alert("참가 취소시 게스트와 득점 기록이 모두 삭제 됩니다.");
+      window.alert("참가 취소시 게스트와 기록된 스탯 모두 삭제 됩니다.");
     }
 
     await mutateAsync({ eventsId, memberId, guestCnt });

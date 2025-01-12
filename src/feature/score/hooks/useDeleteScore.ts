@@ -19,7 +19,7 @@ export const useDeleteScore = () => {
     async (scoreId: string) => {
       if (!checkCanUpdateScore()) {
         window.alert(
-          "득점 기록 및 삭제는 경기 시작 ~ 모임 종료까지 가능합니다."
+          "스탯 기록 및 삭제는 경기 시작 ~ 모임 종료까지 가능합니다."
         );
         return;
       }
