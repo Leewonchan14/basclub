@@ -8,7 +8,9 @@ import { DeepPartial } from "typeorm";
 
 export const upsertEvent = async (obj: DeepPartial<PlainEvents>) => {
   const eventsService = getService(EventsService);
+
   const newEvents = await eventsService.create(EventsScheme.parse(obj));
+
   if (obj.id) newEvents.id = obj.id;
 
   await eventsService.upsert(newEvents);

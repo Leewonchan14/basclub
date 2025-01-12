@@ -11,11 +11,13 @@ import { createContext, useCallback, useContext, useState } from "react";
 export interface EventCreateContextType {
   eventsId: string;
   address: string;
+  detailAddress: string;
   point: GeoPoint;
   selectedDate: string | null;
   timeSlot: TimeSlot;
   plainEvents: PlainEvents;
   setAddressPoint: (address: string, point: GeoPoint) => void;
+  onChangeDetailAddress: (nextValue: string) => void;
   setTimeSlot: (timeSlot: TimeSlot) => void;
 }
 
@@ -35,6 +37,9 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({
   const params = useSearchParams();
   const selectedDate = params.get(SELECTED_DATE_KEY);
   const [address, setAddress] = useState(events.address ?? "");
+  const [detailAddress, setDetailAddress] = useState(
+    events.detailAddress ?? ""
+  );
   const [point, setPoint] = useState<GeoPoint>({
     lat: events.coordinates?.lat ?? 0,
     lng: events.coordinates?.lng ?? 0,
@@ -72,9 +77,14 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({
     [eventDate]
   );
 
+  const onChangeDetailAddress = useCallback((nextValue: string) => {
+    setDetailAddress(nextValue);
+  }, []);
+
   const plainEvents: PlainEvents = {
     id: events.id ?? "",
     address,
+    detailAddress,
     coordinates: point,
     date: day_js(selectedDate).toISOString(),
     timeSlot: {
@@ -88,11 +98,13 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({
       value={{
         eventsId: events.id ?? "",
         address,
+        detailAddress,
         point,
         timeSlot,
         plainEvents,
         selectedDate,
         setAddressPoint,
+        onChangeDetailAddress,
         setTimeSlot,
       }}
     >

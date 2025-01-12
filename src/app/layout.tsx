@@ -40,6 +40,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
+        <script
+          defer
+          type="text/javascript"
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_JAVASCRIPT_KEY}&autoload=false`}
+        />
         <QueryProviders>
           <MuiProvider>
             <SideNavLayout>{children}</SideNavLayout>

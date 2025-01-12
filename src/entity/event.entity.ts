@@ -12,6 +12,7 @@ import { z } from "zod";
 export interface PlainEvents {
   id: string;
   address: string;
+  detailAddress: string;
   coordinates: GeoPoint;
   date: string;
   timeSlot: {
@@ -27,8 +28,12 @@ export class Events
 {
   @PrimaryGeneratedColumn("uuid")
   id: string;
+
   @Column({ length: 150 })
   address: string;
+
+  @Column({ length: 150, default: "" })
+  detailAddress: string;
 
   @Column({ type: "geometry", transformer: new GeoPointTransFormer() })
   coordinates: GeoPoint;
@@ -48,10 +53,11 @@ export class Events
   })
   teams: Promise<Team[]> = Promise.resolve([]);
 
-  toPlain() {
+  toPlain(): PlainEvents {
     return {
       id: this.id,
       address: this.address,
+      detailAddress: this.detailAddress,
       coordinates: this.coordinates,
       date: this.date.toDate().toISOString(),
       timeSlot: {
@@ -64,6 +70,7 @@ export class Events
 
 export const EventsScheme = z.object({
   address: z.string(),
+  detailAddress: z.string(),
   coordinates: z.object({
     lat: z.coerce.number(),
     lng: z.coerce.number(),

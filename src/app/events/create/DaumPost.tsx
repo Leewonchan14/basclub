@@ -15,9 +15,9 @@ const DaumPost: NextPage<Props> = ({ buttonText, className }) => {
   const { setAddressPoint } = useEventCreateContext();
 
   const handleComplete = async (data: AddressInterface) => {
-    const address = await getAddress(data);
+    const { address, fullAddress } = await getAddress(data);
     const geoCode = await getGeoCode(address);
-    setAddressPoint(address, geoCode);
+    setAddressPoint(fullAddress, geoCode);
   };
 
   const handleClick = () => {
@@ -52,11 +52,10 @@ const getAddress = async (data: AddressInterface) => {
         extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
   }
 
-  return address;
+  return { address, fullAddress };
 };
 
 const getGeoCode = async (address: string): Promise<GeoPoint> => {

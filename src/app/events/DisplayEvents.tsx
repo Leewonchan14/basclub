@@ -42,9 +42,15 @@ export const DisplayEvents = () => {
         <div className="text-orange-600">
           {timeSlot.start.format("a h시 mm분")} ~{" "}
           {timeSlot.end.format("a h시 mm분")}
-          <div>{events.address}</div>
+          <div>
+            {events.address} {events.detailAddress}
+          </div>
         </div>
-        <DisplayMap address={events.address} point={events.coordinates} />
+        <DisplayMap
+          address={events.address}
+          point={events.coordinates}
+          marker={events.detailAddress}
+        />
       </div>
 
       <div className="gap-2 text-2xl font-bold">

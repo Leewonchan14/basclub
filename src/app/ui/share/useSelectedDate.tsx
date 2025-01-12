@@ -2,7 +2,7 @@
 
 import { Dayjs, day_js } from "@/share/lib/dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 export const SELECTED_DATE_KEY = "selectedDate";
 export const useSelectedDate = () => {
@@ -25,6 +25,12 @@ export const useSelectedDate = () => {
   const getSearchParam = useCallback(() => {
     return new URLSearchParams(params.toString());
   }, [params]);
+
+  useEffect(() => {
+    if (params.get(SELECTED_DATE_KEY) === null) {
+      setSelectedDate(day_js().toDate());
+    }
+  }, [params, setSelectedDate]);
 
   const isSelectedDate = useCallback(
     (date: Dayjs) => {
