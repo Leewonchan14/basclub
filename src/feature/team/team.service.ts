@@ -66,6 +66,9 @@ export class TeamService implements IService<Team> {
       await this.teamRepository.delete({
         member: { id: In(guests.map((g) => g.id)) },
       });
+
+      // score들도 삭제
+      await this.scoreService.deleteScoresByMemberId(memberId);
       return;
     }
 

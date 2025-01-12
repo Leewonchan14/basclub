@@ -109,5 +109,9 @@ export class ScoreService implements IService<Score> {
     return await this.scoreRepository.delete(scoreId);
   }
 
+  async deleteScoresByMemberId(memberId: string) {
+    return await this.scoreRepository.delete({ member: { id: memberId } });
+  }
+
   getRepository = async () => this.scoreRepository;
 }
