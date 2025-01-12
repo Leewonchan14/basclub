@@ -6,11 +6,10 @@ import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 interface Props {
   address?: string;
-  marker: string;
   point: GeoPoint;
 }
 
-const DisplayMap: NextPage<Props> = ({ address, point, marker }) => {
+const DisplayMap: NextPage<Props> = ({ address, point }) => {
   if (!address) return null;
   // 지도 보기
   const handleClickFindMap = () => {

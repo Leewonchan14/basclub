@@ -1,6 +1,7 @@
 import { SideNavLayout } from "@/app/ui/sidenav/SideNavLayout";
 import QueryProviders from "@/share/lib/tasntack-query/query-providers";
 
+import { KakaoScripts } from "@/app/kakaoscripts";
 import MuiProvider from "@/share/lib/mui-x/MuiProvider";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -40,11 +41,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
-        <script
-          defer
-          type="text/javascript"
-          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_JAVASCRIPT_KEY}&autoload=false`}
-        />
+        <KakaoScripts />
         <QueryProviders>
           <MuiProvider>
             <SideNavLayout>{children}</SideNavLayout>
