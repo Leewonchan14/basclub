@@ -3,12 +3,15 @@
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { day_js } from "@/share/lib/dayjs";
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, HTMLAttributes, MouseEventHandler } from "react";
 import {
   CalendarDay,
   DayPicker,
-  getDefaultClassNames,
   Modifiers,
+  Nav,
+  Week,
+  WeekProps,
+  getDefaultClassNames,
   useDayPicker,
 } from "react-day-picker";
 import { ko } from "react-day-picker/locale";
@@ -24,10 +27,15 @@ export const DayPickers = () => {
       mode="single"
       showOutsideDays
       locale={ko}
+      month={selectedDate.toDate()}
       selected={selectedDate.toDate()}
       onSelect={(date) => date && setSelectedDate(date)}
       onMonthChange={(month) => {
-        setSelectedDate(day_js(month).startOf("month").toDate());
+        if (selectedDate.format("YYYY-MM") === day_js(month).format("YYYY-MM"))
+          return;
+        setSelectedDate(
+          day_js(month).set("date", selectedDate.get("date")).toDate()
+        );
       }}
       classNames={{
         today: `${defaultClassNames.today} !text-orange-600`,
@@ -43,10 +51,46 @@ export const DayPickers = () => {
       }}
       components={{
         DayButton: (props) => <CustomNode {...props} />,
+        Week: (props) => <CurrentWeekRow {...props} />,
+        Nav: (props) => <CusTomNav {...props} />,
       }}
     />
   );
 };
+
+const CusTomNav = (
+  props: {
+    onPreviousClick?: MouseEventHandler<HTMLButtonElement> | undefined;
+    onNextClick?: MouseEventHandler<HTMLButtonElement> | undefined;
+    previousMonth?: Date | undefined;
+    nextMonth?: Date | undefined;
+  } & HTMLAttributes<HTMLElement>
+) => {
+  const { selectedDate, setSelectedDate } = useSelectedDate();
+  return (
+    <Nav
+      {...props}
+      onPreviousClick={(_e) => {
+        const pre = selectedDate.subtract(1, "week");
+        setSelectedDate(pre.toDate());
+      }}
+      onNextClick={(_e) => {
+        const next = selectedDate.add(1, "week");
+        setSelectedDate(next.toDate());
+      }}
+    />
+  );
+};
+
+function CurrentWeekRow(props: WeekProps) {
+  const { selectedDate } = useSelectedDate();
+  const isSameWeek = day_js(props.week.days[0].date).isSame(
+    selectedDate,
+    "week"
+  );
+  if (!isSameWeek) return null;
+  return <Week {...props} />;
+}
 
 type CustomNodeProps = {
   day: CalendarDay;

@@ -51,7 +51,6 @@ export const useFetchSelectedEvents = () => {
     .slice(1);
 
   const members = (teamsArr ?? []).map((t) => t.member);
-  console.log('teamsArr: ', teamsArr);
   const ownGuestTeams = teamsArr.filter((t) => t.member.guestById === own?.id);
   const isJoin = members.some((m) => m.id === own?.id);
 
