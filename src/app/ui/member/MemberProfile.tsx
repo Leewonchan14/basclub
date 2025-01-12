@@ -27,6 +27,7 @@ export const MemberProfile: React.FC<{
           src={profileUrl}
           fill
           className="object-cover"
+          unoptimized
         />
       </div>
       <div>
