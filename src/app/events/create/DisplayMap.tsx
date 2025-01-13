@@ -5,12 +5,14 @@ import { NextPage } from "next";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 interface Props {
-  address?: string;
+  address: string;
+  detailAddress: string;
   point: GeoPoint;
 }
 
-const DisplayMap: NextPage<Props> = ({ address, point }) => {
+const DisplayMap: NextPage<Props> = ({ address, detailAddress, point }) => {
   if (!address) return null;
+
   // 지도 보기
   const handleClickFindMap = () => {
     const addressParam = new URLSearchParams({ address })
@@ -24,11 +26,13 @@ const DisplayMap: NextPage<Props> = ({ address, point }) => {
 
   // 길찾기
   const handleClickFindLoad = () => {
-    const addressParam = new URLSearchParams({ address })
+    const addressParam = new URLSearchParams({ detailAddress })
       .toString()
       .split("=")[1];
 
-    const url = `https://map.kakao.com/link/to/${addressParam},${point.lat},${point.lng}`;
+    const url = `https://map.kakao.com/link/to/${addressParam || "체육관"},${
+      point.lat
+    },${point.lng}`;
 
     window.open(url);
   };

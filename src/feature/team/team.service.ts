@@ -53,6 +53,8 @@ export class TeamService implements IService<Team> {
       memberId
     );
 
+
+    // 게스트 조회 및 생성
     const { findMember, newGuests, guests } =
       await this.memberService.getMemberGuestByMemberIdAndCnt(
         memberId,

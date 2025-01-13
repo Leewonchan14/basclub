@@ -54,7 +54,11 @@ export const DisplayEvents = () => {
             {events.address} {events.detailAddress}
           </div>
         </div>
-        <DisplayMap address={events.address} point={events.coordinates} />
+        <DisplayMap
+          address={events.address}
+          detailAddress={events.detailAddress}
+          point={events.coordinates}
+        />
       </div>
 
       <div className="gap-2 text-2xl font-bold">

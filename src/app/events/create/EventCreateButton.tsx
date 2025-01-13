@@ -15,7 +15,7 @@ interface Props {}
 export const EventMutateButton: NextPage<Props> = ({}) => {
   const { selectedDate, goToDay } = useSelectedDate();
   const [message, setMessage] = useState("");
-  const { address, plainEvents } = useEventCreateContext();
+  const { address, detailAddress, plainEvents } = useEventCreateContext();
 
   const { mutateAsync: create, isPending: isPendingCreate } = useMutation(
     eventsMutateOption.upsert
@@ -25,13 +25,14 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
   );
 
   return (
-    <div className="flex items-center justify-center gap-4">
+    <div className="flex flex-col items-center justify-center gap-4">
+      <div>{message && <div className="ml-2 text-red-600">{message}</div>}</div>
       <PrimaryButton
         disabled={isPendingCreate}
         onClick={async () => {
           setMessage("");
-          if (!address) {
-            setMessage("주소를 입력해주세요");
+          if (!address || !detailAddress) {
+            setMessage("주소, 상세주소를 입력해주세요");
             return;
           }
           await create(plainEvents);
@@ -53,7 +54,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
             await remove(plainEvents.id);
             goToDay(selectedDate);
           }}
-          className="w-32 justify-center"
+          className="justify-center w-32"
         >
           일정 삭제
           {isPendingDelete && (
@@ -63,7 +64,6 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
           )}
         </DeleteButton>
       )}
-      {message && <div className="ml-2 text-red-600">{message}</div>}
     </div>
   );
 };

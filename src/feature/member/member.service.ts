@@ -44,7 +44,7 @@ export class MemberService implements IService<Member> {
       const newGuests = this.memberRepository.create({
         id: guests[i]?.id ?? uuid(),
         role: ERole.GUEST,
-        nickname: `${findMember.nickname}-Guest-${i + 1}`,
+        nickname: `${findMember.nickname}-Guest${i + 1}`,
         profileUrl: findMember.profileUrl,
       });
 

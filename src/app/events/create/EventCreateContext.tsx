@@ -38,7 +38,7 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({
   const selectedDate = params.get(SELECTED_DATE_KEY);
   const [address, setAddress] = useState(events.address ?? "");
   const [detailAddress, setDetailAddress] = useState(
-    events.detailAddress ?? ""
+    events.detailAddress ?? "체육관 이름"
   );
   const [point, setPoint] = useState<GeoPoint>({
     lat: events.coordinates?.lat ?? 0,
