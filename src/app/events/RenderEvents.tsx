@@ -42,8 +42,8 @@ export const RenderEvents: NextPage<Props> = ({ isAdmin }) => {
 
   return (
     <>
-      <DisplayEvents />
       <UpdateEventButton isAdmin={isAdmin} text={"일정 수정 하기"} />
+      <DisplayEvents />
     </>
   );
 };
