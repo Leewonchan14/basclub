@@ -5,10 +5,10 @@ import { scoreQueryApi } from "@/feature/score/score-query";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFetchAvgScoreByEvents = () => {
-  const { events } = useFetchSelectedEvents();
-  const { data: scoreMap, isLoading } = useQuery(
+  const { events, isLoading } = useFetchSelectedEvents();
+  const { data: scoreMap, isLoading: isLoadingScore } = useQuery(
     scoreQueryApi.findAvgScoresByEvents(events?.id ?? "")
   );
 
-  return { scoreMap, isLoading };
+  return { scoreMap, isLoading: isLoading || isLoadingScore };
 };

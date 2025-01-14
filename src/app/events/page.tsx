@@ -32,6 +32,7 @@ const Page: NextPage<Props> = async ({ searchParams }) => {
         <DayPickers />
       </Suspense>
       <Suspense
+        key={selectedDate?.format("YYYY-MM-DD")}
         fallback={
           <Spinner>
             <Spinner.Spin />

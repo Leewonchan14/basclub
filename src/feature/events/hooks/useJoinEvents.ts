@@ -13,7 +13,7 @@ export const useJoinEvents = ({ guestCnt }: { guestCnt: number }) => {
     eventsMutateOption.toggleJoin
   );
 
-  const { events, isJoin, isFetching } = useFetchSelectedEvents();
+  const { events, isJoin, isFetching, isLoading } = useFetchSelectedEvents();
   const eventsId = events?.id ?? "";
   const memberId = own?.id ?? "";
 
@@ -43,6 +43,7 @@ export const useJoinEvents = ({ guestCnt }: { guestCnt: number }) => {
     onJoin,
     isJoin,
     isCanJoin,
+    isLoading,
     isPending,
   };
 };

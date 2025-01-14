@@ -7,7 +7,11 @@ import { ChangeEvent, useCallback, useState } from "react";
 
 export const JoinEventsButton = () => {
   const [guestCnt, setGuestCnt] = useState<number>(0);
-  const { isJoin, isCanJoin, isPending, onJoin } = useJoinEvents({ guestCnt });
+  const { isJoin, isCanJoin, isPending, onJoin, isLoading } = useJoinEvents({
+    guestCnt,
+  });
+
+  if (isLoading) return null;
 
   if (!isCanJoin) {
     return (
