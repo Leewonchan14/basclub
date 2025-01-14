@@ -23,11 +23,11 @@ export const metadata: Metadata = {
   description: "같이 농구하자!",
   icons: [
     {
-      url: "/basclub_backgroud_logo.jpeg",
+      url: "/basclub_background_logo.jpeg",
     },
   ],
   openGraph: {
-    images: [{ url: "/backgroud_group.jpeg" }],
+    images: [{ url: "/background_group.jpeg" }],
   },
 };
 

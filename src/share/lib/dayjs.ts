@@ -14,7 +14,10 @@ dayjs.locale("ko");
 dayjs.extend(isBetween);
 dayjs.extend(isSameOrBefore);
 
-export const day_js = (date?: dayjs.ConfigType) => dayjs(date).tz("Asia/Seoul");
+const TimeZone = "Asia/Seoul"
+
+export const day_js = (date?: dayjs.ConfigType) => dayjs.tz(date, TimeZone);
+
 export type Dayjs = ReturnType<typeof day_js>;
 
 export const dayjsZod = () => {
@@ -26,5 +29,6 @@ export const getStartEndOfMonth = (date: Dayjs) => {
   const endOfMonth = date.endOf("month").endOf("week");
 
   return { startOfMonth, endOfMonth };
-};export const SELECTED_DATE_KEY = "selectedDate";
+};
 
+export const SELECTED_DATE_KEY = "selectedDate";

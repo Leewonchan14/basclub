@@ -17,13 +17,6 @@ export const RenderEvents: NextPage<Props> = async ({ selectedDate }) => {
   const eventsService = getService(EventsService);
   const events = await eventsService.findByDate(selectedDate);
 
-  console.log(
-    "eventsService:",
-    Object.getOwnPropertyNames(Object.getPrototypeOf(eventsService))
-  );
-  console.log("selectedDate: ", selectedDate);
-  console.log("events: ", events);
-
   if (!events) {
     return (
       <>
