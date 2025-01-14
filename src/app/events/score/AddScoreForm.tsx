@@ -13,12 +13,12 @@ export const AddScoreForm: React.FC<{
   readonly?: boolean;
 }> = function ({ member, onChange, score, readonly }) {
   return (
-    <div className="flex items-center p-2 transition-shadow bg-gray-100 border border-gray-100 rounded-md shadow-sm md:p-4 hover:shadow">
+    <div className="flex items-center w-full p-2 transition-shadow bg-gray-100 border border-gray-100 rounded-md shadow-sm md:p-4 hover:shadow">
       {/* 멤버 이름 */}
       <MemberProfile member={member} className="!bg-none" isNotScore />
       {/* 2점, 3점 입력 필드 */}
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-wrap items-center justify-center sm:gap-6">
+      <div className="flex flex-col flex-1 gap-2">
+        <div className="flex flex-wrap items-center justify-evenly sm:gap-6">
           {/* 2점 입력 */}
           <ScoreInput
             value={score.score2}

@@ -15,16 +15,16 @@ export interface InputScore {
 
 export const ScoreRecord = () => {
   return (
-    <div>
+    <>
       <h2 className="flex gap-2 text-2xl font-bold text-gray-800">
         <div>스탯 기록</div>
         <div className="flex items-end text-base text-orange-600">
           (한 경기당 스탯)
         </div>
       </h2>
-      <div className="flex flex-col items-center !shadow-none">
+      <div className="flex flex-col items-start">
         <AddScoreComp />
-        <Accordion style={{ boxShadow: "0" }} className="!shadow-none mt-10">
+        <Accordion className="!shadow-none mt-10 before:!invisible !bg-none !w-full">
           <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
             <div className="font-bold text-orange-500">
               열어서 다른 스탯 기록 확인
@@ -35,7 +35,7 @@ export const ScoreRecord = () => {
           </AccordionDetails>
         </Accordion>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -47,7 +47,7 @@ const AddScoreComp = () => {
 
   if (!isJoin) {
     return (
-      <div className="flex flex-col items-center justify-center h-40 text-gray-500 gap-2">
+      <div className="flex flex-col items-center justify-center h-40 gap-2 text-gray-500">
         모임에 참가하여 경기 스탯을 남겨보세요
       </div>
     );
@@ -55,7 +55,7 @@ const AddScoreComp = () => {
 
   if (!isCanUpdateScore) {
     return (
-      <div className="flex flex-col items-center justify-center h-40 text-gray-500 gap-2">
+      <div className="flex flex-col items-center justify-center w-full h-40 gap-2 text-gray-500">
         <p>스탯 기록 및 삭제는</p>
         <p className="text-orange-500">경기 시작 ~ 모임 종료</p>
         <p>시간에만 가능합니다.</p>
@@ -64,7 +64,7 @@ const AddScoreComp = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col w-full gap-4">
       {own && <AddScoreForm score={score} member={own} onChange={onChange} />}
       <PrimaryButton
         disabled={isPending}
