@@ -14,8 +14,14 @@ interface Props {
 
 export const RenderEvents: NextPage<Props> = async ({ selectedDate }) => {
   const isAdmin = await getIsAdmin();
-  const events = await getService(EventsService).findByDate(selectedDate);
+  const eventsService = getService(EventsService);
+  const events = await eventsService.findByDate(selectedDate);
 
+  console.log(
+    "eventsService:",
+    Object.getOwnPropertyNames(Object.getPrototypeOf(eventsService))
+  );
+  console.log("selectedDate: ", selectedDate);
   console.log("events: ", events);
 
   if (!events) {
