@@ -23,7 +23,7 @@ export const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
     // const imageUrl =
     //   "http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png";
     // console.log("imageUrl: ", imageUrl);
-    const joinLink = `${window.location.host}/events?${getSearchParam()}`;
+    const joinLink = `${window.location.href}`;
 
     const addressParam = new URLSearchParams({ k: events.detailAddress })
       .toString()
