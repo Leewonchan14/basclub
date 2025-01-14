@@ -6,6 +6,13 @@ import { day_js } from "@/share/lib/dayjs";
 import Image from "next/image";
 import React from "react";
 
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Kakao: any;
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const Kakao: any;
 
@@ -27,6 +34,10 @@ export const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
       .split("=")[1];
 
     const findLoadLink = `https://map.kakao.com/link/to/${addressParam},${events.coordinates.lat},${events.coordinates.lng}`;
+
+    if (!Kakao.isInitialized()) {
+      Kakao.init(process.env.NEXT_PUBLIC_JAVASCRIPT_KEY);
+    }
 
     Kakao.Share.createDefaultButton({
       container: "#kakaotalk-sharing-btn",

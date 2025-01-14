@@ -14,9 +14,22 @@ dayjs.locale("ko");
 dayjs.extend(isBetween);
 dayjs.extend(isSameOrBefore);
 
-const TimeZone = "Asia/Seoul"
+const TimeZone = "Asia/Seoul";
 
-export const day_js = (date?: dayjs.ConfigType) => dayjs.tz(date, TimeZone);
+export const day_js = (date?: dayjs.ConfigType) => {
+  // Z로 끝나는 문자열은 UTC로 처리
+  if (typeof date === "string" && date.endsWith("Z")) {
+    return dayjs.utc(date).tz(TimeZone);
+  }
+
+  // 문자열이면서 Z로 끝나지 않는 경우는 (2025-01-15) Asia/Seoul로 처리
+  if (typeof date === "string") {
+    return dayjs.tz(date, TimeZone);
+  }
+
+  // 그 외의 경우는 그냥 처리
+  return dayjs(date).tz(TimeZone);
+};
 
 export type Dayjs = ReturnType<typeof day_js>;
 
