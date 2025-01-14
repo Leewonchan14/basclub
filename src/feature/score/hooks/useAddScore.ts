@@ -1,11 +1,19 @@
 "use client";
 
-import { InputScore } from "@/app/events/score/ScoreRecord";
+import { ScoreField } from "@/entity/enum/score-field";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
 import { scoreMutateOption } from "@/feature/score/score-mutate";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
+
+const INIT_SCORE = {
+  score2: 0,
+  score3: 0,
+  assist: 0,
+  rebound: 0,
+  steal: 0,
+};
 
 export const useAddScore = () => {
   const { events, checkCanUpdateScore, isCanUpdateScore, isJoin } =
@@ -14,20 +22,13 @@ export const useAddScore = () => {
   const { mutateAsync, isPending } = useMutation(
     scoreMutateOption.addScore(events?.id ?? "", own?.id ?? "")
   );
-  const [score, setScore] = useState<InputScore>({
-    score2: 0,
-    score3: 0,
-  });
-
-  const onChange = (name: keyof InputScore, value: number) => {
-    setScore({ ...score, [name]: Number(value) });
-  };
+  const [score, setScore] = useState<ScoreField>(INIT_SCORE);
 
   const onAddScore = useCallback(async () => {
     if (!events) return;
     if (!checkCanUpdateScore()) return;
     if (!isJoin) {
-      window.alert("모임에 참가하여 경기 스탯을 남겨보세요.");
+      return window.alert("모임에 참가하여 경기 스탯을 남겨보세요.");
     }
 
     const own = await needLoginPromise();
@@ -45,6 +46,7 @@ export const useAddScore = () => {
       memberId: own.id,
       ...score,
     });
+    setScore(INIT_SCORE);
     window.alert("득점이 기록되었습니다.");
   }, [
     checkCanUpdateScore,
@@ -55,5 +57,5 @@ export const useAddScore = () => {
     score,
   ]);
 
-  return { onChange, score, onAddScore, isPending, isCanUpdateScore };
+  return { setScore, score, onAddScore, isPending, isCanUpdateScore };
 };

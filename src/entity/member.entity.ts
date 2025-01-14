@@ -18,7 +18,7 @@ export class Member extends TimeStampEntity {
   role: ERole;
 
   @Column({ type: "varchar", length: 255, nullable: true, name: "guestBy" })
-  guestBy: string;
+  guestBy: string | null;
 
   toPayload(): IPayLoad {
     return {

@@ -11,8 +11,11 @@ export const useFetchLastScoresByEvents = () => {
   const isNoScore = data?.pages?.[0]?.length === 0;
   const hasNext = data?.pages?.at(-1)?.length === 5;
 
+  const pureScores = data?.pages.flat() ?? [];
+
   return {
     data,
+    pureScores,
     scores: data?.pages.flat() ?? [],
     isLoading,
     isFetching,

@@ -32,12 +32,24 @@ export class Score extends TimeStampEntity {
   @Column({ default: 0 })
   score3: number;
 
+  @Column({ default: 0 })
+  assist: number;
+
+  @Column({ default: 0 })
+  rebound: number;
+
+  @Column({ default: 0 })
+  steal: number;
+
   async toPlain(): Promise<PlainScore> {
     return {
       id: this.id,
       member: (await this.member).toPlain(),
       score2: this.score2,
       score3: this.score3,
+      rebound: this.rebound,
+      assist: this.assist,
+      steal: this.steal,
       createdAt: this.createdAt.toISOString(),
     };
   }
@@ -48,5 +60,8 @@ export interface PlainScore {
   member: PlainMember;
   score2: number;
   score3: number;
+  rebound: number;
+  assist: number;
+  steal: number;
   createdAt: string;
 }

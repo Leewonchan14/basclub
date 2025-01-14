@@ -3,13 +3,13 @@
 import { JoinEventsButton } from "@/app/events/JoinEventsButton";
 import { KakaoShareButton } from "@/app/events/KakaoShareButton";
 import DisplayMap from "@/app/events/create/DisplayMap";
+import { ScoreGrid } from "@/app/events/score/scoregrid/ScoreGrid";
 import { DisplayParticipants } from "@/app/teams/DisplayParticipants";
 import { DisplayTeams } from "@/app/teams/DisplayTeams";
 import { UpsertTeamButton } from "@/app/teams/UpsertTeamButton";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { day_js } from "@/share/lib/dayjs";
-import { ScoreRecord } from "./score/ScoreRecord";
 
 export const DisplayEvents = () => {
   const { selectedDate } = useSelectedDate();
@@ -73,8 +73,8 @@ export const DisplayEvents = () => {
 
       <DisplayTeams />
       <UpsertTeamButton />
-
-      <ScoreRecord />
+      <div className="gap-2 mt-10 text-2xl font-bold">스탯 기록</div>
+      <ScoreGrid />
     </div>
   );
 };
