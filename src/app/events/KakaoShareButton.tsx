@@ -6,13 +6,6 @@ import { day_js } from "@/share/lib/dayjs";
 import Image from "next/image";
 import React from "react";
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Kakao: any;
-  }
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const Kakao: any;
 
@@ -26,7 +19,10 @@ export const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
   const { getSearchParam } = useSelectedDate();
   if (!events) return;
   const onClickShare = () => {
-    const imageUrl = `${window.location.host}/background_group.jpeg`;
+    const imageUrl = `https://basclub.vercel.app/background_group.jpeg`;
+    // const imageUrl =
+    //   "http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png";
+    // console.log("imageUrl: ", imageUrl);
     const joinLink = `${window.location.host}/events?${getSearchParam()}`;
 
     const addressParam = new URLSearchParams({ k: events.detailAddress })
