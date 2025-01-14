@@ -46,7 +46,7 @@ const RefetchButton = () => {
   return (
     <PrimaryButton
       disabled={isFetching}
-      onClick={() => refetch({})}
+      onClick={() => refetch()}
       className="inline-flex gap-4 mb-4"
     >
       스탯기록 새로고침
