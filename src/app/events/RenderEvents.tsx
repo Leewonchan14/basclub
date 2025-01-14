@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { DisplayEvents } from "@/app/events/DisplayEvents";
 import { getIsAdmin } from "@/feature/auth/auth-action";
 import { EventsService } from "@/feature/events/events.service";
@@ -13,6 +15,7 @@ interface Props {
 export const RenderEvents: NextPage<Props> = async ({ selectedDate }) => {
   const isAdmin = await getIsAdmin();
   const events = await getService(EventsService).findByDate(selectedDate);
+  console.log('events: ', events);
 
   if (!events) {
     return (
