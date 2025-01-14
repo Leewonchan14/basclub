@@ -4,6 +4,7 @@ import { EventsScheme, PlainEvents } from "@/entity/event.entity";
 import { EventsService } from "@/feature/events/events.service";
 import { TeamService } from "@/feature/team/team.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
+import { revalidatePath } from "next/cache";
 import { DeepPartial } from "typeorm";
 
 export const upsertEvent = async (obj: DeepPartial<PlainEvents>) => {
@@ -14,6 +15,8 @@ export const upsertEvent = async (obj: DeepPartial<PlainEvents>) => {
   if (obj.id) newEvents.id = obj.id;
 
   await eventsService.upsert(newEvents);
+  revalidatePath("/events");
+  revalidatePath("/events/create");
 };
 
 export const removeEvent = async (id: string) => {
