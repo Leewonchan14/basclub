@@ -7,6 +7,11 @@ import { scoreMutateOption } from "@/feature/score/score-mutate";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 
+const INIT_SCORE: InputScore = {
+  score2: 0,
+  score3: 0,
+};
+
 export const useAddScore = () => {
   const { events, checkCanUpdateScore, isCanUpdateScore, isJoin } =
     useFetchSelectedEvents();
@@ -14,10 +19,7 @@ export const useAddScore = () => {
   const { mutateAsync, isPending } = useMutation(
     scoreMutateOption.addScore(events?.id ?? "", own?.id ?? "")
   );
-  const [score, setScore] = useState<InputScore>({
-    score2: 0,
-    score3: 0,
-  });
+  const [score, setScore] = useState<InputScore>(INIT_SCORE);
 
   const onChange = (name: keyof InputScore, value: number) => {
     setScore({ ...score, [name]: Number(value) });
@@ -27,7 +29,7 @@ export const useAddScore = () => {
     if (!events) return;
     if (!checkCanUpdateScore()) return;
     if (!isJoin) {
-      window.alert("모임에 참가하여 경기 스탯을 남겨보세요.");
+      return window.alert("모임에 참가하여 경기 스탯을 남겨보세요.");
     }
 
     const own = await needLoginPromise();
@@ -46,6 +48,7 @@ export const useAddScore = () => {
       ...score,
     });
     window.alert("득점이 기록되었습니다.");
+    setScore(INIT_SCORE);
   }, [
     checkCanUpdateScore,
     events,
