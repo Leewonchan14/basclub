@@ -31,6 +31,9 @@ export const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
 
     const findLoadLink = `https://map.kakao.com/link/to/${addressParam},${events.coordinates.lat},${events.coordinates.lng}`;
 
+    console.log("joinLink: ", joinLink);
+    console.log("findLoadLink: ", findLoadLink);
+
     if (!Kakao.isInitialized()) {
       Kakao.init(process.env.NEXT_PUBLIC_JAVASCRIPT_KEY);
     }
