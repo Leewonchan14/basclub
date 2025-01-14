@@ -11,13 +11,17 @@ export const useSelectedDate = () => {
 
   const selectedDate = day_js(params.get(SELECTED_DATE_KEY) ?? undefined);
 
-  const setSelectedDate = useCallback((date?: Date) => {
+  const setSelectedDate = useCallback((date?: Date, replace?: boolean) => {
     const former = day_js(date).format("YYYY-MM-DD");
     const query = new URLSearchParams(params.toString());
 
     if (date) query.set(SELECTED_DATE_KEY, former);
     else query.delete(SELECTED_DATE_KEY);
 
+    if (replace) {
+      router.replace(`?${query.toString()}`);
+      return;
+    }
     router.push(`?${query.toString()}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -28,7 +32,7 @@ export const useSelectedDate = () => {
 
   useEffect(() => {
     if (params.get(SELECTED_DATE_KEY) === null) {
-      setSelectedDate(day_js().toDate());
+      setSelectedDate(day_js().toDate(), true);
     }
   }, [params, setSelectedDate]);
 
