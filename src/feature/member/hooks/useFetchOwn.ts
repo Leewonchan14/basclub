@@ -4,5 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useFetchOwn = () => {
   const { data, isLoading } = useQuery(memberQueryApi.findOwn);
-  return { own: data, isLoading, isAdmin: data?.role === ERole.ADMIN };
+  const isMine = (id: string) => data?.id === id;
+  const isCanUpdate = (id: string) =>
+    data?.id === id || data?.role === ERole.ADMIN;
+  return {
+    own: data,
+    isLoading,
+    isAdmin: data?.role === ERole.ADMIN,
+    isMine,
+    isCanUpdate,
+  };
 };
