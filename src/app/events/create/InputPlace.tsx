@@ -30,7 +30,7 @@ export const InputPlace: NextPage<Props> = ({}) => {
           onChange={(e) => onChangeDetailAddress(e.target.value)}
         />
       </div>
-      <DisplayMap address={address} point={point} />
+      <DisplayMap detailAddress={detailAddress} point={point} />
     </div>
   );
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import Spinner from "@/app/ui/share/Spinner";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";

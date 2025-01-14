@@ -5,7 +5,7 @@ import { EventMutateButton } from "@/app/events/create/EventCreateButton";
 import { EventCreateProvider } from "@/app/events/create/EventCreateContext";
 import { InputPlace } from "@/app/events/create/InputPlace";
 import { InputTime } from "@/app/events/create/InputTime";
-import { SELECTED_DATE_KEY } from "@/app/ui/share/useSelectedDate";
+import { SELECTED_DATE_KEY } from "@/share/lib/dayjs";
 import { getIsAdmin } from "@/feature/auth/auth-action";
 import { getEventByDate } from "@/feature/events/event-query.action";
 import { day_js } from "@/share/lib/dayjs";

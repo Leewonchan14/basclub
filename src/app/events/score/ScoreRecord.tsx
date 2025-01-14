@@ -1,4 +1,5 @@
 "use client";
+
 import { ScoreList } from "@/app/events/score/ScoreList";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
@@ -6,6 +7,7 @@ import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { useAddScore } from "@/feature/score/hooks/useAddScore";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import React from "react";
 import { AddScoreForm } from "./AddScoreForm";
 
 export interface InputScore {
@@ -15,7 +17,7 @@ export interface InputScore {
 
 export const ScoreRecord = () => {
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <h2 className="flex gap-2 text-2xl font-bold text-gray-800">
         <div>스탯 기록</div>
         <div className="flex items-end text-base text-orange-600">
@@ -35,7 +37,7 @@ export const ScoreRecord = () => {
           </AccordionDetails>
         </Accordion>
       </div>
-    </>
+    </div>
   );
 };
 

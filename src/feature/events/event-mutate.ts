@@ -15,7 +15,7 @@ export const eventsMutateOption = {
     },
     onSuccess: (_data: unknown, _variables: Partial<PlainEvents>) => {
       getQueryClient().invalidateQueries({
-        queryKey: ["events"],
+        queryKey: [eventsQueryApi.findById("", false).queryKey[0]],
       });
     },
   },
@@ -43,7 +43,7 @@ export const eventsMutateOption = {
     ) => {
       getQueryClient().invalidateQueries({
         queryKey: [
-          ...eventsQueryApi.findById(variables.eventsId, true).queryKey,
+          ...eventsQueryApi.findById(variables.eventsId, false).queryKey,
         ],
       });
     },

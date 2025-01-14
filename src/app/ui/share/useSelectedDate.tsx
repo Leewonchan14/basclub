@@ -1,10 +1,10 @@
 "use client";
 
+import { SELECTED_DATE_KEY } from "@/share/lib/dayjs";
 import { Dayjs, day_js } from "@/share/lib/dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
-export const SELECTED_DATE_KEY = "selectedDate";
 export const useSelectedDate = () => {
   const router = useRouter();
   const params = useSearchParams();

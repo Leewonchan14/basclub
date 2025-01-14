@@ -26,4 +26,5 @@ export const getStartEndOfMonth = (date: Dayjs) => {
   const endOfMonth = date.endOf("month").endOf("week");
 
   return { startOfMonth, endOfMonth };
-};
+};export const SELECTED_DATE_KEY = "selectedDate";
+

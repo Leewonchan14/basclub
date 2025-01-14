@@ -13,7 +13,7 @@ const originDataSource = new DataSource({
   database: process.env.POSTGRES_DATABASE,
   entities: [Member, Team, Events, Score],
   synchronize: false,
-  logging: ["query", "error"],
+  logging: ["error"],
   migrations: [],
   ssl: true,
   subscribers: [],

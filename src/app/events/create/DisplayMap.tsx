@@ -2,21 +2,21 @@
 
 import { GeoPoint } from "@/entity/transformer/point.transformer";
 import { NextPage } from "next";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 interface Props {
-  address?: string;
+  detailAddress: string;
   point: GeoPoint;
 }
 
-const DisplayMap: NextPage<Props> = ({ address, point }) => {
-  if (!address) return null;
+const DisplayMap: NextPage<Props> = ({ detailAddress, point }) => {
+  const addressParam =
+    new URLSearchParams({ address: detailAddress }).toString().split("=")[1] ||
+    "상세 주소";
+
+  if (!addressParam) return null;
+
   // 지도 보기
   const handleClickFindMap = () => {
-    const addressParam = new URLSearchParams({ address })
-      .toString()
-      .split("=")[1];
-
     const url = `https://map.kakao.com/link/map/${addressParam},${point.lat},${point.lng}`;
 
     window.open(url);
@@ -24,10 +24,6 @@ const DisplayMap: NextPage<Props> = ({ address, point }) => {
 
   // 길찾기
   const handleClickFindLoad = () => {
-    const addressParam = new URLSearchParams({ address })
-      .toString()
-      .split("=")[1];
-
     const url = `https://map.kakao.com/link/to/${addressParam},${point.lat},${point.lng}`;
 
     window.open(url);
@@ -42,9 +38,9 @@ const DisplayMap: NextPage<Props> = ({ address, point }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <Map center={{ ...point }} className="w-full h-52 md:h-96">
+      {/* <Map center={{ ...point }} className="w-full h-52 md:h-96">
         <MapMarker position={{ ...point }} />
-      </Map>
+      </Map> */}
       <div className="flex gap-4">
         <button
           className="p-2 font-bold text-white bg-blue-600 rounded-lg"

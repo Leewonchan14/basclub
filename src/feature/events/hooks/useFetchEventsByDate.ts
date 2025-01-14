@@ -1,3 +1,5 @@
+"use client";
+
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";

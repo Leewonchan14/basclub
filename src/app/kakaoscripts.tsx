@@ -19,7 +19,7 @@ export const KakaoScripts = () => {
         strategy="beforeInteractive"
       />
 
-      <Script id="kakao-sdk">
+      <Script defer id="kakao-sdk" strategy="beforeInteractive">
         Kakao.init(&quot;{process.env.NEXT_PUBLIC_JAVASCRIPT_KEY}&quot;);
       </Script>
     </React.Fragment>

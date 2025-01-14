@@ -1,15 +1,21 @@
 "use client";
 
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { PlainEvents } from "@/entity/event.entity";
 import { day_js } from "@/share/lib/dayjs";
 import Image from "next/image";
+import React from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const Kakao: any;
 
-export const KakaoShareButton = () => {
-  const { events } = useFetchSelectedEvents();
+interface KakaoShareButtonProps {
+  events: PlainEvents;
+}
+
+export const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
+  events,
+}) => {
   const { getSearchParam } = useSelectedDate();
   if (!events) return;
   const onClickShare = () => {
