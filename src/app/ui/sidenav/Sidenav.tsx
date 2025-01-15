@@ -5,7 +5,7 @@ import ProfileLogin from "@/app/ui/sidenav/ProfileLogin";
 import { NextPage } from "next";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import React, { FC, Suspense, useState } from "react";
+import React, { FC, Suspense, useEffect, useState } from "react";
 
 interface NAV_LINK_ITEM {
   name: string;
@@ -20,6 +20,29 @@ const NAV_LINKS: { [k: string]: NAV_LINK_ITEM } = {
 } as const;
 
 export const Sidenav: NextPage<{ isLogin: boolean }> = ({ isLogin }) => {
+  const [agent, setAgent] = useState("");
+  const redirectToExternalBrowser = () => {
+    const targetUrl = window.location.href;
+    if (!navigator.userAgent.includes("INAPP")) {
+      console.log("not in app");
+      return;
+    }
+
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      window.location.href = "x-web-search://?";
+    } else {
+      window.location.href = `intent://${targetUrl.replace(
+        /https?:\/\//i,
+        ""
+      )}#Intent;scheme=http;end`;
+    }
+  };
+
+  useEffect(() => {
+    console.log("navigator.userAgent: ", navigator.userAgent);
+    redirectToExternalBrowser();
+    setAgent(navigator.userAgent);
+  }, []);
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -30,6 +53,7 @@ export const Sidenav: NextPage<{ isLogin: boolean }> = ({ isLogin }) => {
         }`}
         onClick={() => setIsOpen(false)}
       />
+      {agent}
       <div
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-5 left-5 w-12 h-12 flex items-center justify-center bg-white border-2 border-gray-700 z-20 cursor-pointer rounded-lg visible md:invisible ${
