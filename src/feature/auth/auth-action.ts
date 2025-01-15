@@ -1,7 +1,7 @@
 "use server";
 
 import { ERole } from "@/entity/enum/role";
-import { jwtHandler, JWTHandler } from "@/feature/auth/jwt-handler";
+import { IPayLoad, jwtHandler, JWTHandler } from "@/feature/auth/jwt-handler";
 import { MemberService } from "@/feature/member/member.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 import { cookies } from "next/headers";
@@ -69,18 +69,6 @@ export const getToken = async () => {
 export const getPayload = async () => {
   const token = await getToken();
   const payload = await jwtHandler.verifyToken(token);
-  if (payload?.id) {
-    const findMember = await getService(MemberService).findById(payload?.id);
-
-    if (
-      !findMember ||
-      payload.id !== findMember.id ||
-      payload.role !== findMember.role
-    ) {
-      logout();
-    }
-  }
-
   return payload;
 };
 

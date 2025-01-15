@@ -36,6 +36,10 @@ export class Member extends TimeStampEntity {
       guestById: this.guestBy,
     };
   }
+
+  static validPayload(payload: IPayLoad, member?: Member | null) {
+    return payload.id === member?.id && payload.role === member?.role;
+  }
 }
 
 export type PlainMember = ReturnType<Member["toPlain"]>;

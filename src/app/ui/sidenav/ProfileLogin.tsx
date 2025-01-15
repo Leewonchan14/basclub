@@ -15,6 +15,7 @@ interface Props {
 }
 
 export const ProfileLogin: NextPage<Props> = ({ isLogin }) => {
+  useFetchOwn();
   return (
     <div className="mt-auto mb-16">
       {isLogin ? <Profile /> : <LoginButton />}
