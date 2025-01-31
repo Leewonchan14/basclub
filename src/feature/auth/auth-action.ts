@@ -1,7 +1,7 @@
 "use server";
 
 import { ERole } from "@/entity/enum/role";
-import { IPayLoad, jwtHandler, JWTHandler } from "@/feature/auth/jwt-handler";
+import { jwtHandler, JWTHandler } from "@/feature/auth/jwt-handler";
 import { MemberService } from "@/feature/member/member.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 import { cookies } from "next/headers";

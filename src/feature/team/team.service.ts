@@ -68,7 +68,10 @@ export class TeamService implements IService<Team> {
       });
 
       // score들도 삭제
-      await this.scoreService.deleteScoresByMemberId(memberId);
+      await this.scoreService.deleteScoresByMemberIdAndEventsId(
+        memberId,
+        eventId
+      );
       return;
     }
 

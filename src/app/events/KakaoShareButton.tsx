@@ -1,6 +1,5 @@
 "use client";
 
-import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { PlainEvents } from "@/entity/event.entity";
 import { day_js } from "@/share/lib/dayjs";
 import Image from "next/image";
@@ -16,7 +15,6 @@ interface KakaoShareButtonProps {
 export const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
   events,
 }) => {
-  const { getSearchParam } = useSelectedDate();
   if (!events) return;
   const onClickShare = () => {
     const imageUrl = `https://basclub.vercel.app/background_group.jpeg`;
@@ -49,7 +47,7 @@ export const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({
         ).format("a h시 mm분")} ~ ${day_js(events.timeSlot.end).format(
           "a h시 mm분"
         )}`,
-        description: `${events.detailAddress}에서 농구해요!`,
+        description: `${events.address}에서 농구해요!`,
         imageUrl,
         link: {
           mobileWebUrl: joinLink,
