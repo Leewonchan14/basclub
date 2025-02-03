@@ -23,8 +23,8 @@ export class MemberService implements IService<Member> {
       where: { id: obj.id },
     });
 
-    // 카톡 프로필과 다르면 프로필 다시 하게 변경
-    if (findMember && findMember.profileUrl != obj.profileUrl) {
+    // 준웅씨 프로필 사진 변경하기
+    if (findMember?.id === "3883039025") {
       await this.memberRepository.update(obj.id, {
         ...findMember,
         profileUrl: obj.profileUrl,
