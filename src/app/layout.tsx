@@ -6,7 +6,6 @@ import MuiProvider from "@/share/lib/mui-x/MuiProvider";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Head from "next/head";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,6 +29,9 @@ export const metadata: Metadata = {
   openGraph: {
     images: [{ url: "/background_group.jpeg" }],
   },
+  verification: {
+    google: "eF9PZe9bFQ_LmAJQMIO4uXoUkfOJ8PcrKeF-kLuew6M",
+  },
 };
 
 export default function RootLayout({
@@ -39,12 +41,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <meta
-          name="google-site-verification"
-          content="eF9PZe9bFQ_LmAJQMIO4uXoUkfOJ8PcrKeF-kLuew6M"
-        />
-      </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
