@@ -7,17 +7,29 @@ import {
 } from "@/share/lib/typeorm/DIContainer";
 import { uuid } from "@/share/lib/uuid/uuid";
 import _ from "lodash";
-import { DeepPartial, Repository } from "typeorm";
+import { Repository } from "typeorm";
 
 @Service
 export class MemberService implements IService<Member> {
   @InjectRepository(Member)
   private memberRepository: Repository<Member>;
 
-  async findByIdOrSave(obj: DeepPartial<Member> & { id: Member["id"] }) {
+  async findByIdOrSave(obj: {
+    id: Member["id"];
+    nickname: Member["nickname"];
+    profileUrl: Member["profileUrl"];
+  }) {
     let findMember = await this.memberRepository.findOne({
       where: { id: obj.id },
     });
+
+    // 카톡 프로필과 다르면 프로필 다시 하게 변경
+    if (findMember && findMember.profileUrl != obj.profileUrl) {
+      await this.memberRepository.update(obj.id, {
+        ...findMember,
+        profileUrl: obj.profileUrl,
+      });
+    }
 
     if (!findMember) {
       findMember = await this.memberRepository.save(
@@ -30,10 +42,6 @@ export class MemberService implements IService<Member> {
 
   findById(id: string) {
     return this.memberRepository.findOne({ where: { id } });
-  }
-
-  save(obj: DeepPartial<Member>) {
-    return;
   }
 
   findGuestByMemberId(memberId: string) {
