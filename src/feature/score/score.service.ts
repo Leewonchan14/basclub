@@ -1,4 +1,5 @@
 import { Score } from "@/entity/score.entity";
+import { Team } from "@/entity/team.entity";
 import { EventsService } from "@/feature/events/events.service";
 import { MemberService } from "@/feature/member/member.service";
 import { day_js } from "@/share/lib/dayjs";
@@ -43,9 +44,9 @@ export class ScoreService implements IService<Score> {
       .where((qb) => {
         const subQuery = qb
           .subQuery()
-          .select("score.memberId")
-          .from(Score, "score")
-          .where("score.eventsId = :eventsId", { eventsId })
+          .select("team.memberId")
+          .from(Team, "team")
+          .where("team.eventsId = :eventsId", { eventsId })
           .getQuery();
         return `score.memberId IN ${subQuery}`;
       })
