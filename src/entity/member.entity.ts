@@ -37,8 +37,14 @@ export class Member extends TimeStampEntity {
     };
   }
 
-  static validPayload(payload: IPayLoad, member?: Member | null) {
-    return payload.id === member?.id && payload.role === member?.role;
+  static validPayload(payload: IPayLoad, member: Member) {
+    // id가 다르면 in_valid
+    if (payload.id !== member.id) return false;
+    // role이 다르면 in_valid
+    if (payload.role !== member.role) return false;
+    // role이 BAN이라면 in_valid
+    if (payload.role === ERole.BAN) return false;
+    return true;
   }
 }
 

@@ -16,7 +16,7 @@ export const getMemberOwn = async () => {
 
   const findMember = await getService(MemberService).findById(id);
 
-  const isValid = Member.validPayload(payload, findMember);
+  const isValid = findMember && Member.validPayload(payload, findMember);
 
   if (!isValid || !findMember) {
     await logout();

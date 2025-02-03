@@ -14,12 +14,26 @@ export class MemberService implements IService<Member> {
   @InjectRepository(Member)
   private memberRepository: Repository<Member>;
 
+  async findByIdOrSave(obj: DeepPartial<Member> & { id: Member["id"] }) {
+    let findMember = await this.memberRepository.findOne({
+      where: { id: obj.id },
+    });
+
+    if (!findMember) {
+      findMember = await this.memberRepository.save(
+        this.memberRepository.create(obj)
+      );
+    }
+
+    return findMember;
+  }
+
   findById(id: string) {
     return this.memberRepository.findOne({ where: { id } });
   }
 
   save(obj: DeepPartial<Member>) {
-    return this.memberRepository.save(this.memberRepository.create(obj));
+    return;
   }
 
   findGuestByMemberId(memberId: string) {
