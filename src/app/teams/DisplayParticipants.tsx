@@ -1,19 +1,25 @@
 "use client";
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
+import { SmallDeleteButton } from "@/app/ui/share/SmallDeleteButton";
+import { eventsMutateOption } from "@/feature/events/event-mutate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { useFetchAvgScoreByEvents } from "@/feature/score/hooks/useFetchAvgScoreByEvents";
 import { Skeleton } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import React from "react";
 
 // 참가 인원들
 export const DisplayParticipants = () => {
-  const [mount, setMount] = useState(false);
-  const { teamsArr, ownGuestTeams, isJoin, isLoading } =
+  const { isAdmin } = useFetchOwn();
+  const { events, teamsArr, ownGuestTeams, isJoin, isLoading } =
     useFetchSelectedEvents();
   const { scoreMap, isLoading: isLoadingScore } = useFetchAvgScoreByEvents();
+  const { mutateAsync, isPending } = useMutation(eventsMutateOption.toggleJoin);
 
-  const sliderRef = useRef<HTMLDivElement>(null);
+  /* const sliderRef = useRef<HTMLDivElement>(null);
+  const [mount, setMount] = useState(false);
   const isMouseEnter = useRef(false);
   useEffect(() => {
     if (mount) return;
@@ -35,7 +41,7 @@ export const DisplayParticipants = () => {
 
     const interval = setInterval(autoScroll, 30);
     return () => clearInterval(interval);
-  }, [mount]);
+  }, [mount]); */
 
   const joinStateText = () => {
     const text = "참가중";
@@ -46,7 +52,7 @@ export const DisplayParticipants = () => {
     return `게스트 ${ownGuestTeams.length}명과 함께 ${text}`;
   };
 
-  if (!mount || isLoading || isLoadingScore) {
+  if (isLoading || isLoadingScore || !events?.id) {
     return (
       <div className="flex flex-col gap-2 font-bold">
         <div className="text-2xl">참가 인원</div>
@@ -68,7 +74,7 @@ export const DisplayParticipants = () => {
         </div>
       </div>
       <div
-        onTouchMove={() => {
+        /* onTouchMove={() => {
           isMouseEnter.current = true;
         }}
         onMouseMove={() => {
@@ -82,11 +88,11 @@ export const DisplayParticipants = () => {
             isMouseEnter.current = false;
           }, 1500);
         }}
-        ref={sliderRef}
-        className="flex items-center gap-4 p-4 overflow-x-auto bg-gray-100 rounded-lg"
+        ref={sliderRef} */
+        className="flex p-4 overflow-x-auto bg-gray-100 rounded-lg"
       >
         {teamsArr.map((teamMember, index) => (
-          <React.Fragment key={teamMember.id}>
+          <div className="relative flex items-center" key={teamMember.id}>
             <MemberProfile
               member={teamMember.member}
               avgScore={
@@ -96,10 +102,23 @@ export const DisplayParticipants = () => {
               }
               isLoading={isLoadingScore}
             />
-            {index !== teamsArr.length - 1 && (
-              <div className="border-l-2 border-black border-dotted h-14" />
+            {isAdmin && (
+              <SmallDeleteButton
+                disabled={isPending}
+                className="absolute font-bold top-2 left-2"
+                onClick={() =>
+                  mutateAsync({
+                    eventsId: events.id,
+                    memberId: teamMember.member.id,
+                    guestCnt: 0,
+                  })
+                }
+              />
             )}
-          </React.Fragment>
+            {index !== teamsArr.length - 1 && (
+              <div className="border-l-2 border-black border-dotted h-14 mx-4" />
+            )}
+          </div>
         ))}
       </div>
     </React.Fragment>

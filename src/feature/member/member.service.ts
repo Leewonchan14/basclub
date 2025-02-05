@@ -51,33 +51,51 @@ export class MemberService implements IService<Member> {
     });
   }
 
-  async getMemberGuestByMemberIdAndCnt(memberId: string, guestCnt: number) {
-    const findMember = await this.findById(memberId);
-    if (!findMember) {
+  async generateOriginMemberGuest(
+    memberId: string, //
+    guestCnt: number
+  ) {
+    let originMember = await this.findById(memberId);
+    // 게스트라면 진짜 멤버찾기
+    if (originMember?.guestBy) {
+      originMember = await this.findById(originMember.guestBy);
+    }
+    if (!originMember) {
       throw new Error("Member not found");
     }
 
-    const guests = await this.memberRepository.find({
-      where: { guestBy: memberId },
-      order: { createdAt: "ASC" },
-    });
+    const existGuests =
+      (guestCnt &&
+        (await this.memberRepository.find({
+          where: { guestBy: originMember.id },
+          order: { createdAt: "ASC" },
+          take: guestCnt,
+        }))) ||
+      [];
 
-    const newGuests = _.range(guestCnt).map((i) => {
-      const newGuests = this.memberRepository.create({
-        id: guests[i]?.id ?? uuid(),
-        role: ERole.GUEST,
-        nickname: `${findMember.nickname}-Guest-${i + 1}`,
-        profileUrl: findMember.profileUrl,
-      });
+    const newGuests = _.range(Math.max(0, guestCnt - existGuests.length)).map(
+      (i) => {
+        const newGuests = this.memberRepository.create({
+          id: uuid(),
+          role: ERole.GUEST,
+          nickname: `${originMember.nickname}-Guest-${
+            existGuests.length + i + 1
+          }`,
+          profileUrl: originMember.profileUrl,
+        });
 
-      newGuests.guestBy = findMember.id;
+        newGuests.guestBy = originMember.id;
 
-      return newGuests;
-    });
+        return newGuests;
+      }
+    );
 
     await this.memberRepository.save(newGuests);
 
-    return { findMember, newGuests, guests };
+    const members = [originMember, ...existGuests, ...newGuests];
+    const memberIds = members.map((m) => m.id);
+
+    return { originMember, members, memberIds };
   }
 
   async getRepository() {

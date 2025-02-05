@@ -8,7 +8,7 @@ import {
   InjectRepository,
   Service,
 } from "@/share/lib/typeorm/DIContainer";
-import { In, Repository } from "typeorm";
+import { Repository } from "typeorm";
 
 @Service
 export class TeamService implements IService<Team> {
@@ -33,6 +33,9 @@ export class TeamService implements IService<Team> {
       where: { events: { id: eventId } },
       order: {
         createdAt: "ASC",
+        member: {
+          nickname: "ASC",
+        },
       },
       relations: { events: true, member: true },
     });
@@ -52,48 +55,26 @@ export class TeamService implements IService<Team> {
       memberId
     );
 
-    const { findMember, newGuests, guests } =
-      await this.memberService.getMemberGuestByMemberIdAndCnt(
-        memberId,
-        guestCnt
-      );
+    const findEvent = await this.eventsService.findById(eventId);
+    if (!findEvent) {
+      throw new Error("Event not found");
+    }
 
     // 이미 있다면 삭제
     if (findTeam) {
-      await this.teamRepository.remove(findTeam);
-      // team의 게스트들도 다 삭제
-      await this.teamRepository.delete({
-        member: { id: In(guests.map((g) => g.id)) },
-      });
-
-      // score들도 삭제
-      await this.scoreService.deleteScoresByMemberIdAndEventsId(
-        memberId,
-        eventId
-      );
+      await this.removeJoin(eventId, memberId);
       return;
     }
 
-    const findEvent = await this.eventsService.findById(eventId);
+    const { originMember, members } =
+      await this.memberService.generateOriginMemberGuest(memberId, guestCnt);
 
-    if (!findEvent) {
-      return;
-    }
+    // 평균 점수 구하기
+    const avgScore = await this.scoreService.findScoresAVGByMemberId(
+      originMember.id
+    );
 
-    // 1. 본인 Team 생성
-    const avgScore = await this.scoreService.findScoresAVGByMemberId(memberId);
-
-    const ownTeam = this.teamRepository.create({
-      group: 0,
-      avgScore: avgScore ?? 0,
-    });
-
-    ownTeam.events = Promise.resolve(findEvent);
-    ownTeam.member = findMember;
-
-    // 2. 게스트들 Teams 생성
-
-    const guestsTeams = newGuests.map((m) => {
+    const newTeams = members.map((m) => {
       const newTeam = this.teamRepository.create({
         group: 0,
         avgScore: 0,
@@ -101,11 +82,38 @@ export class TeamService implements IService<Team> {
 
       newTeam.events = Promise.resolve(findEvent);
       newTeam.member = m;
-
+      if (m.id === originMember.id) {
+        newTeam.avgScore = avgScore ?? 0;
+      }
       return newTeam;
     });
 
-    await this.teamRepository.save([ownTeam, ...guestsTeams]);
+    await this.teamRepository.save(newTeams);
+  }
+
+  // 참가 취소
+  async removeJoin(eventId: string, memberId: string) {
+    const findMember = await this.memberService.findById(memberId);
+
+    if (!findMember) {
+      throw new Error("Member not found");
+    }
+
+    const originMemberId = findMember.guestBy || findMember.id;
+
+    // 이벤트에 team모두 삭제
+    const teams = await this.teamRepository.findBy({
+      events: { id: eventId },
+      member: [{ id: originMemberId }, { guestBy: originMemberId }],
+    });
+
+    await this.teamRepository.remove(teams);
+
+    // 이벤트에 score모두 삭제
+    await this.scoreService.deleteScoresByEventsIdAndMemberId(
+      eventId,
+      originMemberId
+    );
     return;
   }
 

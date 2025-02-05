@@ -31,7 +31,7 @@ export const toggleJoinEvent = async (
   guestCnt: number
 ) => {
   const eventsService = getService(TeamService);
-  guestCnt = z.coerce.number().min(0).max(10).parse(guestCnt);
+  guestCnt = z.coerce.number().min(0).max(9).parse(guestCnt);
   await eventsService.toggleJoin(eventsId, memberId, guestCnt);
 
   return;

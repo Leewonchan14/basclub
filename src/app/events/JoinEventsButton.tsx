@@ -70,7 +70,7 @@ const InputGuest: React.FC<InputGuestProps> = ({
 
   // 포커스가 해제될때 0, 30으로 최대 최소값을 제한하는 함수
   const onBlur = useCallback(() => {
-    const sorted = [0, guestCnt, 10].sort((a, b) => a - b);
+    const sorted = [0, guestCnt, 9].sort((a, b) => a - b);
     setGuestCnt(sorted[1]);
   }, [guestCnt, setGuestCnt]);
 
@@ -91,7 +91,7 @@ const InputGuest: React.FC<InputGuestProps> = ({
         id={"guestCnt"}
         type="number"
         min={0}
-        max={30}
+        max={9}
         className={`p-2 transition-colors border border-gray-300 rounded outline-none focus:ring-2 ${
           readonly &&
           "bg-gray-100 outline-none !focus:ring-0 border-none text-orange-500 font-bold !py-0"
