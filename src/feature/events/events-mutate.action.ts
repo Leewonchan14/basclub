@@ -6,6 +6,7 @@ import { TeamService } from "@/feature/team/team.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 import { revalidatePath } from "next/cache";
 import { DeepPartial } from "typeorm";
+import { z } from "zod";
 
 export const upsertEvent = async (obj: DeepPartial<PlainEvents>) => {
   const eventsService = getService(EventsService);
@@ -30,6 +31,7 @@ export const toggleJoinEvent = async (
   guestCnt: number
 ) => {
   const eventsService = getService(TeamService);
+  guestCnt = z.coerce.number().min(0).max(10).parse(guestCnt);
   await eventsService.toggleJoin(eventsId, memberId, guestCnt);
 
   return;

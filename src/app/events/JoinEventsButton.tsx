@@ -3,6 +3,7 @@
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import Spinner from "@/app/ui/share/Spinner";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
+import _ from "lodash";
 import { ChangeEvent, useCallback, useState } from "react";
 
 export const JoinEventsButton = () => {
@@ -66,6 +67,13 @@ const InputGuest: React.FC<InputGuestProps> = ({
     },
     [setGuestCnt]
   );
+
+  // 포커스가 해제될때 0, 30으로 최대 최소값을 제한하는 함수
+  const onBlur = useCallback(() => {
+    const sorted = [0, guestCnt, 10].sort((a, b) => a - b);
+    setGuestCnt(sorted[1]);
+  }, [guestCnt, setGuestCnt]);
+
   return (
     <div className="inline-flex flex-col max-w-20">
       <label
@@ -77,6 +85,7 @@ const InputGuest: React.FC<InputGuestProps> = ({
       <input
         name={"guestCnt"}
         value={String(guestCnt)}
+        onBlur={onBlur}
         readOnly={isPending}
         onChange={onChange}
         id={"guestCnt"}

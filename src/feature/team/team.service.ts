@@ -46,7 +46,6 @@ export class TeamService implements IService<Team> {
     return findTeam;
   }
 
-  // TODO guestCnt 사용해야함
   async toggleJoin(eventId: string, memberId: string, guestCnt: number) {
     const findTeam = await this.findTeamsByEventIdAndMemberId(
       eventId,

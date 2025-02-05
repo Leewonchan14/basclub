@@ -27,13 +27,11 @@ export const useJoinEvents = ({ guestCnt }: { guestCnt: number }) => {
     await needLoginPromise();
     if (!memberId) return;
     if (!eventsId) return;
-
-    if (isJoin) {
-      if (
-        !window.confirm("참가 취소시 게스트와 기록된 스탯 모두 삭제 됩니다.")
-      ) {
-        return;
-      }
+    if (
+      isJoin &&
+      !window.confirm("참가 취소시 게스트와 기록된 스탯 모두 삭제 됩니다.")
+    ) {
+      return;
     }
 
     await mutateAsync({ eventsId, memberId, guestCnt });
