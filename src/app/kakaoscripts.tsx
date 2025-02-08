@@ -19,9 +19,9 @@ export const KakaoScripts = () => {
       ></Script>
 
       {/* 카카오 공유를 위한 스크립트 */}
-      <Script type="text/javascript" id="kakao-sdk" crossOrigin="anonymous">
+      {/* <Script type="text/javascript" id="kakao-sdk" crossOrigin="anonymous">
         Kakao.init(&quot;{process.env.NEXT_PUBLIC_JAVASCRIPT_KEY}&quot;);
-      </Script>
+      </Script> */}
     </React.Fragment>
   );
 };
