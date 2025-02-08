@@ -39,6 +39,10 @@ export class EventsService implements IService<Events> {
     return this.eventsRepository.findOne({ where: { date } });
   }
 
+  async findLasted(take: number) {
+    return this.eventsRepository.find({ take, order: { date: "DESC" } });
+  }
+
   async findByMonth(date: Dayjs) {
     const { startOfMonth, endOfMonth } = getStartEndOfMonth(date);
 

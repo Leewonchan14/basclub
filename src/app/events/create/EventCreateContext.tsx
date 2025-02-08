@@ -1,10 +1,9 @@
 "use client";
 
-import { SELECTED_DATE_KEY } from "@/share/lib/dayjs";
 import { Events, PlainEvents } from "@/entity/event.entity";
 import type { GeoPoint } from "@/entity/transformer/point.transformer";
 import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
-import { day_js } from "@/share/lib/dayjs";
+import { SELECTED_DATE_KEY, day_js } from "@/share/lib/dayjs";
 import { useSearchParams } from "next/navigation";
 import { createContext, useCallback, useContext, useState } from "react";
 
@@ -16,8 +15,10 @@ export interface EventCreateContextType {
   selectedDate: string | null;
   timeSlot: TimeSlot;
   plainEvents: PlainEvents;
+  lastEvents: PlainEvents[];
   setAddressPoint: (address: string, point: GeoPoint) => void;
   onChangeDetailAddress: (nextValue: string) => void;
+  onChangeEvents: (lastEventId: string) => void;
   setTimeSlot: (timeSlot: TimeSlot) => void;
 }
 
@@ -28,14 +29,17 @@ export const EventCreateContext = createContext<
 interface ProviderProps {
   children: React.ReactNode;
   events: Partial<ReturnType<Events["toPlain"]>>;
+  lastEvents: PlainEvents[];
 }
 
 export const EventCreateProvider: React.FC<ProviderProps> = ({
   children,
   events,
+  lastEvents,
 }) => {
   const params = useSearchParams();
   const selectedDate = params.get(SELECTED_DATE_KEY);
+
   const [address, setAddress] = useState(events.address ?? "");
   const [detailAddress, setDetailAddress] = useState(
     events.detailAddress ?? ""
@@ -81,6 +85,22 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({
     setDetailAddress(nextValue);
   }, []);
 
+  const onChangeEvents = useCallback(
+    (lastEventId: string) => {
+      const findEvent = lastEvents.find((e) => e.id === lastEventId);
+      if (findEvent) {
+        setAddress(findEvent.address);
+        setDetailAddress(findEvent.detailAddress);
+        setPoint(findEvent.coordinates);
+        setTimeSlot({
+          start: day_js(findEvent.timeSlot.start),
+          end: day_js(findEvent.timeSlot.end),
+        });
+      }
+    },
+    [lastEvents, setTimeSlot]
+  );
+
   const plainEvents: PlainEvents = {
     id: events.id ?? "",
     address,
@@ -102,9 +122,11 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({
         point,
         timeSlot,
         plainEvents,
+        lastEvents,
         selectedDate,
         setAddressPoint,
         onChangeDetailAddress,
+        onChangeEvents,
         setTimeSlot,
       }}
     >
