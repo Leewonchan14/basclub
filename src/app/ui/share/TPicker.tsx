@@ -2,7 +2,6 @@
 
 import { TimeSlot } from "@/entity/transformer/timSlot.transformer";
 import { day_js } from "@/share/lib/dayjs";
-import { TimePicker } from "@mui/x-date-pickers";
 
 export interface TPickerProps {
   tKey: keyof TimeSlot;
@@ -35,21 +34,24 @@ export const TPicker: React.FC<TPickerProps> = function ({
       .add(50, "minute");
   }
 
+  // TODO : TimePicker 컴포넌트 추가
+
   return (
-    <TimePicker
-      label={text}
-      readOnly={readonly}
-      value={timeSlot[tKey]}
-      onChange={(value) => {
-        if (!value || !tKey) return;
-        setTimeSlot?.({ ...timeSlot, [tKey]: value });
-      }}
-      ampm={false}
-      minutesStep={10}
-      {...{
-        ...{},
-      }}
-      {...timeLimit}
-    />
+    <></>
+    // <TimePicker
+    //   label={text}
+    //   readOnly={readonly}
+    //   value={timeSlot[tKey]}
+    //   onChange={(value) => {
+    //     if (!value || !tKey) return;
+    //     setTimeSlot?.({ ...timeSlot, [tKey]: value });
+    //   }}
+    //   ampm={false}
+    //   minutesStep={10}
+    //   {...{
+    //     ...{},
+    //   }}
+    //   {...timeLimit}
+    // />
   );
 };

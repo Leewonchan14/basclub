@@ -1,6 +1,7 @@
 "use client";
 
 import { LogoImage } from "@/app/ui/logo/LogoImage";
+import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import ProfileLogin from "@/app/ui/sidenav/ProfileLogin";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -24,20 +25,20 @@ export const Sidenav: NextPage<{ isLogin: boolean }> = ({ isLogin }) => {
   return (
     <React.Fragment>
       <div
-        className={`fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 md:hidden ${
+        className={`fixed left-0 top-0 z-10 h-full w-full bg-black bg-opacity-50 md:hidden ${
           !isOpen && "hidden"
         }`}
         onClick={() => setIsOpen(false)}
       />
       <div
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-5 left-5 w-12 h-12 flex items-center justify-center bg-white border-2 border-gray-700 z-20 cursor-pointer rounded-lg visible md:invisible ${
+        className={`visible fixed bottom-5 left-5 z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-lg border-2 border-gray-700 bg-white md:invisible ${
           isOpen && "hidden"
         }`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="w-6 h-6"
+          className="h-6 w-6"
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
@@ -50,14 +51,15 @@ export const Sidenav: NextPage<{ isLogin: boolean }> = ({ isLogin }) => {
         </svg>
       </div>
       <div
-        className={`fixed z-10 flex flex-col h-screen px-6 py-12 transition-transform duration-300 shadow-lg ease-in-out -translate-x-full bg-white w-sidenav-width md:translate-x-0 ${
+        className={`fixed z-10 flex h-screen w-sidenav-width -translate-x-full flex-col bg-white px-6 py-12 shadow-lg transition-transform duration-300 ease-in-out md:translate-x-0 ${
           isOpen && "translate-x-0"
         }`}
       >
-        <div className="flex flex-col mb-12">
+        <div className="mb-12 flex flex-col">
           <LogoImage />
         </div>
         <div className="flex flex-col gap-6">
+          <PrimaryButton>안녕하세요</PrimaryButton>
           <Suspense>
             {Object.entries(NAV_LINKS).map(([k, v]) => (
               <SideLink key={k} item={v} />
@@ -76,13 +78,13 @@ export const SideLink: FC<{ item: NAV_LINK_ITEM }> = ({ item }) => {
   const searchParam = useSearchParams();
 
   const preQuery = new URLSearchParams(
-    Object.fromEntries(searchParam.entries())
+    Object.fromEntries(searchParam.entries()),
   ).toString();
 
   const isActive = path === usePathname();
   return (
     <Link
-      className={`block bg-gray-300 p-4 rounded-lg font-bold ${
+      className={`block rounded-lg bg-gray-300 p-4 font-bold ${
         isActive && "!bg-orange-500 text-white"
       }`}
       href={`${path}?${preQuery}`}

@@ -2,6 +2,7 @@ import { SideNavLayout } from "@/app/ui/sidenav/SideNavLayout";
 import QueryProviders from "@/share/lib/tasntack-query/query-providers";
 
 import { KakaoScripts } from "@/app/kakaoscripts";
+import FlowbiteWrapper from "@/app/ui/layout/flowbite-wrapper";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -43,10 +44,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-white antialiased`}
       >
-        <KakaoScripts />
-        <QueryProviders>
-          <SideNavLayout>{children}</SideNavLayout>
-        </QueryProviders>
+        <FlowbiteWrapper>
+          <KakaoScripts />
+          <QueryProviders>
+            <SideNavLayout>{children}</SideNavLayout>
+          </QueryProviders>
+        </FlowbiteWrapper>
       </body>
     </html>
   );

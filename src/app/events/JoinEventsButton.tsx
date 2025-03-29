@@ -17,7 +17,7 @@ export const JoinEventsButton = () => {
   if (!isCanJoin) {
     return (
       <div className="flex flex-col items-center gap-2">
-        <div className="flex flex-col items-center justify-center h-40 text-gray-500">
+        <div className="flex h-40 flex-col items-center justify-center text-gray-500">
           <p>참가 기한이 지났습니다.</p>
         </div>
       </div>
@@ -33,11 +33,7 @@ export const JoinEventsButton = () => {
           isPending={isPending}
         />
       )}
-      <PrimaryButton
-        disabled={isPending || !isCanJoin}
-        onClick={onJoin}
-        className="inline-flex self-end gap-4 px-10 py-2 font-bold text-white bg-orange-600 rounded-lg text-nowrap disabled:opacity-50"
-      >
+      <PrimaryButton disabled={isPending || !isCanJoin} onClick={onJoin}>
         {!isPending && (isJoin ? "참가취소" : "참가하기")}
         {isPending && (
           <Spinner>
@@ -65,7 +61,7 @@ const InputGuest: React.FC<InputGuestProps> = ({
     (e: ChangeEvent<HTMLInputElement>) => {
       setGuestCnt(Number(e.target.value));
     },
-    [setGuestCnt]
+    [setGuestCnt],
   );
 
   // 포커스가 해제될때 0, 30으로 최대 최소값을 제한하는 함수
@@ -75,10 +71,10 @@ const InputGuest: React.FC<InputGuestProps> = ({
   }, [guestCnt, setGuestCnt]);
 
   return (
-    <div className="inline-flex flex-col max-w-20">
+    <div className="inline-flex max-w-20 flex-col">
       <label
         htmlFor={"guestCnt"}
-        className="px-2 mb-1 text-sm text-gray-600 text-nowrap"
+        className="mb-1 text-nowrap px-2 text-sm text-gray-600"
       >
         게스트 수
       </label>
@@ -92,9 +88,9 @@ const InputGuest: React.FC<InputGuestProps> = ({
         type="number"
         min={0}
         max={9}
-        className={`p-2 transition-colors border border-gray-300 rounded outline-none focus:ring-2 ${
+        className={`rounded border border-gray-300 p-2 outline-none transition-colors focus:ring-2 ${
           readonly &&
-          "bg-gray-100 outline-none !focus:ring-0 border-none text-orange-500 font-bold !py-0"
+          "!focus:ring-0 border-none bg-gray-100 !py-0 font-bold text-orange-500 outline-none"
         }`}
       />
     </div>
