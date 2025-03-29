@@ -1,7 +1,6 @@
 import { JoinEventsButton } from "@/app/events/JoinEventsButton";
 import { KakaoShareButton } from "@/app/events/KakaoShareButton";
 import DisplayMap from "@/app/events/create/DisplayMap";
-import { ScoreRecord } from "@/app/events/score/ScoreRecord";
 import { DisplayParticipants } from "@/app/teams/DisplayParticipants";
 import { DisplayTeams } from "@/app/teams/DisplayTeams";
 import { UpsertTeamButton } from "@/app/teams/UpsertTeamButton";
@@ -26,7 +25,7 @@ export const DisplayEvents: NextPage<Props> = async ({ events }) => {
     <Suspense>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2 font-bold">
-          <div className="text-2xl ">시간 및 장소</div>
+          <div className="text-2xl">시간 및 장소</div>
           <div className="flex items-center gap-4">
             <KakaoShareButton events={events.toPlain()} />
             <div className="flex flex-col items-start text-sm font-bold">
@@ -55,8 +54,6 @@ export const DisplayEvents: NextPage<Props> = async ({ events }) => {
 
         <DisplayTeams />
         <UpsertTeamButton />
-
-        <ScoreRecord />
       </div>
     </Suspense>
   );

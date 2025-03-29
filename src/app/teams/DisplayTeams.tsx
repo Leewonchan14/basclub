@@ -4,7 +4,6 @@ import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { PlainTeam } from "@/entity/team.entity";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useFetchAvgScoreByEvents } from "@/feature/score/hooks/useFetchAvgScoreByEvents";
-import { Skeleton } from "@mui/material";
 import React from "react";
 
 export const DisplayTeams = () => {
@@ -14,11 +13,7 @@ export const DisplayTeams = () => {
   if (isLoading || isLoadingScore)
     return (
       <Layout>
-        <Skeleton
-          className="rounded-lg"
-          variant="rectangular"
-          height={"12rem"}
-        />
+        <div className="rounded-lg h-24" />
       </Layout>
     );
   const isNoTeam = groupedTeam.length === 0;

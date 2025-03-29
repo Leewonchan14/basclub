@@ -6,7 +6,6 @@ import { eventsMutateOption } from "@/feature/events/event-mutate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { useFetchAvgScoreByEvents } from "@/feature/score/hooks/useFetchAvgScoreByEvents";
-import { Skeleton } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
 
@@ -17,31 +16,6 @@ export const DisplayParticipants = () => {
     useFetchSelectedEvents();
   const { scoreMap, isLoading: isLoadingScore } = useFetchAvgScoreByEvents();
   const { mutateAsync, isPending } = useMutation(eventsMutateOption.toggleJoin);
-
-  /* const sliderRef = useRef<HTMLDivElement>(null);
-  const [mount, setMount] = useState(false);
-  const isMouseEnter = useRef(false);
-  useEffect(() => {
-    if (mount) return;
-    setMount(true);
-    const container = sliderRef.current;
-    if (!container) return;
-
-    const autoScroll = () => {
-      // 끝에 도달하면 맨 앞으로 복귀
-      if (
-        Math.ceil(container.scrollLeft + container.clientWidth) >=
-        container.scrollWidth
-      ) {
-        container.scrollLeft = 0;
-      }
-      if (isMouseEnter.current) return;
-      container.scrollBy({ left: 1, behavior: "smooth" });
-    };
-
-    const interval = setInterval(autoScroll, 30);
-    return () => clearInterval(interval);
-  }, [mount]); */
 
   const joinStateText = () => {
     const text = "참가중";
@@ -126,9 +100,7 @@ export const DisplayParticipants = () => {
 };
 
 const SkeletonParticipants = () => {
-  return (
-    <Skeleton className="rounded-lg" variant="rectangular" height={"12rem"} />
-  );
+  return <div className="rounded-lg h-24" />;
 };
 
 const NoParticipants = () => {

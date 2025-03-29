@@ -6,7 +6,6 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { FC, Suspense, useState } from "react";
-
 interface NAV_LINK_ITEM {
   name: string;
   path: string;
