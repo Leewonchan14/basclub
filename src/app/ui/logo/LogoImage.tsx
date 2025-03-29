@@ -7,7 +7,7 @@ export const LogoImage = () => {
   return (
     <Link
       href={"/events"}
-      className="relative w-full mb-6 text-4xl font-bold rounded-lg aspect-square"
+      className="relative mb-6 aspect-square w-full rounded-lg text-4xl font-bold"
     >
       <Image src={"/basclub_logo.jpeg"} alt="" fill />
     </Link>

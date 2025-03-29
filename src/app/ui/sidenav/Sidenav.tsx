@@ -2,7 +2,7 @@
 
 import { LogoImage } from "@/app/ui/logo/LogoImage";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
-import ProfileLogin from "@/app/ui/sidenav/ProfileLogin";
+import ProfileLogin from "@/app/ui/sidenav/Profile";
 import { NextPage } from "next";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";

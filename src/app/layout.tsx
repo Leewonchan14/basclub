@@ -1,8 +1,8 @@
-import { SideNavLayout } from "@/app/ui/sidenav/SideNavLayout";
 import QueryProviders from "@/share/lib/tasntack-query/query-providers";
 
 import { KakaoScripts } from "@/app/kakaoscripts";
 import FlowbiteWrapper from "@/app/ui/layout/flowbite-wrapper";
+import { NavBarLayout } from "@/app/ui/navbar/NavBarLayout";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -47,7 +47,7 @@ export default function RootLayout({
         <FlowbiteWrapper>
           <KakaoScripts />
           <QueryProviders>
-            <SideNavLayout>{children}</SideNavLayout>
+            <NavBarLayout>{children}</NavBarLayout>
           </QueryProviders>
         </FlowbiteWrapper>
       </body>
