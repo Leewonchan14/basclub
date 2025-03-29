@@ -9,9 +9,9 @@ export const NavBarLayout: NextPage<{ children: React.ReactNode }> = async ({
   const isLogin = !!payload;
 
   return (
-    <div>
+    <main className="flex flex-col">
       <NavBar isLogin={isLogin} />
       {children}
-    </div>
+    </main>
   );
 };

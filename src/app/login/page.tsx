@@ -18,10 +18,10 @@ const LoginPage: NextPage<Props> = async () => {
         alt="background"
         width={2520}
         height={1602}
-        className="fixed object-contain w-full h-full opacity-30"
+        className="fixed h-full w-full object-contain opacity-30"
       />
-      <div className="z-10 flex items-center justify-center h-screen mx-auto">
-        <div className="z-10 flex flex-col items-center justify-center w-full h-screen max-w-80">
+      <div className="z-10 mx-auto flex h-screen items-center justify-center">
+        <div className="z-10 flex h-screen w-full max-w-80 flex-col items-center justify-center">
           <LogoImage />
           <KakaoLoginButton />
         </div>
@@ -30,7 +30,15 @@ const LoginPage: NextPage<Props> = async () => {
   );
 };
 
-const KakaoLoginButton = () => {
+interface KakaoLoginButtonProps {
+  className?: string;
+  size?: number;
+}
+
+export const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({
+  className,
+  size = 1,
+}) => {
   "use client";
 
   const url = "https://kauth.kakao.com/oauth/authorize";
@@ -43,12 +51,12 @@ const KakaoLoginButton = () => {
   const link = `${url}?${params}`;
 
   return (
-    <Link href={link}>
+    <Link href={link} className={className}>
       <Image
         src="/kakao_button.png"
         alt="카카오 로그인 버튼"
-        width={100}
-        height={50}
+        width={100 * size}
+        height={50 * size}
         style={{ cursor: "pointer" }}
         priority={true} // 이미지 우선 로드
       />

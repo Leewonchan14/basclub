@@ -1,5 +1,6 @@
 import LogoIcon from "@/app/ui/logo/LogoIcon";
 import NavBarDropDownProfile from "@/app/ui/navbar/NavBarDropDownProfile";
+import NavBarLoginButton from "@/app/ui/navbar/NavBarLoginButton";
 import { Navbar, NavbarBrand } from "flowbite-react";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -19,7 +20,8 @@ export const NavBar: NextPage<Props> = ({ isLogin }) => {
           </span>
         </div>
       </NavbarBrand>
-      <NavBarDropDownProfile isLogin={isLogin} />
+      {isLogin && <NavBarDropDownProfile />}
+      {!isLogin && <NavBarLoginButton />}
     </Navbar>
   );
 };
