@@ -2,7 +2,6 @@ import { SideNavLayout } from "@/app/ui/sidenav/SideNavLayout";
 import QueryProviders from "@/share/lib/tasntack-query/query-providers";
 
 import { KakaoScripts } from "@/app/kakaoscripts";
-import MuiProvider from "@/share/lib/mui-x/MuiProvider";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -42,13 +41,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-white antialiased`}
       >
         <KakaoScripts />
         <QueryProviders>
-          <MuiProvider>
-            <SideNavLayout>{children}</SideNavLayout>
-          </MuiProvider>
+          <SideNavLayout>{children}</SideNavLayout>
         </QueryProviders>
       </body>
     </html>
