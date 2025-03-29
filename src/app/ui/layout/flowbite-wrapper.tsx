@@ -11,11 +11,6 @@ const flowbiteTheme = createTheme({
         "bg-orange-500 text-white hover:bg-orange-600 focus:ring-2 focus:ring-orange-500",
     },
   },
-  navbar: {
-    root: {
-      base: "shadow-sm",
-    },
-  },
 });
 
 const FlowbiteWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {

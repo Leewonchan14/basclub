@@ -16,6 +16,7 @@ const config: Config = {
       },
       spacing: {
         "sidenav-width": "14rem",
+        "content-width": "1024px",
       },
     },
   },

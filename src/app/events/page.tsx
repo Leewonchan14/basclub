@@ -27,8 +27,8 @@ const Page: NextPage<Props> = async ({ searchParams }) => {
   }
 
   return (
-    <div className="flex flex-col gap-12">
-      <Suspense>
+    <div className="flex w-full flex-col gap-12">
+      <Suspense fallback={<Spinner.Spin />}>
         <DayPickers />
       </Suspense>
       <Suspense
