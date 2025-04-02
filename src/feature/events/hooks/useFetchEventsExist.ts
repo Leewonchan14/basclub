@@ -8,15 +8,17 @@ export const useFetchEventsExist = () => {
   const { selectedDate } = useSelectedDate();
 
   const { isLoading, data: eventsExists } = useQuery(
-    eventsQueryApi.findByMonthExist(day_js(selectedDate), !!selectedDate)
+    eventsQueryApi.findByMonthExist(day_js(selectedDate), !!selectedDate),
   );
 
   const isExist = useCallback(
     (date: Dayjs) => {
       return day_js(date).format("YYYY-MM-DD") in (eventsExists ?? {});
     },
-    [eventsExists]
+    [eventsExists],
   );
 
-  return { eventsExists, isLoading, isExist };
+  const isExistSelectedEvents = isExist(selectedDate);
+
+  return { eventsExists, isLoading, isExist, isExistSelectedEvents };
 };

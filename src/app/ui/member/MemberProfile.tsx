@@ -1,59 +1,41 @@
-import Spinner from "@/app/ui/share/Spinner";
-import { Avatar } from "flowbite-react";
-import Image from "next/image";
+import { ERole } from "@/entity/enum/role";
+import { Avatar, Badge } from "flowbite-react";
 import React from "react";
 
 export const MemberProfile: React.FC<{
-  member: { nickname: string; profileUrl: string };
+  member: { nickname: string; profileUrl: string; role: ERole };
   isNotScore?: boolean;
   avgScore?: number;
   isLoading?: boolean;
   className?: string;
 }> = ({
-  member: { nickname, profileUrl },
+  member: { nickname, profileUrl, role },
   avgScore,
   isNotScore,
   isLoading,
   className,
 }) => {
   const score = avgScore ? Number(avgScore).toFixed(2) : "없음";
+  const isGuest = role === ERole.GUEST;
+
+  const getNickname = () => {
+    if (isGuest) {
+      const [nick, _, num] = nickname.split("-");
+      return `${nick}-${num}`;
+    }
+    return nickname;
+  };
+
   return (
     <Avatar rounded img={profileUrl}>
-      <span className="text-sm font-bold text-gray-800">{nickname}</span>
+      <div className="flex flex-col gap-1">
+        <span className="text-sm font-bold text-gray-800">{getNickname()}</span>
+        {isGuest && (
+          <Badge className="justify-center text-center" color="indigo">
+            GUEST
+          </Badge>
+        )}
+      </div>
     </Avatar>
-    // <div
-    //   className={`flex items-center flex-shrink-0 gap-4 p-3 bg-gray-100 rounded-lg ${className}`}
-    // >
-    //   <div className="relative flex-shrink-0 overflow-hidden border-2 border-orange-600 rounded-full w-14 h-14">
-    //     <Image
-    //       draggable={false}
-    //       alt="프로필 이미지"
-    //       src={profileUrl}
-    //       fill
-    //       className="object-cover"
-    //       unoptimized
-    //     />
-    //   </div>
-    //   <div>
-    //     <div className="text-lg font-bold text-gray-800 text-nowrap">
-    //       {nickname}
-    //     </div>
-    //     {!isNotScore && (
-    //       <div className="flex flex-col text-sm text-gray-600 text-nowrap">
-    //         평균 득점
-    //         {isLoading && (
-    //           <Spinner>
-    //             <Spinner.Spin className="!w-4 !h-4" />
-    //           </Spinner>
-    //         )}
-    //         {!isLoading && (
-    //           <span className="font-semibold text-blue-600 text-nowrap">
-    //             {score}
-    //           </span>
-    //         )}
-    //       </div>
-    //     )}
-    //   </div>
-    // </div>
   );
 };

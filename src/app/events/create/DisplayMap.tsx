@@ -1,6 +1,7 @@
 "use client";
 
 import { GeoPoint } from "@/entity/transformer/point.transformer";
+import { Button } from "flowbite-react";
 import { NextPage } from "next";
 
 interface Props {
@@ -36,30 +37,37 @@ const DisplayMap: NextPage<Props> = ({ detailAddress, point }) => {
     window.open(url);
   };
 
+  const buttons = [
+    {
+      label: "지도 보기",
+      onClick: handleClickFindMap,
+    },
+    {
+      label: "길찾기",
+      onClick: handleClickFindLoad,
+    },
+    {
+      label: "로드뷰",
+      onClick: handleClickFindRoadView,
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-4">
       {/* <Map center={{ ...point }} className="w-full h-52 md:h-96">
         <MapMarker position={{ ...point }} />
       </Map> */}
-      <div className="flex gap-4">
-        <button
-          className="p-2 font-bold text-white bg-blue-600 rounded-lg"
-          onClick={handleClickFindMap}
-        >
-          지도 보기
-        </button>
-        <button
-          className="p-2 font-bold text-white bg-blue-600 rounded-lg"
-          onClick={handleClickFindLoad}
-        >
-          길찾기
-        </button>
-        <button
-          className="p-2 font-bold text-white bg-blue-600 rounded-lg"
-          onClick={handleClickFindRoadView}
-        >
-          로드뷰
-        </button>
+      <div className="flex gap-2 text-sm">
+        {buttons.map((button) => (
+          <Button
+            color="primary"
+            key={button.label}
+            className="px-3 py-2"
+            onClick={button.onClick}
+          >
+            {button.label}
+          </Button>
+        ))}
       </div>
     </div>
   );

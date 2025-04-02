@@ -17,6 +17,7 @@ const config: Config = {
       spacing: {
         "sidenav-width": "14rem",
         "content-width": "1024px",
+        "mobile-width": "400px",
       },
     },
   },

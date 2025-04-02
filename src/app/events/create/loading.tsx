@@ -1,14 +1,12 @@
-import Spinner from "@/app/ui/share/Spinner";
+import { Spinner } from "flowbite-react";
 import { NextPage } from "next";
 
 interface Props {}
 
 const Loading: NextPage<Props> = ({}) => {
   return (
-    <div className="flex items-center justify-center h-screen">
-      <Spinner>
-        <Spinner.Spin />
-      </Spinner>
+    <div className="flex h-screen w-full items-center justify-center">
+      <Spinner color="warning" />
     </div>
   );
 };

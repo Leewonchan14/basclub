@@ -40,7 +40,7 @@ export const useSelectedDate = () => {
     (date: Dayjs) => {
       return date.isSame(selectedDate, "day");
     },
-    [selectedDate]
+    [selectedDate],
   );
 
   const goToDay = useCallback(
@@ -50,7 +50,7 @@ export const useSelectedDate = () => {
       }).toString();
       router.push(`/events?${param}`);
     },
-    [router]
+    [router],
   );
 
   return {

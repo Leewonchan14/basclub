@@ -1,18 +1,25 @@
 "use client";
 
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
-import Spinner from "@/app/ui/share/Spinner";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
-import _ from "lodash";
+import { Spinner } from "flowbite-react";
 import { ChangeEvent, useCallback, useState } from "react";
 
 export const JoinEventsButton = () => {
   const [guestCnt, setGuestCnt] = useState<number>(0);
+
+  const { ownGuestTeams } = useFetchSelectedEvents();
   const { isJoin, isCanJoin, isPending, onJoin, isLoading } = useJoinEvents({
     guestCnt,
   });
 
-  if (isLoading) return null;
+  if (isLoading || isPending)
+    return (
+      <div className="flex w-full justify-center">
+        <Spinner color="warning" />
+      </div>
+    );
 
   if (!isCanJoin) {
     return (
@@ -25,38 +32,39 @@ export const JoinEventsButton = () => {
   }
 
   return (
-    <div className="flex items-center gap-6">
-      {!isJoin && (
-        <InputGuest
-          guestCnt={guestCnt}
-          setGuestCnt={setGuestCnt}
-          isPending={isPending}
-        />
-      )}
-      <PrimaryButton disabled={isPending || !isCanJoin} onClick={onJoin}>
-        {!isPending && (isJoin ? "참가취소" : "참가하기")}
-        {isPending && (
-          <Spinner>
-            <Spinner.Spin />
-          </Spinner>
-        )}
+    <div className="flex h-12 w-full items-center gap-2">
+      <InputGuest
+        className="h-full w-full"
+        guestCnt={guestCnt}
+        setGuestCnt={setGuestCnt}
+        disabled={isPending || isJoin}
+      />
+      <PrimaryButton
+        className="flex h-full w-full flex-col font-semibold"
+        disabled={isPending || !isCanJoin}
+        onClick={onJoin}
+      >
+        <div>{isJoin ? ownGuestTeams.length : guestCnt}명의 게스트와</div>
+        <div>{isJoin ? "참가취소" : "참가하기"}</div>
       </PrimaryButton>
     </div>
   );
 };
 
 interface InputGuestProps {
+  className?: string;
   guestCnt: number;
   setGuestCnt: (cnt: number) => void;
-  isPending: boolean;
+  disabled: boolean;
 }
 
 const InputGuest: React.FC<InputGuestProps> = ({
   guestCnt,
   setGuestCnt,
-  isPending,
+  disabled,
+  className,
 }) => {
-  const readonly = isPending;
+  const readonly = disabled;
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setGuestCnt(Number(e.target.value));
@@ -71,28 +79,90 @@ const InputGuest: React.FC<InputGuestProps> = ({
   }, [guestCnt, setGuestCnt]);
 
   return (
-    <div className="inline-flex max-w-20 flex-col">
-      <label
-        htmlFor={"guestCnt"}
-        className="mb-1 text-nowrap px-2 text-sm text-gray-600"
-      >
-        게스트 수
-      </label>
+    <div
+      className={`flex items-center ${className} ${disabled && "invisible"}`}
+    >
+      <MinusButton
+        disabled={readonly}
+        className={`${disabled && "cursor-not-allowed"}`}
+        onClick={() => setGuestCnt(guestCnt - 1)}
+      />
       <input
-        name={"guestCnt"}
-        value={String(guestCnt)}
-        onBlur={onBlur}
-        readOnly={isPending}
+        type="text"
+        id="quantity-input"
+        data-input-counter
+        aria-describedby="helper-text-explanation"
+        className="block h-11 w-full min-w-10 border-x-0 border-gray-300 bg-gray-50 py-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+        value={guestCnt}
         onChange={onChange}
-        id={"guestCnt"}
-        type="number"
-        min={0}
-        max={9}
-        className={`rounded border border-gray-300 p-2 outline-none transition-colors focus:ring-2 ${
-          readonly &&
-          "!focus:ring-0 border-none bg-gray-100 !py-0 font-bold text-orange-500 outline-none"
-        }`}
+        onBlur={onBlur}
+        disabled={readonly}
+      />
+      <PlusButton
+        disabled={readonly}
+        className={`${disabled && "cursor-not-allowed"}`}
+        onClick={() => setGuestCnt(guestCnt + 1)}
       />
     </div>
+  );
+};
+
+interface ButtonProps {
+  onClick: () => void;
+  className?: string;
+  disabled: boolean;
+}
+
+const MinusButton = ({ onClick, className, disabled }: ButtonProps) => {
+  return (
+    <button
+      type="button"
+      id="decrement-button"
+      className={`h-11 rounded-s-lg border border-gray-300 bg-gray-100 p-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      <svg
+        className="h-3 w-3 text-gray-900"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 18 2"
+      >
+        <path
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M1 1h16"
+        />
+      </svg>
+    </button>
+  );
+};
+
+const PlusButton = ({ onClick, className, disabled }: ButtonProps) => {
+  return (
+    <button
+      type="button"
+      id="increment-button"
+      className={`h-11 rounded-e-lg border border-gray-300 bg-gray-100 p-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      <svg
+        className="h-3 w-3 text-gray-900"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 18 18"
+      >
+        <path
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M9 1v16M1 9h16"
+        />
+      </svg>
+    </button>
   );
 };

@@ -7,9 +7,9 @@ import { NextPage } from "next";
 export const InputTime: NextPage<{}> = ({}) => {
   const { timeSlot, setTimeSlot } = useEventCreateContext();
   return (
-    <div className="flex flex-col">
-      <div className="mb-2 text-2xl font-bold">일정 시간</div>
-      <div className="flex flex-col gap-4 md:flex-row ">
+    <div className="mt-2 flex w-full flex-col items-start gap-2 rounded-lg bg-white p-4 shadow-lg">
+      <div className="mb-2 text-xl font-bold">일정 시간</div>
+      <div className="flex w-full gap-4 md:flex-row">
         <TPicker
           tKey={"start"}
           text={"시작"}

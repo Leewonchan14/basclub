@@ -1,21 +1,15 @@
 "use client";
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
-import { SmallDeleteButton } from "@/app/ui/share/SmallDeleteButton";
-import { eventsMutateOption } from "@/feature/events/event-mutate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
-import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { useFetchAvgScoreByEvents } from "@/feature/score/hooks/useFetchAvgScoreByEvents";
-import { useMutation } from "@tanstack/react-query";
 import React from "react";
 
 // 참가 인원들
 export const DisplayParticipants = () => {
-  const { isAdmin } = useFetchOwn();
   const { events, teamsArr, ownGuestTeams, isJoin, isLoading } =
     useFetchSelectedEvents();
   const { scoreMap, isLoading: isLoadingScore } = useFetchAvgScoreByEvents();
-  const { mutateAsync, isPending } = useMutation(eventsMutateOption.toggleJoin);
 
   const joinStateText = () => {
     const text = "참가중";
@@ -28,8 +22,8 @@ export const DisplayParticipants = () => {
 
   if (isLoading || isLoadingScore || !events?.id) {
     return (
-      <div className="flex flex-col gap-2 font-bold">
-        <div className="text-2xl">참가 인원</div>
+      <div className="flex w-full items-center gap-2 font-bold">
+        <div className="text-xl">참가 인원</div>
         <SkeletonParticipants />
       </div>
     );
@@ -41,32 +35,18 @@ export const DisplayParticipants = () => {
 
   return (
     <React.Fragment>
-      <div className="gap-2 font-bold">
-        <div className="text-2xl">참가 인원</div>
-        <div className="text-lg text-orange-500">
+      <div className="flex w-full items-center gap-2 font-bold">
+        <div className="text-xl">참가 인원</div>
+        <div className="text-orange-500">
           {teamsArr.length}명 {isJoin && `(${joinStateText()})`}
         </div>
       </div>
-      <div
-        /* onTouchMove={() => {
-          isMouseEnter.current = true;
-        }}
-        onMouseMove={() => {
-          isMouseEnter.current = true;
-        }}
-        onMouseLeave={() => {
-          isMouseEnter.current = false;
-        }}
-        onTouchEnd={() => {
-          setTimeout(() => {
-            isMouseEnter.current = false;
-          }, 1500);
-        }}
-        ref={sliderRef} */
-        className="flex p-4 overflow-x-auto bg-gray-100 rounded-lg"
-      >
+      <div className="flex w-full flex-col gap-2">
         {teamsArr.map((teamMember, index) => (
-          <div className="relative flex items-center" key={teamMember.id}>
+          <div
+            className="flex w-full items-center rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-lg"
+            key={teamMember.id}
+          >
             <MemberProfile
               member={teamMember.member}
               avgScore={
@@ -76,22 +56,6 @@ export const DisplayParticipants = () => {
               }
               isLoading={isLoadingScore}
             />
-            {isAdmin && (
-              <SmallDeleteButton
-                disabled={isPending}
-                className="absolute font-bold top-2 left-2"
-                onClick={() =>
-                  mutateAsync({
-                    eventsId: events.id,
-                    memberId: teamMember.member.id,
-                    guestCnt: 0,
-                  })
-                }
-              />
-            )}
-            {index !== teamsArr.length - 1 && (
-              <div className="border-l-2 border-black border-dotted h-14 mx-4" />
-            )}
           </div>
         ))}
       </div>
@@ -100,12 +64,12 @@ export const DisplayParticipants = () => {
 };
 
 const SkeletonParticipants = () => {
-  return <div className="rounded-lg h-24" />;
+  return <div className="h-24 animate-pulse rounded-lg bg-gray-200" />;
 };
 
 const NoParticipants = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-40 text-gray-500">
+    <div className="flex h-20 flex-col items-center justify-center text-gray-500">
       <p>참가자가 아직 없습니다.</p>
     </div>
   );

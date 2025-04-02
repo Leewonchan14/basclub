@@ -66,7 +66,6 @@ export const Sidenav: NextPage<{ isLogin: boolean }> = ({ isLogin }) => {
             ))}
           </Suspense>
         </div>
-
         <ProfileLogin isLogin={isLogin} />
       </div>
     </React.Fragment>
