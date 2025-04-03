@@ -1,7 +1,6 @@
 "use client";
 
 import DaumPost from "@/app/events/create/DaumPost";
-import DisplayMap from "@/app/events/create/DisplayMap";
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
 import { NextPage } from "next";
 import Link from "next/link";

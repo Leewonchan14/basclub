@@ -8,14 +8,7 @@ export const MemberProfile: React.FC<{
   avgScore?: number;
   isLoading?: boolean;
   className?: string;
-}> = ({
-  member: { nickname, profileUrl, role },
-  avgScore,
-  isNotScore,
-  isLoading,
-  className,
-}) => {
-  const score = avgScore ? Number(avgScore).toFixed(2) : "없음";
+}> = ({ member: { nickname, profileUrl, role } }) => {
   const isGuest = role === ERole.GUEST;
 
   const getNickname = () => {

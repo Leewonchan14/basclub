@@ -1,11 +1,10 @@
 "use client";
 
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
-import { FaRecycle } from "react-icons/fa";
 import { day_js } from "@/share/lib/dayjs";
-import { Button, Tooltip } from "flowbite-react";
+import { Tooltip } from "flowbite-react";
 import { useState } from "react";
+import { FaRecycle } from "react-icons/fa";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
 export const LastEvents = () => {

@@ -19,7 +19,7 @@ const NAV_LINKS: { [k: string]: NAV_LINK_ITEM } = {
   },
 } as const;
 
-export const Sidenav: NextPage<{ isLogin: boolean }> = ({ isLogin }) => {
+export const Sidenav: NextPage<{ isLogin: boolean }> = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -66,7 +66,7 @@ export const Sidenav: NextPage<{ isLogin: boolean }> = ({ isLogin }) => {
             ))}
           </Suspense>
         </div>
-        <ProfileLogin isLogin={isLogin} />
+        <ProfileLogin />
       </div>
     </React.Fragment>
   );

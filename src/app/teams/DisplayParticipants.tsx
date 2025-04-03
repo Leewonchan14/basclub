@@ -42,7 +42,7 @@ export const DisplayParticipants = () => {
         </div>
       </div>
       <div className="flex w-full flex-col gap-2">
-        {teamsArr.map((teamMember, index) => (
+        {teamsArr.map((teamMember) => (
           <div
             className="flex w-full items-center rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-lg"
             key={teamMember.id}

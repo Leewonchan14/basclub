@@ -8,10 +8,10 @@ export const Profile: React.FC<{}> = () => {
   "use client";
 
   const { own, isLoading } = useFetchOwn();
-  const { score: avgScore, isLoading: isLoadingScore } =
+  const { score: _avgScore, isLoading: _isLoadingScore } =
     useFetchScoreByMemberId(own?.id ?? "");
 
-  const score = avgScore ? Number(avgScore).toFixed(2) : "없음";
+  // const score = avgScore ? Number(avgScore).toFixed(2) : "없음";
   if (isLoading || !own)
     return (
       <Avatar className="animate-pulse" rounded>
