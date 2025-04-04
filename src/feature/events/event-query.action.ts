@@ -26,3 +26,10 @@ export const getEventsExistInMonth = async (date: string) => {
 
   return { ..._.mapValues(events, (e) => e.id) };
 };
+
+export const getLastEventsByDate = async () => {
+  const eventService = getService(EventsService);
+  const lastEvents = await eventService.findLasted(5);
+
+  return lastEvents.map((e) => e.toPlain());
+};

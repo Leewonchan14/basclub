@@ -1,6 +1,5 @@
 "use client";
 
-import { Spinner } from "flowbite-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -16,7 +15,7 @@ const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({
 }) => {
   const pathname = usePathname();
   if (pathname.startsWith("/login")) {
-    return <Spinner color="warning" />;
+    return <div className="h-8 w-20 animate-pulse rounded-lg bg-gray-200" />;
   }
 
   const url = "https://kauth.kakao.com/oauth/authorize";

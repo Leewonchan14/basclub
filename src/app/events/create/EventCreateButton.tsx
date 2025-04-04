@@ -15,13 +15,14 @@ interface Props {}
 export const EventMutateButton: NextPage<Props> = ({}) => {
   const { selectedDate, goToDay } = useSelectedDate();
   const [message, setMessage] = useState("");
-  const { address, plainEvents } = useEventCreateContext();
+  const { inputEvent } = useEventCreateContext();
+  const { address } = inputEvent;
 
   const { mutateAsync: create, isPending: isPendingCreate } = useMutation(
-    eventsMutateOption.upsert
+    eventsMutateOption.upsert,
   );
   const { mutateAsync: remove, isPending: isPendingDelete } = useMutation(
-    eventsMutateOption.remove
+    eventsMutateOption.remove,
   );
 
   return (
@@ -34,10 +35,16 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
             setMessage("주소를 입력해주세요");
             return;
           }
-          await create(plainEvents);
+          await create({
+            ...inputEvent,
+            timeSlot: {
+              start: inputEvent.timeSlot.start.toString(),
+              end: inputEvent.timeSlot.end.toString(),
+            },
+          });
           goToDay(selectedDate);
         }}
-        className="inline-flex justify-center w-32 gap-2 p-2 font-bold text-white bg-orange-600 rounded-lg disabled:opacity-80"
+        className="inline-flex w-32 justify-center gap-2 rounded-lg p-2 font-bold text-white disabled:opacity-80"
       >
         저장하기
         {isPendingCreate && (
@@ -46,12 +53,15 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
           </Spinner>
         )}
       </PrimaryButton>
-      {plainEvents.id && (
+      {inputEvent.id && (
         <DeleteButton
           disabled={isPendingDelete}
           onClick={async () => {
-            await remove(plainEvents.id);
-            goToDay(selectedDate);
+            const isYes = window.confirm("정말 삭제하시겠습니까?");
+            if (isYes) {
+              await remove(inputEvent.id);
+              goToDay(selectedDate);
+            }
           }}
           className="w-32 justify-center"
         >

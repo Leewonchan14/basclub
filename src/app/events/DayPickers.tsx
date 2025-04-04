@@ -29,10 +29,6 @@ export const DayPickers: React.FC<DayPickersProps> = ({}) => {
   const defaultClassNames = getDefaultClassNames();
   const { selectedDate, setSelectedDate } = useSelectedDate();
 
-  const onClose = () => {
-    setIsOpen(false);
-  };
-
   useEffect(() => {
     if (accordionRef.current) {
       setAccordionHeight(accordionRef.current.scrollHeight);
@@ -76,8 +72,7 @@ export const DayPickers: React.FC<DayPickersProps> = ({}) => {
           month={selectedDate.toDate()}
           selected={selectedDate.toDate()}
           onSelect={(date) => {
-            setSelectedDate(date);
-            onClose();
+            if (date) setSelectedDate(date);
           }}
           onMonthChange={(month) => {
             if (

@@ -1,7 +1,6 @@
 "use client";
 
 import { setToken } from "@/feature/auth/auth-action";
-import { Spinner } from "flowbite-react";
 import { NextPage } from "next";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
@@ -33,8 +32,8 @@ const Redirect = () => {
   }, []);
 
   return (
-    <div className="flex h-screen w-full items-center justify-center">
-      <Spinner color="warning" />
+    <div className="flex h-screen w-full justify-center">
+      <div className="h-80 w-full animate-pulse rounded-lg bg-gray-200" />
     </div>
   );
 };

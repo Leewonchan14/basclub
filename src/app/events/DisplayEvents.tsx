@@ -6,7 +6,7 @@ import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByD
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import useShareKakao from "@/feature/events/hooks/useShareKakao";
 import { day_js } from "@/share/lib/dayjs";
-import { Button, Spinner, Tooltip } from "flowbite-react";
+import { Button, Tooltip } from "flowbite-react";
 import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,74 +19,85 @@ export const DisplayEvents: NextPage<Props> = ({}) => {
   const { events, isLoading } = useFetchSelectedEvents();
   const { onClickShare, findLoadLink } = useShareKakao();
 
-  if (isLoading) {
-    return <Spinner color="warning" />;
-  }
+  const renderWithSkeleton = () => {
+    if (isLoading) {
+      return (
+        <>
+          <div className="h-12 w-full animate-pulse rounded-lg bg-gray-200" />
+          <div className="h-24 w-full animate-pulse rounded-lg bg-gray-200" />
+        </>
+      );
+    }
 
-  if (!isExistSelectedEvents || !events) {
+    if (!isExistSelectedEvents || !events) {
+      return (
+        <p className="flex w-full items-center justify-center text-gray-500">
+          관련 일정이 없습니다.
+        </p>
+      );
+    }
+
+    const timeSlot = {
+      start: day_js(events.timeSlot?.start),
+      end: day_js(events.timeSlot?.end),
+    };
+
+    const { address, detailAddress } = events;
+
     return (
-      <div className="flex flex-col items-center justify-center text-gray-500">
-        <p>관련 일정이 없습니다.</p>
-      </div>
+      <>
+        <div className="flex items-center justify-center gap-1 font-semibold text-orange-500">
+          <FaRegClock className="text-black" />
+          {timeSlot.start.format("a h:mm")} ~ {timeSlot.end.format("a h:mm")}
+          <span>
+            {"("}총 {timeSlot.end.diff(timeSlot.start, "hour")}시간{" "}
+            {timeSlot.end.diff(timeSlot.start, "minute") % 60}분{")"}
+          </span>
+        </div>
+        <Tooltip content={"길찾기"} style="light">
+          <Link
+            href={findLoadLink}
+            target="_blank"
+            className="flex w-full gap-1 underline"
+          >
+            <span className="text-blue-600">
+              {address + " " + detailAddress}
+            </span>
+          </Link>
+        </Tooltip>
+        <div className="flex h-12 w-full items-center gap-1">
+          <Button
+            onClick={onClickShare}
+            className="flex h-full w-full items-center gap-2"
+            color="alternative"
+            id="kakaotalk-sharing-btn"
+          >
+            <KakaoShareButton />
+            <span className="text-sm font-bold">
+              카카오톡으로
+              <br />
+              공유하기!
+            </span>
+          </Button>
+          <Button
+            onClick={() => window.open(findLoadLink, "_blank")}
+            className="flex h-full w-full items-center gap-1"
+            color="alternative"
+          >
+            <IoNavigateCircleSharp className="inline text-center text-3xl text-yellow-300" />
+            <span className="text-sm font-bold">길찾기</span>
+          </Button>
+        </div>
+      </>
     );
-  }
-
-  const timeSlot = {
-    start: day_js(events.timeSlot?.start),
-    end: day_js(events.timeSlot?.end),
   };
 
-  const { address, detailAddress } = events;
-
-  // return <AAA />;
-
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="flex items-center justify-center gap-1 font-semibold text-orange-500">
-        <FaRegClock className="text-black" />
-        {timeSlot.start.format("a h:mm")} ~ {timeSlot.end.format("a h:mm")}
-        <span>
-          {"("}총 {timeSlot.end.diff(timeSlot.start, "hour")}시간{" "}
-          {timeSlot.end.diff(timeSlot.start, "minute") % 60}분{")"}
-        </span>
-      </div>
-      <Tooltip content={"길찾기"} style="light">
-        <Link
-          href={findLoadLink}
-          target="_blank"
-          className="flex w-full gap-1 underline"
-        >
-          <span className="text-blue-600">{address + " " + detailAddress}</span>
-        </Link>
-      </Tooltip>
-      <div className="flex h-12 w-full items-center gap-1">
-        <Button
-          onClick={onClickShare}
-          className="flex h-full w-full items-center gap-2"
-          color="alternative"
-          id="kakaotalk-sharing-btn"
-        >
-          <KakaoShareButton />
-          <span className="text-sm font-bold">
-            카카오톡으로
-            <br />
-            공유하기!
-          </span>
-        </Button>
-        <Button
-          onClick={() => window.open(findLoadLink, "_blank")}
-          className="flex h-full w-full items-center gap-1"
-          color="alternative"
-        >
-          <IoNavigateCircleSharp className="inline text-center text-3xl text-yellow-300" />
-          <span className="text-sm font-bold">길찾기</span>
-        </Button>
-      </div>
+    <div className="flex w-full flex-col items-center gap-4">
+      {renderWithSkeleton()}
 
       <DisplayParticipants />
       <JoinEventsButton />
-      {/* <DisplayTeams /> */}
-      {/* <UpsertTeamButton /> */}
     </div>
   );
 };

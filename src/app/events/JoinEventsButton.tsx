@@ -3,23 +3,17 @@
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
-import { Spinner } from "flowbite-react";
 import { ChangeEvent, useCallback, useState } from "react";
 
 export const JoinEventsButton = () => {
   const [guestCnt, setGuestCnt] = useState<number>(0);
 
-  const { ownGuestTeams } = useFetchSelectedEvents();
+  const { ownGuestTeams, events } = useFetchSelectedEvents();
   const { isJoin, isCanJoin, isPending, onJoin, isLoading } = useJoinEvents({
     guestCnt,
   });
 
-  if (isLoading || isPending)
-    return (
-      <div className="flex w-full justify-center">
-        <Spinner color="warning" />
-      </div>
-    );
+  if (isLoading || isPending || !events) return null;
 
   if (!isCanJoin) {
     return (

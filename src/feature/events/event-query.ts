@@ -1,6 +1,7 @@
 import {
   getEventById,
   getEventsExistInMonth,
+  getLastEventsByDate,
 } from "@/feature/events/event-query.action";
 import { Dayjs } from "@/share/lib/dayjs";
 import { queryOptions } from "@tanstack/react-query";
@@ -27,6 +28,14 @@ export const eventsQueryApi = {
       staleTime: 1000 * 60 * 30,
       enabled,
     }),
+
+  findByLastEvents: () =>
+    queryOptions({
+      // eslint-disable-next-line @tanstack/query/exhaustive-deps
+      queryKey: ["events", "last"],
+      queryFn: async () => {
+        return await getLastEventsByDate();
+      },
+      staleTime: 1000 * 60 * 30,
+    }),
 };
-
-

@@ -4,9 +4,6 @@ import React from "react";
 
 export const MemberProfile: React.FC<{
   member: { nickname: string; profileUrl: string; role: ERole };
-  isNotScore?: boolean;
-  avgScore?: number;
-  isLoading?: boolean;
   className?: string;
 }> = ({ member: { nickname, profileUrl, role } }) => {
   const isGuest = role === ERole.GUEST;

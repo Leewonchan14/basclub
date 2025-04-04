@@ -1,24 +1,26 @@
 "use client";
 
-import { Events, PlainEvents } from "@/entity/event.entity";
+import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
+import { PlainEvents } from "@/entity/event.entity";
 import type { GeoPoint } from "@/entity/transformer/point.transformer";
 import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
-import { SELECTED_DATE_KEY, day_js } from "@/share/lib/dayjs";
-import { useSearchParams } from "next/navigation";
-import { createContext, useCallback, useContext, useState } from "react";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { day_js } from "@/share/lib/dayjs";
+import { Dayjs } from "dayjs";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 export interface EventCreateContextType {
-  eventsId: string;
-  address: string;
-  detailAddress: string;
-  point: GeoPoint;
-  selectedDate: string | null;
-  timeSlot: TimeSlot;
-  plainEvents: PlainEvents;
-  lastEvents: PlainEvents[];
+  inputEvent: Omit<PlainEvents, "timeSlot"> & { timeSlot: TimeSlot };
   setAddressPoint: (address: string, point: GeoPoint) => void;
-  onChangeDetailAddress: (nextValue: string) => void;
-  onChangeEvents: (lastEventId: string) => void;
+  handleChangeDetailAddress: (nextValue: string) => void;
+  handleClickLastEvent: (lastEvent: PlainEvents) => void;
+  handleChangeEvent: (event?: IInputEvent) => void;
   setTimeSlot: (timeSlot: TimeSlot) => void;
 }
 
@@ -26,44 +28,27 @@ export const EventCreateContext = createContext<
   EventCreateContextType | undefined
 >(undefined);
 
+type IInputEvent = Omit<PlainEvents, "timeSlot"> & { timeSlot: TimeSlot };
+
 interface ProviderProps {
   children: React.ReactNode;
-  events: Partial<ReturnType<Events["toPlain"]>>;
-  lastEvents: PlainEvents[];
 }
 
-export const EventCreateProvider: React.FC<ProviderProps> = ({
-  children,
-  events,
-  lastEvents,
-}) => {
-  const params = useSearchParams();
-  const selectedDate = params.get(SELECTED_DATE_KEY);
-
-  const [address, setAddress] = useState(events.address ?? "");
-  const [detailAddress, setDetailAddress] = useState(
-    events.detailAddress ?? ""
+export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
+  const { selectedDate } = useSelectedDate();
+  const { events } = useFetchSelectedEvents();
+  const [inputEvent, setInputEvent] = useState<IInputEvent>(
+    DEFAULT_INPUT_EVENT(selectedDate),
   );
-  const [point, setPoint] = useState<GeoPoint>({
-    lat: events.coordinates?.lat ?? 0,
-    lng: events.coordinates?.lng ?? 0,
-  });
 
   const eventDate = selectedDate ? day_js(selectedDate) : day_js();
 
-  const [timeSlot, _setTimeSlot] = useState<TimeSlot>({
-    start: events.timeSlot?.start
-      ? day_js(events.timeSlot?.start)
-      : eventDate.startOf("date"),
-
-    end: events.timeSlot?.end
-      ? day_js(events.timeSlot?.end)
-      : eventDate.endOf("date").startOf("hour"),
-  });
-
   const setAddressPoint = useCallback((address: string, point: GeoPoint) => {
-    setAddress(address);
-    setPoint(point);
+    setInputEvent((prev) => ({
+      ...prev,
+      address,
+      coordinates: point,
+    }));
   }, []);
 
   const setTimeSlot = useCallback(
@@ -76,57 +61,60 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({
         start: day_js(`${eydm} ${tshm}`),
         end: day_js(`${eydm} ${tehm}`),
       };
-      _setTimeSlot(newTimeSlot);
+      setInputEvent((prev) => ({
+        ...prev,
+        timeSlot: newTimeSlot,
+      }));
     },
-    [eventDate]
+    [eventDate],
   );
 
-  const onChangeDetailAddress = useCallback((nextValue: string) => {
-    setDetailAddress(nextValue);
+  const handleChangeDetailAddress = useCallback((nextValue: string) => {
+    setInputEvent((prev) => ({
+      ...prev,
+      detailAddress: nextValue,
+    }));
   }, []);
 
-  const onChangeEvents = useCallback(
-    (lastEventId: string) => {
-      const findEvent = lastEvents.find((e) => e.id === lastEventId);
-      if (findEvent) {
-        setAddress(findEvent.address);
-        setDetailAddress(findEvent.detailAddress);
-        setPoint(findEvent.coordinates);
-        setTimeSlot({
-          start: day_js(findEvent.timeSlot.start),
-          end: day_js(findEvent.timeSlot.end),
-        });
-      }
+  const handleChangeEvent = useCallback((event?: IInputEvent) => {
+    setInputEvent((prev) => ({
+      ...prev,
+      ...event,
+    }));
+  }, []);
+
+  const handleClickLastEvent = useCallback(
+    (lastEvent: PlainEvents) => {
+      handleChangeEvent({
+        ...lastEvent,
+        timeSlot: getInitTimeSlot(
+          lastEvent.timeSlot.start,
+          lastEvent.timeSlot.end,
+        ),
+      });
     },
-    [lastEvents, setTimeSlot]
+    [handleChangeEvent],
   );
 
-  const plainEvents: PlainEvents = {
-    id: events.id ?? "",
-    address,
-    detailAddress,
-    coordinates: point,
-    date: day_js(selectedDate).toISOString(),
-    timeSlot: {
-      start: timeSlot.start.toISOString(),
-      end: timeSlot.end.toISOString(),
-    },
-  };
+  useEffect(() => {
+    if (events) {
+      handleChangeEvent({
+        ...events,
+        timeSlot: getInitTimeSlot(events.timeSlot.start, events.timeSlot.end),
+      });
+    } else {
+      handleChangeEvent(DEFAULT_INPUT_EVENT(selectedDate));
+    }
+  }, [events, handleChangeEvent]);
 
   return (
     <EventCreateContext.Provider
       value={{
-        eventsId: events.id ?? "",
-        address,
-        detailAddress,
-        point,
-        timeSlot,
-        plainEvents,
-        lastEvents,
-        selectedDate,
+        inputEvent,
         setAddressPoint,
-        onChangeDetailAddress,
-        onChangeEvents,
+        handleChangeDetailAddress,
+        handleClickLastEvent,
+        handleChangeEvent,
         setTimeSlot,
       }}
     >
@@ -135,11 +123,35 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({
   );
 };
 
+const getInitTimeSlot = (start?: string, end?: string) => {
+  const startTime = start ? day_js(start) : day_js().startOf("date");
+  const endTime = end ? day_js(end) : day_js().endOf("date").startOf("hour");
+
+  return {
+    start: startTime,
+    end: endTime,
+  };
+};
+
+const DEFAULT_INPUT_EVENT: (selectedDate: Dayjs) => Omit<
+  PlainEvents,
+  "timeSlot"
+> & {
+  timeSlot: TimeSlot;
+} = (selectedDate) => ({
+  id: "",
+  address: "",
+  detailAddress: "",
+  coordinates: { lat: 0, lng: 0 },
+  date: selectedDate.format("YYYY-MM-DD"),
+  timeSlot: getInitTimeSlot(),
+});
+
 export const useEventCreateContext = () => {
   const context = useContext(EventCreateContext);
   if (!context) {
     throw new Error(
-      "EventCreateContext must be used within EventCreateProvider"
+      "EventCreateContext must be used within EventCreateProvider",
     );
   }
 
