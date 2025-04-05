@@ -2,25 +2,24 @@
 
 import DaumPost from "@/app/events/create/DaumPost";
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
+import LeafletMap from "@/app/events/leaflet-map";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { Button } from "flowbite-react";
 import { NextPage } from "next";
 import Link from "next/link";
+import { IoNavigateCircleSharp } from "react-icons/io5";
 
 export const InputPlace: NextPage = () => {
-  const { events, isLoading } = useFetchSelectedEvents();
+  const { isLoading } = useFetchSelectedEvents();
   const { inputEvent, handleChangeDetailAddress } = useEventCreateContext();
 
-  const {
-    address,
-    detailAddress,
-    coordinates: point,
-  } = events ? events : inputEvent;
+  const { address, detailAddress, coordinates: point } = inputEvent;
 
   const addressParam =
     new URLSearchParams({ address: detailAddress }).toString().split("=")[1] ||
     "상세 주소";
 
-  const findLoadUrl = `https://map.kakao.com/link/to/${addressParam},${point.lat},${point.lng}`;
+  const findLoadLink = `https://map.kakao.com/link/to/${addressParam},${point.lat},${point.lng}`;
 
   return (
     <div className="mt-2 flex flex-col items-start gap-2 rounded-lg bg-white p-4 shadow-lg">
@@ -35,10 +34,7 @@ export const InputPlace: NextPage = () => {
         <>
           <div className="flex w-full flex-col items-start">
             {address}
-            <DaumPost
-              buttonText="주소검색"
-              className="text-nowrap font-bold text-orange-600 hover:underline"
-            />
+            <DaumPost buttonText="주소검색" />
           </div>
           <input
             type="text"
@@ -49,13 +45,17 @@ export const InputPlace: NextPage = () => {
             onChange={(e) => handleChangeDetailAddress(e.target.value)}
           />
           {!!address && (
-            <Link
-              className="inline text-nowrap font-bold text-orange-600"
-              href={findLoadUrl}
-              target="_blank"
-            >
-              길찾기
-            </Link>
+            <>
+              <LeafletMap key={point.lat} center={[point.lat, point.lng]} />
+              <Button
+                onClick={() => window.open(findLoadLink, "_blank")}
+                className="flex w-full items-center gap-1 py-2"
+                color="alternative"
+              >
+                <IoNavigateCircleSharp className="inline text-center text-3xl text-yellow-300" />
+                <span className="text-sm font-bold">길찾기</span>
+              </Button>
+            </>
           )}
         </>
       )}

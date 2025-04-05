@@ -1,13 +1,16 @@
 "use client";
 
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
+import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import type { GeoPoint } from "@/entity/transformer/point.transformer";
+import { Tooltip } from "flowbite-react";
 import { NextPage } from "next";
 import { useDaumPostcodePopup } from "react-daum-postcode";
+import { TbMapSearch } from "react-icons/tb";
 
 interface Props {
   buttonText: string;
-  className: string;
+  className?: string;
 }
 
 const DaumPost: NextPage<Props> = ({ buttonText, className }) => {
@@ -25,9 +28,20 @@ const DaumPost: NextPage<Props> = ({ buttonText, className }) => {
   };
 
   return (
-    <button className={className} onClick={handleClick}>
-      {buttonText}
-    </button>
+    <Tooltip
+      theme={{ target: "w-full" }}
+      style="light"
+      placement="top"
+      content="주소 검색으로 일정장소 입력하기"
+    >
+      <PrimaryButton
+        className={`mt-2 w-full ${className}`}
+        onClick={handleClick}
+      >
+        <TbMapSearch className="mr-2 text-xl" />
+        {buttonText}
+      </PrimaryButton>
+    </Tooltip>
   );
 };
 
@@ -70,7 +84,7 @@ const getGeoCode = async (address: string): Promise<GeoPoint> => {
       headers: {
         Authorization: `KakaoAK ${process.env.NEXT_PUBLIC_REST_API_KEY!}`,
       },
-    }
+    },
   );
 
   const body = (await response.json()) as {

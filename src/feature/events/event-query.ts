@@ -2,6 +2,7 @@ import {
   getEventById,
   getEventsExistInMonth,
   getLastEventsByDate,
+  getRecentEventByNow,
 } from "@/feature/events/event-query.action";
 import { Dayjs } from "@/share/lib/dayjs";
 import { queryOptions } from "@tanstack/react-query";
@@ -16,7 +17,6 @@ export const eventsQueryApi = {
       staleTime: 1000 * 60 * 30,
       enabled,
     }),
-
   findByMonthExist: (date: Dayjs, enabled: boolean) =>
     queryOptions({
       // eslint-disable-next-line @tanstack/query/exhaustive-deps
@@ -35,6 +35,14 @@ export const eventsQueryApi = {
       queryKey: ["events", "last"],
       queryFn: async () => {
         return await getLastEventsByDate();
+      },
+      staleTime: 1000 * 60 * 30,
+    }),
+  findRecentByNow: () =>
+    queryOptions({
+      queryKey: ["events", "recent"],
+      queryFn: async () => {
+        return await getRecentEventByNow();
       },
       staleTime: 1000 * 60 * 30,
     }),

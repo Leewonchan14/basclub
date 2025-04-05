@@ -1,12 +1,12 @@
 import { Events } from "@/entity/event.entity";
-import { getStartEndOfMonth } from "@/share/lib/dayjs";
+import { day_js, getStartEndOfMonth } from "@/share/lib/dayjs";
 import {
   InjectRepository,
   IService,
   Service,
 } from "@/share/lib/typeorm/DIContainer";
 import { Dayjs } from "dayjs";
-import { Between, DeepPartial, Repository } from "typeorm";
+import { Between, DeepPartial, MoreThanOrEqual, Repository } from "typeorm";
 
 @Service
 export class EventsService implements IService<Events> {
@@ -43,6 +43,16 @@ export class EventsService implements IService<Events> {
     return this.eventsRepository.find({ take, order: { date: "DESC" } });
   }
 
+  async findRecentByNow() {
+    return this.eventsRepository.find({
+      where: {
+        date: MoreThanOrEqual<Dayjs>(day_js(day_js().format("YYYY-MM-DD"))),
+      },
+      order: { date: "ASC" },
+      take: 1,
+    });
+  }
+
   async findByMonth(date: Dayjs) {
     const { startOfMonth, endOfMonth } = getStartEndOfMonth(date);
 
@@ -53,7 +63,7 @@ export class EventsService implements IService<Events> {
     });
 
     return Object.fromEntries(
-      events.map((e) => [e.date.format("YYYY-MM-DD"), e])
+      events.map((e) => [e.date.format("YYYY-MM-DD"), e]),
     );
   }
 }

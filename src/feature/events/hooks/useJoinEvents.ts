@@ -4,14 +4,13 @@ import { eventsMutateOption } from "@/feature/events/event-mutate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
 import { day_js } from "@/share/lib/dayjs";
-import { useMutation } from "@tanstack/react-query";
+import { useIsMutating, useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
 
 export const useJoinEvents = ({ guestCnt }: { guestCnt: number }) => {
   const { own, needLoginPromise } = useNeedLogin();
-  const { mutateAsync, isPending: isMutating } = useMutation(
-    eventsMutateOption.toggleJoin
-  );
+  const { mutateAsync } = useMutation(eventsMutateOption.toggleJoin);
+  const isMutating = useIsMutating(eventsMutateOption.toggleJoin) === 1;
 
   const { events, isJoin, isFetching, isLoading } = useFetchSelectedEvents();
   const eventsId = events?.id ?? "";

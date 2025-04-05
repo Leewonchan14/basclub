@@ -2,6 +2,7 @@
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import _ from "lodash";
 import React from "react";
 
@@ -9,6 +10,8 @@ import React from "react";
 export const DisplayParticipants = () => {
   const { events, teamsArr, ownGuestTeams, isJoin, isLoading } =
     useFetchSelectedEvents();
+
+  const { isPending } = useJoinEvents({ guestCnt: 0 });
 
   const joinStateText = () => {
     const text = "참가중";
@@ -19,7 +22,7 @@ export const DisplayParticipants = () => {
     return `게스트 ${ownGuestTeams.length}명과 함께 ${text}`;
   };
 
-  if (isLoading) {
+  if (isLoading || isPending) {
     return (
       <div className="flex w-full flex-col items-center gap-2 font-bold">
         <div className="flex w-full items-center justify-start gap-2 text-xl">

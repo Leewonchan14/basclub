@@ -33,3 +33,10 @@ export const getLastEventsByDate = async () => {
 
   return lastEvents.map((e) => e.toPlain());
 };
+
+export const getRecentEventByNow = async () => {
+  const eventService = getService(EventsService);
+  const recentEvents = await eventService.findRecentByNow();
+
+  return recentEvents[0]?.toPlain();
+};

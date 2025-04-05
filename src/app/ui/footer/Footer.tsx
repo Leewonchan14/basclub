@@ -2,10 +2,11 @@ import {
   Footer as FooterBite,
   FooterBrand,
   FooterCopyright,
-  FooterLink,
   FooterLinkGroup,
 } from "flowbite-react";
 import { NextPage } from "next";
+import Link from "next/link";
+import { FaGithub } from "react-icons/fa";
 
 interface Props {}
 
@@ -15,8 +16,8 @@ const Footer: NextPage<Props> = ({}) => {
       container
       className="flex flex-col border-t border-gray-200 bg-gray-50 py-4"
     >
-      <div className="max-w-content-width w-full">
-        <div className="w-full justify-between sm:flex sm:items-center sm:justify-between">
+      <div className="w-full max-w-content-width">
+        <div className="w-full justify-between gap-2 sm:flex sm:items-center sm:justify-between">
           <div className="flex items-center">
             <FooterBrand src="/basclub_logo.jpeg" alt="Logo" />
             <FooterCopyright
@@ -27,10 +28,14 @@ const Footer: NextPage<Props> = ({}) => {
             />
           </div>
 
-          <FooterLinkGroup>
-            <FooterLink href="https://github.com/Leewonchan14/basclub">
+          <FooterLinkGroup className="justify-center">
+            <Link
+              className="inline-flex items-center gap-2 border-gray-500 hover:border-b"
+              href="https://github.com/Leewonchan14/basclub"
+            >
+              <FaGithub className="inline" />
               Contact
-            </FooterLink>
+            </Link>
           </FooterLinkGroup>
         </div>
       </div>

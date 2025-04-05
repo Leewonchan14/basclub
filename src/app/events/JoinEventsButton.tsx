@@ -34,7 +34,7 @@ export const JoinEventsButton = () => {
         disabled={isPending || isJoin}
       />
       <PrimaryButton
-        className="flex h-full w-full flex-col font-semibold"
+        className="flex h-full w-full flex-col text-nowrap !p-0 font-semibold"
         disabled={isPending || !isCanJoin}
         onClick={onJoin}
       >
@@ -89,6 +89,7 @@ const InputGuest: React.FC<InputGuestProps> = ({
         className="block h-11 w-full min-w-10 border-x-0 border-gray-300 bg-gray-50 py-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
         value={guestCnt}
         onChange={onChange}
+        max={9}
         onBlur={onBlur}
         disabled={readonly}
       />

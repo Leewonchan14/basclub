@@ -2,6 +2,7 @@
 
 import { DeleteButton } from "@/app/ui/share/DeleteButton";
 import { useRouter, useSearchParams } from "next/navigation";
+import { BsBackspace } from "react-icons/bs";
 
 import React from "react";
 
@@ -24,6 +25,7 @@ export const BackButton: React.FC<Props> = ({ href }) => {
       }}
       className="min-w-40"
     >
+      <BsBackspace />
       뒤로가기
     </DeleteButton>
   );

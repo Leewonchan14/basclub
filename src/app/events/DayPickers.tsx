@@ -1,10 +1,16 @@
 "use client";
 
+import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { day_js } from "@/share/lib/dayjs";
 import { Tooltip } from "flowbite-react";
-import { ButtonHTMLAttributes, useEffect, useRef, useState } from "react";
+import React, {
+  ButtonHTMLAttributes,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   CalendarDay,
   DayPicker,
@@ -15,15 +21,16 @@ import {
 import { ko } from "react-day-picker/locale";
 import "react-day-picker/style.css";
 import { IoCalendarOutline } from "react-icons/io5";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { MdKeyboardArrowDown } from "react-icons/md";
 
 interface DayPickersProps {}
 
-export const DayPickers: React.FC<DayPickersProps> = ({}) => {
+const DayPickers: React.FC<DayPickersProps> = ({}) => {
   const accordionRef = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
-  const [accordionHeight, setAccordionHeight] = useState(
-    accordionRef.current?.scrollHeight ?? 0,
+  const [accordionHeight, setAccordionHeight] = useState<string | number>(
+    "auto",
   );
   const isClose = !isOpen;
   const defaultClassNames = getDefaultClassNames();
@@ -35,6 +42,10 @@ export const DayPickers: React.FC<DayPickersProps> = ({}) => {
     }
   }, [selectedDate]);
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <div
       className={`rounded-lg bg-white p-4 shadow-md transition-all ${isClose && "cursor-pointer"}`}
@@ -43,17 +54,16 @@ export const DayPickers: React.FC<DayPickersProps> = ({}) => {
       <Tooltip
         content="날짜를 선택하세요"
         style="light"
-        placement="bottom"
+        placement="top"
         theme={{ target: "w-full" }}
       >
         <div
-          className="flex w-full cursor-pointer items-center justify-between gap-2 text-xl font-extrabold"
+          className="flex w-full cursor-pointer items-center justify-between text-lg font-extrabold lg:text-xl"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {!isOpen && (
-            <MdKeyboardArrowDown className="text-2xl font-extrabold" />
-          )}
-          {isOpen && <MdKeyboardArrowUp className="text-2xl font-extrabold" />}
+          <MdKeyboardArrowDown
+            className={`text-2xl font-extrabold transition-all duration-300 ${isOpen && "rotate-180"}`}
+          />
           {day_js(selectedDate.toDate()).format("YYYY년 MM월 DD일 ddd요일")}
           <IoCalendarOutline className="text-2xl font-extrabold" />
         </div>
@@ -96,62 +106,65 @@ export const DayPickers: React.FC<DayPickersProps> = ({}) => {
             month_grid: `${defaultClassNames.month_grid} w-full`,
             month: `${defaultClassNames.month} w-full`,
             months: `${defaultClassNames.months} !max-w-none`,
-            day: `${defaultClassNames.day} !text-lg !font-bold`,
-            outside: `${defaultClassNames.outside} !text-lg !text-gray-400`,
-            day_button: `${defaultClassNames.day_button} !inline-flex !relative !mx-auto !border-none`,
+            day: `${defaultClassNames.day} !relative`,
+            outside: `${defaultClassNames.outside} !text-gray-400`,
             weekday: `${defaultClassNames.weekday} !font-bold !text-lg`,
-            month_caption: `${defaultClassNames.month_caption} justify-center !text-xl`,
+            month_caption: `${defaultClassNames.month_caption} justify-center !text-lg lg:!text-xl`,
             nav: `${defaultClassNames.nav} w-full gap-48 justify-center`,
           }}
           components={{
-            DayButton: (props) => <CustomNode {...props} />,
+            DayButton: (props) => (
+              <CustomNode isMounted={isMounted} {...props} />
+            ),
           }}
         />
+        <PrimaryButton
+          onClick={() => setIsOpen(false)}
+          className="flex !h-auto w-full cursor-pointer items-center justify-center !py-0 focus:ring-0"
+        >
+          <MdKeyboardArrowDown className="rotate-180 text-2xl font-extrabold transition-all duration-300" />
+        </PrimaryButton>
       </div>
     </div>
   );
 };
 
+export default DayPickers;
+
 type CustomNodeProps = {
   day: CalendarDay;
   modifiers: Modifiers;
+  isMounted: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const CustomNode: React.FC<CustomNodeProps> = ({
-  day,
-  className,
-  modifiers: _,
-  ...props
-}) => {
-  const { selected } = useDayPicker();
+const CustomNode: React.FC<CustomNodeProps> = React.memo(
+  ({ day, className, isMounted, modifiers: _, ...props }) => {
+    const { selected } = useDayPicker();
 
-  const isSelected = selected && day_js(selected).isSame(day.date, "day");
+    const isSelected = selected && day_js(selected).isSame(day.date, "day");
 
-  const { isLoading, isExist } = useFetchEventsExist();
+    const { isLoading, isExist } = useFetchEventsExist();
 
-  return (
-    <button
-      disabled={isLoading}
-      className={`${className} ${
-        isSelected && "relative !bg-orange-600 !text-white"
-      } disabled:opacity-50`}
-      {...props}
-    >
-      {props.children}
-
-      <div
-        className={`absolute bottom-0 h-2 w-2 animate-pulse rounded-full bg-gray-200 text-xs ${
-          !isLoading && "invisible"
-        }`}
-      />
-
-      {isExist(day_js(day.date)) && (
+    return (
+      <>
         <div
-          className={`absolute bottom-1 h-2 w-2 rounded-full bg-orange-600 ${
-            isSelected && "!bg-white"
-          }`}
-        />
-      )}
-    </button>
-  );
-};
+          className={`!m-auto !aspect-square !h-8 !w-auto !border-none lg:!h-10 ${isSelected && "!bg-orange-600 !text-white"} ${className}`}
+          {...(props as React.HTMLAttributes<HTMLDivElement>)}
+        >
+          {props.children}
+
+          {(!isMounted || isLoading) && (
+            <div
+              className={`absolute bottom-[7px] h-2 w-2 animate-pulse rounded-full bg-gray-200 text-xs lg:bottom-0`}
+            />
+          )}
+        </div>
+        {isExist(day_js(day.date)) && (
+          <div
+            className={`absolute bottom-[7px] left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-orange-600 lg:bottom-1 ${isSelected && "!bg-white"}`}
+          />
+        )}
+      </>
+    );
+  },
+);

@@ -44,7 +44,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
           });
           goToDay(selectedDate);
         }}
-        className="inline-flex w-32 justify-center gap-2 rounded-lg p-2 font-bold text-white disabled:opacity-80"
+        className="inline-flex w-full justify-center gap-2 rounded-lg p-2 font-bold text-white disabled:opacity-80"
       >
         저장하기
         {isPendingCreate && (
@@ -63,7 +63,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
               goToDay(selectedDate);
             }
           }}
-          className="w-32 justify-center"
+          className="w-full justify-center"
         >
           일정 삭제
           {isPendingDelete && (

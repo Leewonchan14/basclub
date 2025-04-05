@@ -35,7 +35,7 @@ export const useFetchSelectedEvents = () => {
     isLoading: isLoadingTeam,
   } = useQuery(
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    teamsQueryApi.findByEventsId(events?.id!, !!events)
+    teamsQueryApi.findByEventsId(events?.id!, !!events),
   );
 
   const teamsArr = teamData ?? [];
@@ -61,7 +61,7 @@ export const useFetchSelectedEvents = () => {
     events &&
     day_js().isBetween(
       day_js(events.timeSlot.start),
-      day_js(events.date).endOf("day")
+      day_js(events.date).endOf("day"),
     );
 
   const checkCanUpdateScore = useCallback(() => {
@@ -83,8 +83,14 @@ export const useFetchSelectedEvents = () => {
     isJoin,
     isCanUpdateScore,
     checkCanUpdateScore,
-    isLoading: isLoadingExist || isLoading || isLoadingTeam || isLoadingOwn,
-    isFetching: isFetching || isFetchingTeam,
+    isLoading:
+      isLoadingExist ||
+      isLoading ||
+      isLoadingTeam ||
+      isLoadingOwn ||
+      isFetchingTeam ||
+      isRefetchingTeam,
+    isFetching: isFetching || isFetchingTeam || isRefetchingTeam,
     isRefetching: isRefetching || isRefetchingTeam,
   };
 };

@@ -5,8 +5,10 @@ import { PlainEvents } from "@/entity/event.entity";
 import type { GeoPoint } from "@/entity/transformer/point.transformer";
 import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { day_js } from "@/share/lib/dayjs";
 import { Dayjs } from "dayjs";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,

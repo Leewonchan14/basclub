@@ -41,7 +41,7 @@ const LastEventContainer: React.FC<ILastEventContainerProps> = ({
     return _.range(5).map((idx) => (
       <div
         key={idx}
-        className="h-40 w-full animate-pulse rounded-lg bg-gray-200"
+        className="h-24 w-full animate-pulse rounded-lg bg-gray-200"
       />
     ));
   }

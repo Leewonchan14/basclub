@@ -4,11 +4,7 @@ import React from "react";
 export const KakaoScripts = () => {
   return (
     <React.Fragment>
-      <Script
-        type="text/javascript"
-        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_JAVASCRIPT_KEY}&autoload=false`}
-        strategy="beforeInteractive"
-      ></Script>
+      {/* 카카오 지도를 위한 스크립트 */}
 
       {/* 카카오 공유를 위한 스크립트 */}
       <Script
