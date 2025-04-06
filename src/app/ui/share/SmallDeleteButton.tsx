@@ -1,4 +1,5 @@
 "use client";
+import { MdDeleteOutline } from "react-icons/md";
 
 interface Props {
   onClick: () => void;
@@ -14,10 +15,10 @@ export const SmallDeleteButton: React.FC<Props> = function ({
   return (
     <button
       disabled={disabled}
-      className={`inline-block w-4 h-4 ml-auto text-xs text-white bg-red-600 rounded-full disabled:opacity-30 ${className}`}
+      className={`block aspect-square rounded-full text-red-500 disabled:opacity-30 ${className}`}
       onClick={onClick}
     >
-      x
+      <MdDeleteOutline />
     </button>
   );
 };

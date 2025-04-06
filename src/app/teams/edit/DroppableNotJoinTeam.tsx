@@ -6,17 +6,17 @@ import { DraggableMember } from "./DraggableMember";
 export const DroppableNotJoinTeam: React.FC<{}> = () => {
   const { notGroupedTeam: teams } = useEditTeamContext();
   return (
-    <Droppable direction="horizontal" droppableId={"0"}>
+    <Droppable droppableId={"0"}>
       {(provided, snapshot) => (
         <div
+          className="w-full"
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className={`min-h-24 p-4 bg-gray-50 rounded-lg border ${
-            snapshot.isDraggingOver ? "bg-green-100" : "bg-blue-100"
-          }`}
         >
-          <h2 className="mb-2 text-lg font-bold">투입되지 않은 인원</h2>
-          <div className="flex flex-wrap gap-2">
+          <h2 className="mb-2 font-bold">투입되지 않은 인원</h2>
+          <ul
+            className={`flex flex-col rounded-lg ${snapshot.isDraggingOver && "bg-green-100"}`}
+          >
             {teams.map((t, index) => (
               <DraggableMember
                 key={t.member.id}
@@ -25,7 +25,7 @@ export const DroppableNotJoinTeam: React.FC<{}> = () => {
               />
             ))}
             {provided.placeholder}
-          </div>
+          </ul>
         </div>
       )}
     </Droppable>

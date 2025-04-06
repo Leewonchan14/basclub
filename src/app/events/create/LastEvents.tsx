@@ -3,7 +3,7 @@
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
 import { useFetchLastEvents } from "@/feature/events/hooks/useFetchLastEvents";
 import { day_js } from "@/share/lib/dayjs";
-import { Spinner, Tooltip } from "flowbite-react";
+import { Tooltip } from "flowbite-react";
 import _ from "lodash";
 import { useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";

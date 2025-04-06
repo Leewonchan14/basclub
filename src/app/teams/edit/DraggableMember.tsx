@@ -1,5 +1,4 @@
 "use client";
-import { useEditTeamContext } from "@/app/teams/edit/EditTeamContext";
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { PlainMember } from "@/entity/member.entity";
 import { Draggable } from "@hello-pangea/dnd";
@@ -8,7 +7,6 @@ export const DraggableMember: React.FC<{
   member: PlainMember;
   index: number;
 }> = ({ member, index }) => {
-  const { scoreMap } = useEditTeamContext();
   return (
     <Draggable draggableId={member.id} index={index}>
       {(provided, snapshot) => (
@@ -16,14 +14,12 @@ export const DraggableMember: React.FC<{
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`border-2 border-blue-100 rounded-lg shadow`}
+          className="flex rounded-lg border-2 border-blue-100 bg-white p-4 shadow"
         >
           <MemberProfile
             member={member}
-            isLoading={false}
-            avgScore={scoreMap[member.id]}
-            className={`bg-blue-500 rounded-lg cursor-pointer transition-transform ${
-              snapshot.isDragging && "!text-white bg-gray-300 scale-125"
+            className={`cursor-pointer justify-start rounded-lg bg-blue-500 transition-transform ${
+              snapshot.isDragging && "scale-125 bg-gray-300 !text-white"
             } ${snapshot.isDropAnimating && "!scale-100"}`}
           />
         </div>

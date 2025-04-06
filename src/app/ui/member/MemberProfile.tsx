@@ -1,12 +1,17 @@
+"use client";
+
 import { ERole } from "@/entity/enum/role";
+import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { Avatar, Badge } from "flowbite-react";
 import React from "react";
 
 export const MemberProfile: React.FC<{
-  member: { nickname: string; profileUrl: string; role: ERole };
+  member: { nickname: string; profileUrl: string; role: ERole; id: string };
   className?: string;
-}> = ({ member: { nickname, profileUrl, role } }) => {
+}> = ({ member: { nickname, profileUrl, role, id } }) => {
+  const { own } = useFetchOwn();
   const isGuest = role === ERole.GUEST;
+  const isOwn = own?.id === id;
 
   const getNickname = () => {
     if (isGuest) {
@@ -18,11 +23,16 @@ export const MemberProfile: React.FC<{
 
   return (
     <Avatar rounded img={profileUrl}>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col items-start gap-1">
         <span className="text-sm font-bold text-gray-800">{getNickname()}</span>
         {isGuest && (
           <Badge className="justify-center text-center" color="indigo">
             GUEST
+          </Badge>
+        )}
+        {isOwn && (
+          <Badge className="min-w-14 justify-center text-center" color="pink">
+            나
           </Badge>
         )}
       </div>

@@ -6,7 +6,6 @@ import LeafletMap from "@/app/events/leaflet-map";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { Button } from "flowbite-react";
 import { NextPage } from "next";
-import Link from "next/link";
 import { IoNavigateCircleSharp } from "react-icons/io5";
 
 export const InputPlace: NextPage = () => {

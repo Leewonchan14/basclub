@@ -168,3 +168,5 @@ const CustomNode: React.FC<CustomNodeProps> = React.memo(
     );
   },
 );
+
+CustomNode.displayName = "CustomNode";

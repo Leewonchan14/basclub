@@ -57,17 +57,17 @@ const DisplayEvents: NextPage<Props> = ({}) => {
   return (
     <EventContainer>
       <div className="flex w-full flex-col items-center">
-        <div className="flex w-full items-center justify-between font-bold text-gray-500">
+        <div className="flex w-full items-center justify-between font-bold text-orange-500">
           <div>{startTimeStr}</div>
-          <div className="text-lg font-bold text-black">
+          <div className="text-lg font-bold">
             총 {rangeHour}시간 {rangeMinute}분
           </div>
           <div>{endTimeStr}</div>
         </div>
         <div className="flex w-full items-center justify-center font-semibold">
-          <div className="aspect-square w-3 translate-x-1/2 rounded-full bg-gray-500" />
-          <div className="h-[4px] w-3/4 rounded-full bg-gray-500" />
-          <div className="aspect-square w-3 -translate-x-1/2 rounded-full bg-gray-500" />
+          <div className="aspect-square w-3 translate-x-1/2 rounded-full bg-orange-500" />
+          <div className="h-[4px] w-3/4 rounded-full bg-orange-500" />
+          <div className="aspect-square w-3 -translate-x-1/2 rounded-full bg-orange-500" />
         </div>
       </div>
 
@@ -124,10 +124,12 @@ const EventContainer: React.FC<React.PropsWithChildren> = ({ children }) => {
 
 const EventSkeleton: React.FC = () => {
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-4 text-gray-500">
-      <div className="h-12 w-full animate-pulse rounded-lg bg-gray-200" />
-      <div className="h-52 w-full animate-pulse rounded-lg bg-gray-200" />
-    </div>
+    <EventContainer>
+      <div className="flex w-full flex-col items-center justify-center gap-4 text-gray-500">
+        <div className="h-12 w-full animate-pulse rounded-lg bg-gray-200" />
+        <div className="h-52 w-full animate-pulse rounded-lg bg-gray-200" />
+      </div>
+    </EventContainer>
   );
 };
 
@@ -148,7 +150,7 @@ const NotExistEvents: React.FC = () => {
           }}
           className={`inline-flex cursor-pointer items-center gap-2 border-b border-orange-500 font-bold text-orange-500 ${isLoading && "animate-pulse rounded-lg !border-gray-200 !bg-gray-200 !text-gray-200"}`}
         >
-          곧 시작하는 모임! <FaExternalLinkAlt />
+          가장 빠른 일정 보러가기! <FaExternalLinkAlt />
         </div>
       </div>
     </EventContainer>

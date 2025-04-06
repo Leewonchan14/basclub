@@ -5,10 +5,8 @@ import { PlainEvents } from "@/entity/event.entity";
 import type { GeoPoint } from "@/entity/transformer/point.transformer";
 import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
-import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { day_js } from "@/share/lib/dayjs";
 import { Dayjs } from "dayjs";
-import { useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -38,7 +36,7 @@ interface ProviderProps {
 
 export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
   const { selectedDate } = useSelectedDate();
-  const { events } = useFetchSelectedEvents();
+  const { events, isLoading } = useFetchSelectedEvents();
   const [inputEvent, setInputEvent] = useState<IInputEvent>(
     DEFAULT_INPUT_EVENT(selectedDate),
   );
@@ -99,6 +97,8 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
   );
 
   useEffect(() => {
+    if (!isLoading) return;
+
     if (events) {
       handleChangeEvent({
         ...events,
@@ -107,7 +107,7 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
     } else {
       handleChangeEvent(DEFAULT_INPUT_EVENT(selectedDate));
     }
-  }, [events, handleChangeEvent]);
+  }, [events, handleChangeEvent, isLoading, selectedDate]);
 
   return (
     <EventCreateContext.Provider

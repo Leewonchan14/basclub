@@ -11,6 +11,7 @@ export const DroppableTeam: React.FC<{ teams: PlainTeam[]; group: number }> = ({
   group,
 }) => {
   const { setTeams } = useEditTeamContext();
+  const teamCharacter = String.fromCharCode(64 + group);
 
   const removeTeam = (group: number) => {
     setTeams((teams) => {
@@ -28,15 +29,18 @@ export const DroppableTeam: React.FC<{ teams: PlainTeam[]; group: number }> = ({
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className={`p-4 border-2 rounded-lg w-64 ${
-            snapshot.isDraggingOver ? "bg-green-100" : "bg-gray-100"
-          }`}
+          className={"w-full"}
         >
-          <h2 className="flex items-center mb-2 text-lg font-bold text-nowrap">
-            팀 {group}
-            <SmallDeleteButton onClick={() => removeTeam(group)} />
-          </h2>
-          <ul>
+          <div className="mb-2 flex items-center justify-between text-nowrap text-lg font-bold">
+            <div>팀 {teamCharacter}</div>
+            <SmallDeleteButton
+              className="text-xl"
+              onClick={() => removeTeam(group)}
+            />
+          </div>
+          <ul
+            className={`w-full rounded-lg ${snapshot.isDraggingOver && "bg-green-100"}`}
+          >
             {teams.map((t, index) => (
               <DraggableMember
                 key={t.member.id}
@@ -44,8 +48,8 @@ export const DroppableTeam: React.FC<{ teams: PlainTeam[]; group: number }> = ({
                 index={index}
               />
             ))}
+            {provided.placeholder}
           </ul>
-          {provided.placeholder}
         </div>
       )}
     </Droppable>

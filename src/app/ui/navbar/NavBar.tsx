@@ -12,7 +12,7 @@ export const NavBar: NextPage<Props> = async () => {
   const payload = await getPayload();
   const isLogin = !!payload;
   return (
-    <Navbar className="border-b border-gray-200 bg-gray-50">
+    <Navbar className="border-b border-gray-200 bg-white">
       <div className="mx-auto flex w-full max-w-content-width items-center justify-between">
         <NavbarBrand as={Link} href="/events">
           <div className="relative flex w-full items-center gap-2">

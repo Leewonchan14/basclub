@@ -1,7 +1,7 @@
 "use client";
 
+import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 interface KakaoLoginButtonProps {
@@ -13,28 +13,14 @@ const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({
   className,
   size = 1,
 }) => {
+  const { needLoginPromise } = useNeedLogin();
   const pathname = usePathname();
   if (pathname.startsWith("/login")) {
     return <div className="h-8 w-20 animate-pulse rounded-lg bg-gray-200" />;
   }
 
-  const url = "https://kauth.kakao.com/oauth/authorize";
-  const params = new URLSearchParams({
-    client_id: process.env.NEXT_PUBLIC_CLIENT_ID!,
-    redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URL!,
-    response_type: "code",
-  }).toString();
-
-  const link = `${url}?${params}`;
-
   return (
-    <Link
-      onClick={() =>
-        window.localStorage.setItem("redirectUri", window.location.href)
-      }
-      href={link}
-      className={className}
-    >
+    <div onClick={needLoginPromise} className={className}>
       <Image
         src="/kakao_button.png"
         alt="카카오 로그인 버튼"
@@ -43,7 +29,7 @@ const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({
         style={{ cursor: "pointer" }}
         priority={true} // 이미지 우선 로드
       />
-    </Link>
+    </div>
   );
 };
 

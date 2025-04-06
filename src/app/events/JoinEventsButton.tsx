@@ -18,7 +18,7 @@ export const JoinEventsButton = () => {
   if (!isCanJoin) {
     return (
       <div className="flex flex-col items-center gap-2">
-        <div className="flex h-40 flex-col items-center justify-center text-gray-500">
+        <div className="flex flex-col items-center justify-center text-gray-500">
           <p>참가 기한이 지났습니다.</p>
         </div>
       </div>

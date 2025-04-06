@@ -36,15 +36,17 @@ const Page: NextPage<Props> = async ({ searchParams: { eventsId } }) => {
   });
 
   return (
-    <Suspense>
-      <EditTeamProvider initTeams={teams} scoreMap={scoreMap}>
-        <EditTeam />
-        <div className="flex justify-center w-full gap-4">
-          <BackButton />
-          {isAdmin && <MutateButton date={events.date} eventsId={eventsId} />}
-        </div>
-      </EditTeamProvider>
-    </Suspense>
+    <div className="flex w-full flex-col justify-center gap-4 rounded-lg bg-white p-4 shadow-lg">
+      <Suspense fallback={null}>
+        <EditTeamProvider initTeams={teams} scoreMap={scoreMap}>
+          <EditTeam />
+          <div className="flex w-full justify-center gap-4">
+            <BackButton />
+            {isAdmin && <MutateButton date={events.date} eventsId={eventsId} />}
+          </div>
+        </EditTeamProvider>
+      </Suspense>
+    </div>
   );
 };
 

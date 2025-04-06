@@ -3,11 +3,13 @@
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
+import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import _ from "lodash";
 import React from "react";
 
 // 참가 인원들
 export const DisplayParticipants = () => {
+  const { own } = useFetchOwn();
   const { events, teamsArr, ownGuestTeams, isJoin, isLoading } =
     useFetchSelectedEvents();
 
@@ -60,8 +62,8 @@ export const DisplayParticipants = () => {
       <div className="flex w-full flex-col gap-2">
         {teamsArr.map((teamMember) => (
           <div
-            className="flex w-full items-center rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-lg"
             key={teamMember.id}
+            className={`flex w-full items-center rounded-lg border-2 border-gray-200 bg-gray-50 p-4 shadow-lg ${teamMember.member.id === own?.id && "!border-orange-500"}`}
           >
             <MemberProfile member={teamMember.member} />
           </div>
