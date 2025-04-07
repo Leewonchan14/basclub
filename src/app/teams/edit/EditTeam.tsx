@@ -32,15 +32,18 @@ export const EditTeam: React.FC<{}> = () => {
 
   const handleClickRandomizeTeam = () => {
     if (teams.length <= 1) return;
-    const stack = _.shuffle(_.flatten(teams));
-    const newTeams = _.range(teams.length).map(() => []) as typeof teams;
 
-    stack.forEach((item, index) => {
-      const teamIdx = (index % (teams.length - 1)) + 1; // 팀 1번부터 시작
-      newTeams[teamIdx].push(item);
+    const queue = _.shuffle(_.flatten(teams));
+    const newTeams = _.range(teams.length - 1).map(
+      () => [],
+    ) as (typeof teams)[number][];
+
+    queue.forEach((item, idx) => {
+      const teamIndex = idx % newTeams.length;
+      newTeams[teamIndex].push(item);
     });
 
-    setTeams(() => newTeams);
+    setTeams(() => [[], ...newTeams]);
   };
 
   return (

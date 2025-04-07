@@ -28,7 +28,7 @@ export const removeEvent = async (id: string) => {
 export const toggleJoinEvent = async (
   eventsId: string,
   memberId: string,
-  guestCnt: number
+  guestCnt: number,
 ) => {
   const eventsService = getService(TeamService);
   guestCnt = z.coerce.number().min(0).max(9).parse(guestCnt);

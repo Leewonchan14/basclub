@@ -7,6 +7,7 @@ import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { day_js } from "@/share/lib/dayjs";
 import { Dayjs } from "dayjs";
+import _ from "lodash";
 import {
   createContext,
   useCallback,
@@ -76,7 +77,7 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
     }));
   }, []);
 
-  const handleChangeEvent = useCallback((event?: IInputEvent) => {
+  const handleChangeEvent = useCallback((event?: Omit<IInputEvent, "id">) => {
     setInputEvent((prev) => ({
       ...prev,
       ...event,
@@ -86,14 +87,15 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
   const handleClickLastEvent = useCallback(
     (lastEvent: PlainEvents) => {
       handleChangeEvent({
-        ...lastEvent,
+        ..._.omit(lastEvent, ["id"]),
+        date: selectedDate.format("YYYY-MM-DD"),
         timeSlot: getInitTimeSlot(
           lastEvent.timeSlot.start,
           lastEvent.timeSlot.end,
         ),
       });
     },
-    [handleChangeEvent],
+    [handleChangeEvent, selectedDate],
   );
 
   useEffect(() => {
