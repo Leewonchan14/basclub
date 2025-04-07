@@ -99,7 +99,7 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
   );
 
   useEffect(() => {
-    if (!isLoading) return;
+    if (isLoading) return;
 
     if (events) {
       handleChangeEvent({
@@ -109,7 +109,8 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
     } else {
       handleChangeEvent(DEFAULT_INPUT_EVENT(selectedDate));
     }
-  }, [events, handleChangeEvent, isLoading, selectedDate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, events]);
 
   return (
     <EventCreateContext.Provider
