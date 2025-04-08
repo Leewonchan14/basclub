@@ -4,7 +4,6 @@ import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { PlainTeam } from "@/entity/team.entity";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
-import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
@@ -14,7 +13,6 @@ import { AiOutlineTeam } from "react-icons/ai";
 export const DisplayTeams = () => {
   const { events, isLoading: isFetchingEvent } = useFetchSelectedEvents();
   const { groupedTeam, isLoading } = useFetchSelectedEvents();
-  const { isCanJoin } = useJoinEvents({ guestCnt: 0 });
 
   if (isLoading || isFetchingEvent)
     return (
@@ -28,7 +26,7 @@ export const DisplayTeams = () => {
       </Layout>
     );
 
-  if (!events || !isCanJoin) return null;
+  if (!events) return null;
 
   const isNoTeam = groupedTeam.length === 0;
 
@@ -61,7 +59,7 @@ const NoTeams = () => {
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="flex flex-col items-center justify-center text-gray-500">
-        <p>팀이 아직 정해지지 않았습니다.</p>
+        <p>팀이 정해지지 않았습니다.</p>
       </div>
     </div>
   );
