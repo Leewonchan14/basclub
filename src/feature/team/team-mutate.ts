@@ -1,6 +1,6 @@
 import { PlainTeam } from "@/entity/team.entity";
 import { eventsQueryApi } from "@/feature/events/event-query";
-import { upsertTeam } from "@/feature/team/team-mutate.actions";
+import { togglePaidTeam, upsertTeam } from "@/feature/team/team-mutate.actions";
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
 
 export const teamMutateOption = {
@@ -14,5 +14,17 @@ export const teamMutateOption = {
         queryKey: [...eventsQueryApi.findById(eventsId, false).queryKey],
       });
     },
+  }),
+
+  toggleHasPaid: (teamId: string) => ({
+    mutationKey: ["events", "teams", "toggleHasPaid", teamId],
+    mutationFn: async () => {
+      return await togglePaidTeam(teamId);
+    },
+    // onSuccess: (_data: unknown, _variables: PlainTeam[][]) => {
+    //   getQueryClient().invalidateQueries({
+    //     queryKey: [...eventsQueryApi.findById(teamId, false).queryKey],
+    //   });
+    // },
   }),
 };

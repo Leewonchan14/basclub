@@ -52,7 +52,7 @@ export class TeamService implements IService<Team> {
   async toggleJoin(eventId: string, memberId: string, guestCnt: number) {
     const findTeam = await this.findTeamsByEventIdAndMemberId(
       eventId,
-      memberId
+      memberId,
     );
 
     const findEvent = await this.eventsService.findById(eventId);
@@ -71,7 +71,7 @@ export class TeamService implements IService<Team> {
 
     // 평균 점수 구하기
     const avgScore = await this.scoreService.findScoresAVGByMemberId(
-      originMember.id
+      originMember.id,
     );
 
     const newTeams = members.map((m) => {
@@ -112,7 +112,7 @@ export class TeamService implements IService<Team> {
     // 이벤트에 score모두 삭제
     await this.scoreService.deleteScoresByEventsIdAndMemberId(
       eventId,
-      originMemberId
+      originMemberId,
     );
     return;
   }
@@ -120,5 +120,15 @@ export class TeamService implements IService<Team> {
   async upsertTeams(teams: PlainTeam[][]) {
     teams = teams.map((team, i) => team.map((t) => ({ ...t, group: i })));
     await this.teamRepository.upsert(teams.flat(), ["id"]);
+  }
+
+  async togglePaidTeam(teamId: string) {
+    const team = await this.teamRepository.findOne({ where: { id: teamId } });
+    if (!team) {
+      throw new Error("Team not found");
+    }
+    team.isPaid = !team.isPaid;
+    await this.teamRepository.save(team);
+    return team;
   }
 }

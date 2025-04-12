@@ -35,12 +35,16 @@ export class Team extends TimeStampEntity {
   @Column({ nullable: false })
   group: number;
 
+  @Column({ nullable: false, default: false })
+  isPaid: boolean;
+
   toPlain() {
     return {
       id: this.id,
       member: this.member.toPlain(),
       avgScore: this.avgScore,
       group: this.group,
+      isPaid: this.isPaid,
     };
   }
 }

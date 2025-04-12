@@ -1,6 +1,7 @@
 import { PlainMember } from "@/entity/member.entity";
 import { useRouter } from "next/navigation";
 import { useFetchOwn } from "./useFetchOwn";
+import { useCallback } from "react";
 
 export const useNeedLogin = () => {
   const { own, isLoading } = useFetchOwn();
@@ -16,14 +17,17 @@ export const useNeedLogin = () => {
 
   const link = `${url}?${params}`;
 
-  const needLoginPromise = () =>
-    new Promise<PlainMember>((resolve) => {
-      if (isLoading) return;
-      if (isLogin) return resolve(own);
+  const needLoginPromise = useCallback(
+    () =>
+      new Promise<PlainMember>((resolve) => {
+        if (isLoading) return;
+        if (isLogin) return resolve(own);
 
-      window.localStorage.setItem("redirectUri", window.location.href);
-      router.push(link);
-    });
+        window.localStorage.setItem("redirectUri", window.location.href);
+        router.push(link);
+      }),
+    [isLoading, isLogin, link, own, router],
+  );
 
   return { own, isLoading, needLoginPromise };
 };

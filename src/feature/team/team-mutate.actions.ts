@@ -9,3 +9,8 @@ export const upsertTeam = async (teams: PlainTeam[][]) => {
   await teamService.upsertTeams(teams);
   return;
 };
+
+export const togglePaidTeam = async (teamId: string) => {
+  const teamService = getService(TeamService);
+  await teamService.togglePaidTeam(teamId);
+};

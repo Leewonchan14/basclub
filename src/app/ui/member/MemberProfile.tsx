@@ -3,6 +3,7 @@
 import { ERole } from "@/entity/enum/role";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { Avatar, Badge } from "flowbite-react";
+import { FaRegCircleCheck } from "react-icons/fa6";
 import React from "react";
 
 export const MemberProfile: React.FC<{
@@ -22,7 +23,7 @@ export const MemberProfile: React.FC<{
   };
 
   return (
-    <Avatar rounded img={profileUrl}>
+    <Avatar rounded img={profileUrl} draggable={false}>
       <div className="flex flex-col items-start gap-1">
         <span className="text-sm font-bold text-gray-800">{getNickname()}</span>
         {isGuest && (
