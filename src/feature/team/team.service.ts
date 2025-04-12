@@ -131,4 +131,13 @@ export class TeamService implements IService<Team> {
     await this.teamRepository.save(team);
     return team;
   }
+
+  async deleteTeam(teamId: string) {
+    const team = await this.teamRepository.findOne({ where: { id: teamId } });
+    if (!team) {
+      throw new Error("Team not found");
+    }
+    await this.teamRepository.remove(team);
+    return team;
+  }
 }

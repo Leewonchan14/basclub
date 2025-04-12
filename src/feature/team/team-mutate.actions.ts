@@ -14,3 +14,8 @@ export const togglePaidTeam = async (teamId: string) => {
   const teamService = getService(TeamService);
   await teamService.togglePaidTeam(teamId);
 };
+
+export const deleteTeam = async (teamId: string) => {
+  const teamService = getService(TeamService);
+  await teamService.deleteTeam(teamId);
+};

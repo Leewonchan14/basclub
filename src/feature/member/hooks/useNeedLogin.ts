@@ -1,7 +1,8 @@
+import { ERole } from "@/entity/enum/role";
 import { PlainMember } from "@/entity/member.entity";
 import { useRouter } from "next/navigation";
-import { useFetchOwn } from "./useFetchOwn";
 import { useCallback } from "react";
+import { useFetchOwn } from "./useFetchOwn";
 
 export const useNeedLogin = () => {
   const { own, isLoading } = useFetchOwn();
@@ -29,5 +30,10 @@ export const useNeedLogin = () => {
     [isLoading, isLogin, link, own, router],
   );
 
-  return { own, isLoading, needLoginPromise };
+  return {
+    own,
+    isAdmin: own?.role === ERole.ADMIN,
+    isLoading,
+    needLoginPromise,
+  };
 };

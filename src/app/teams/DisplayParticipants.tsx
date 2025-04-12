@@ -5,12 +5,13 @@ import { PlainTeam } from "@/entity/team.entity";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
+import { useDeleteTeam } from "@/feature/team/hooks/useDeleteTeam";
 import { useHandleHasPaidTeam } from "@/feature/team/hooks/useHandleHasPaidTeam";
 import { ToggleSwitch, Tooltip } from "flowbite-react";
 import _ from "lodash";
 import React from "react";
 import { FaRegCircleCheck } from "react-icons/fa6";
-import { MdWarningAmber } from "react-icons/md";
+import { MdDelete, MdWarningAmber } from "react-icons/md";
 
 // 참가 인원들
 export const DisplayParticipants = () => {
@@ -105,34 +106,52 @@ interface IParticipantListItemProps {
 const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
   const { own, isAdmin } = useFetchOwn();
   const { handleTogglePaidTeam, isMutating } = useHandleHasPaidTeam(team.id);
+  const { isMutating: isDeleting, handleDeleteTeam } = useDeleteTeam(team.id);
   return (
-    <div
-      key={team.id}
-      className={`flex w-full items-center justify-between rounded-lg border-2 border-gray-200 bg-gray-50 p-4 shadow-lg ${team.member.id === own?.id && "!border-orange-500"}`}
-    >
-      <MemberProfile member={team.member} />
-      <div className="flex h-full flex-col items-center justify-center">
-        {/* <Checkbox className="h-5 w-5" color="green" /> */}
-        <div className="flex h-full flex-col-reverse items-center justify-center">
-          {isAdmin && (
-            <Tooltip content="참가비 확인 여부" placement="top">
-              <div
-                onClick={handleTogglePaidTeam}
-                className="flex h-full flex-col items-center justify-between"
+    <div className="flex h-full w-full items-center gap-2">
+      <div
+        key={team.id}
+        className={`relative flex w-full items-center justify-between rounded-lg border-2 border-gray-200 bg-gray-50 p-4 shadow-lg ${team.member.id === own?.id && "!border-orange-500"}`}
+      >
+        <MemberProfile member={team.member} />
+        <div className="flex h-full flex-col items-center justify-center">
+          {/* <Checkbox className="h-5 w-5" color="green" /> */}
+          <div className="flex h-full flex-col-reverse items-center justify-center">
+            {isAdmin && (
+              <Tooltip
+                content="참가비 확인 여부"
+                placement="top"
+                className="text-nowrap"
               >
-                <ToggleSwitch
-                  checked={team.isPaid}
-                  onChange={() => {}}
-                  disabled={isMutating}
-                />
-                <span className="w-full cursor-pointer text-center text-sm text-gray-500">
-                  참가비
-                </span>
-              </div>
-            </Tooltip>
-          )}
+                <div
+                  onClick={handleTogglePaidTeam}
+                  className="flex h-full flex-col items-center justify-between"
+                >
+                  <ToggleSwitch
+                    checked={team.isPaid}
+                    onChange={() => {}}
+                    disabled={isMutating}
+                  />
+                  <span className="w-full cursor-pointer text-center text-sm text-gray-500">
+                    참가비
+                  </span>
+                </div>
+              </Tooltip>
+            )}
+          </div>
         </div>
       </div>
+      {isAdmin && (
+        <Tooltip theme={{ target: "h-full" }} content="팀 삭제">
+          <button
+            disabled={isDeleting}
+            onClick={handleDeleteTeam}
+            className="flex h-full items-center rounded-md bg-red-600 px-1 disabled:opacity-30"
+          >
+            <MdDelete className="text-lg text-white" />
+          </button>
+        </Tooltip>
+      )}
     </div>
   );
 };

@@ -10,7 +10,7 @@ export const useFetchOwn = () => {
   return {
     own: data,
     isLoading,
-    isAdmin: data?.role === ERole.ADMIN,
+    isAdmin: !isLoading && data?.role === ERole.ADMIN,
     isMine,
     isCanUpdate,
   };
