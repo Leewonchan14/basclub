@@ -1,6 +1,5 @@
 "use client";
 
-import { ScoreListItem } from "@/app/events/score/ScoreListItem";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import Spinner from "@/app/ui/share/Spinner";
 import { PlainScore } from "@/entity/score.entity";
@@ -14,7 +13,7 @@ export const ScoreList = () => {
   if (isNoScore) return <NoScore />;
 
   return (
-    <div className="flex flex-col items-start w-full mx-auto">
+    <div className="mx-auto flex w-full flex-col items-start">
       <RefetchButton />
       {/* 득점 기록 목록 */}
       <RenderScoreList scores={scores} />
@@ -28,10 +27,7 @@ const RenderScoreList: React.FC<{ scores: PlainScore[] }> = ({ scores }) => {
   if (scores.length === 0) return <NoScore />;
 
   return (
-    <div className="flex flex-col w-full gap-6">
-      {scores.map((score) => (
-        <ScoreListItem key={score.id} score={score} />
-      ))}
+    <div className="flex w-full flex-col gap-6">
       {hasNext && <MoreButton />}
     </div>
   );
@@ -47,7 +43,7 @@ const RefetchButton = () => {
     <PrimaryButton
       disabled={isFetching}
       onClick={() => refetch()}
-      className="inline-flex gap-4 mb-4"
+      className="mb-4 inline-flex gap-4"
     >
       스탯기록 새로고침
       {isFetching && (

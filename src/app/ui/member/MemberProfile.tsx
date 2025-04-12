@@ -3,7 +3,6 @@
 import { ERole } from "@/entity/enum/role";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { Avatar, Badge } from "flowbite-react";
-import { FaRegCircleCheck } from "react-icons/fa6";
 import React from "react";
 
 export const MemberProfile: React.FC<{
