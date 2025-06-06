@@ -6,7 +6,13 @@ import { GeoPointTransFormer } from "@/entity/transformer/point.transformer";
 import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
 import { TimeSlotTransformer } from "@/entity/transformer/timSlot.transformer";
 import { dayjsZod, type Dayjs } from "@/share/lib/dayjs";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Index,
+} from "typeorm";
 import { z } from "zod";
 
 export interface PlainEvents {
@@ -39,6 +45,7 @@ export class Events
   coordinates: GeoPoint;
 
   @Column({ type: "timestamptz", transformer: new DateTransFormer() })
+  @Index("IDX_events_date", { unique: true })
   date: Dayjs;
 
   @Column({

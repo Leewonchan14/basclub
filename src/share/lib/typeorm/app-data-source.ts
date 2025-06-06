@@ -13,7 +13,7 @@ const originDataSource = new DataSource({
   database: process.env.POSTGRES_DATABASE,
   entities: [Member, Team, Events, Score],
   synchronize: false,
-  logging: ["query", "error"],
+  logging: ["error"],
   migrations: [],
   ssl: true,
   subscribers: [],
@@ -21,7 +21,7 @@ const originDataSource = new DataSource({
   extra: {
     // 연결 풀 크기 설정
     max: 20, // 최대 연결 수
-    min: 5,  // 최소 연결 수
+    min: 5, // 최소 연결 수
     // 연결 타임아웃 설정
     acquireTimeoutMillis: 30000,
     // 유휴 연결 타임아웃
