@@ -2,7 +2,7 @@
 
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { day_js } from "@/share/lib/dayjs";
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const Kakao: any;
@@ -10,25 +10,31 @@ declare const Kakao: any;
 const useShareKakao = () => {
   const { events } = useFetchSelectedEvents();
 
-  const addressParam = new URLSearchParams({ k: events?.detailAddress ?? "" })
-    .toString()
-    .split("=")[1];
+  const findLoadLink = useMemo(() => {
+    if (!events) return "";
+    return `https://map.kakao.com/link/to/${events?.detailAddress},${events?.coordinates.lat},${events?.coordinates.lng}`;
+  }, [events]);
 
-  const findLoadLink = `https://map.kakao.com/link/to/${addressParam},${events?.coordinates.lat},${events?.coordinates.lng}`;
   useEffect(() => {
-    if (!Kakao.isInitialized()) {
-      Kakao.init(process.env.NEXT_PUBLIC_JAVASCRIPT_KEY);
-    }
-  }, []);
-
-  const onClickShare = async () => {
     if (!events) return;
 
+    const init = async () => {
+      if (!Kakao.isInitialized()) {
+        Kakao.init(process.env.NEXT_PUBLIC_JAVASCRIPT_KEY);
+        console.log("SDK load Done");
+      }
+    };
+
+    init();
+  }, [events]);
+
+  const onClickShare = useCallback(() => {
+    if (!events) return;
     const imageUrl = `https://basclub.vercel.app/background_group.jpeg`;
     const joinLink = `${window.location.href}`;
 
-    Kakao.Share.createDefaultButton({
-      container: "#kakaotalk-sharing-btn",
+    Kakao.Share.sendDefault({
+      // container: element,
       objectType: "feed",
       content: {
         title: `${day_js(events.date).format("MM월 DD일 ddd요일")} \n${day_js(
@@ -60,9 +66,9 @@ const useShareKakao = () => {
         },
       ],
     });
-  };
+  }, [events, findLoadLink]);
 
-  return { onClickShare, findLoadLink };
+  return { findLoadLink, onClickShare };
 };
 
 export default useShareKakao;

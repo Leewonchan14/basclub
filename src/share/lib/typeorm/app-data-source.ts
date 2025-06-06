@@ -13,10 +13,24 @@ const originDataSource = new DataSource({
   database: process.env.POSTGRES_DATABASE,
   entities: [Member, Team, Events, Score],
   synchronize: false,
-  logging: ["error"],
+  logging: ["query", "error"],
   migrations: [],
   ssl: true,
   subscribers: [],
+  // 연결 풀 설정 추가
+  extra: {
+    // 연결 풀 크기 설정
+    max: 20, // 최대 연결 수
+    min: 5,  // 최소 연결 수
+    // 연결 타임아웃 설정
+    acquireTimeoutMillis: 30000,
+    // 유휴 연결 타임아웃
+    idleTimeoutMillis: 30000,
+    // 연결 생성 타임아웃
+    createTimeoutMillis: 30000,
+    // 연결 재시도 설정
+    createRetryIntervalMillis: 200,
+  },
 });
 
 export class AppDataSource {

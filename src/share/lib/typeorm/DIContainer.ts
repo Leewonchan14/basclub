@@ -10,13 +10,20 @@ interface Class {
   new (...args: any[]): any;
 }
 
+// DataSource 초기화 상태를 캐시
+let isDataSourceInitialized = false;
+
 const setAsyncAllMethod = (target: any) => {
   return new Proxy(target, {
     get: (target, key) => {
       const value = target[key];
       if (typeof value === "function") {
         return async (...args: any[]) => {
-          await dataSource();
+          // 이미 초기화된 경우 초기화 체크를 스킵
+          if (!isDataSourceInitialized) {
+            await dataSource();
+            isDataSourceInitialized = true;
+          }
           return value.call(target, ...args);
         };
       }
@@ -37,25 +44,25 @@ export class DIContainer {
       DIContainer.repositories.set(
         entity,
         // getRepository를 호출하는 service에서는 무조건 dataSource를 호출하게 된다
-        syncDataSource!.getRepository(entity)
+        syncDataSource!.getRepository(entity),
       );
     }
     return DIContainer.repositories.get(entity) as Repository<Entity>;
   }
 
   static setService<T extends ObjectLiteral>(
-    constructor: new (...args: any[]) => T
+    constructor: new (...args: any[]) => T,
   ) {
     if (!DIContainer.services.has(constructor)) {
       DIContainer.services.set(
         constructor,
-        setAsyncAllMethod(new constructor())
+        setAsyncAllMethod(new constructor()),
       );
     }
   }
 
   static getService<Service extends ObjectLiteral>(
-    constructor: new (...args: any[]) => Service
+    constructor: new (...args: any[]) => Service,
   ) {
     if (!DIContainer.services.has(constructor)) {
       DIContainer.services.set(constructor, new constructor());

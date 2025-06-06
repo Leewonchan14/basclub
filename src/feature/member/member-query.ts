@@ -5,13 +5,15 @@ import {
 import { queryOptions } from "@tanstack/react-query";
 
 export const memberQueryApi = {
-  findOwn: queryOptions({
-    queryKey: ["member", "own"],
-    queryFn: async () => {
-      return getMemberOwn();
-    },
-    staleTime: 1000 * 30,
-  }),
+  findOwn: (enabled = true) =>
+    queryOptions({
+      queryKey: ["member", "own"],
+      queryFn: async () => {
+        return getMemberOwn();
+      },
+      staleTime: 1000 * 30,
+      enabled,
+    }),
 
   findById: (id: string) =>
     queryOptions({

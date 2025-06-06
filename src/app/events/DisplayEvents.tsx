@@ -13,23 +13,17 @@ import { Button } from "flowbite-react";
 import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoNavigateCircleSharp } from "react-icons/io5";
 
 interface Props {}
 
 const DisplayEvents: NextPage<Props> = ({}) => {
-  const [isMounted, setIsMounted] = useState(false);
   const { isExistSelectedEvents } = useFetchEventsExist();
   const { events, isLoading } = useFetchSelectedEvents();
-  const { onClickShare, findLoadLink } = useShareKakao();
+  const { findLoadLink } = useShareKakao();
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (isLoading || !isMounted) {
+  if (isLoading) {
     return <EventSkeleton />;
   }
 
@@ -71,10 +65,13 @@ const DisplayEvents: NextPage<Props> = ({}) => {
         </div>
       </div>
 
-      <LeafletMap center={[events.coordinates.lat, events.coordinates.lng]} />
+      <LeafletMap
+        key={events.id}
+        center={[events.coordinates.lat, events.coordinates.lng]}
+      />
 
       <Link
-        href={findLoadLink}
+        href={"findLoadLink"}
         target="_blank"
         className="flex w-full gap-1 underline"
       >
@@ -82,19 +79,7 @@ const DisplayEvents: NextPage<Props> = ({}) => {
       </Link>
 
       <div className="flex h-12 w-full items-center gap-1">
-        <Button
-          onClick={onClickShare}
-          className="flex h-full w-full items-center gap-2 !p-0"
-          color="alternative"
-          id="kakaotalk-sharing-btn"
-        >
-          <KakaoShareButton />
-          <span className="text-nowrap text-sm font-bold">
-            카카오톡으로
-            <br />
-            공유하기!
-          </span>
-        </Button>
+        <KakaoShareButton />
 
         <Button
           onClick={() => window.open(findLoadLink, "_blank")}
@@ -159,17 +144,29 @@ const NotExistEvents: React.FC = () => {
 
 interface KakaoShareButtonProps {}
 
-const KakaoShareButton: React.FC<KakaoShareButtonProps> = () => {
+export const KakaoShareButton: React.FC<KakaoShareButtonProps> = () => {
+  const { onClickShare } = useShareKakao();
   return (
-    <div className="relative flex h-8 w-8 cursor-pointer flex-col overflow-clip rounded-xl">
-      <Image
-        fill
-        alt="카카오톡 공유 버튼"
-        src={
-          "https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
-        }
-        unoptimized
-      />
-    </div>
+    <Button
+      onClick={onClickShare}
+      className="flex h-full w-full items-center gap-2 !p-0"
+      color="alternative"
+    >
+      <div className="relative flex h-8 w-8 cursor-pointer flex-col overflow-clip rounded-xl">
+        <Image
+          fill
+          alt="카카오톡 공유 버튼"
+          src={
+            "https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
+          }
+          unoptimized
+        />
+      </div>
+      <span className="text-nowrap text-sm font-bold">
+        카카오톡으로
+        <br />
+        공유하기!
+      </span>
+    </Button>
   );
 };

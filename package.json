@@ -22,6 +22,7 @@
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "lodash": "^4.17.21",
     "next": "14.2.18",
+    "nuqs": "^2.4.3",
     "pg": "^8.13.1",
     "react": "^18",
     "react-daum-postcode": "^3.2.0",

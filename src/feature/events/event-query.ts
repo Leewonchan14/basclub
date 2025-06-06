@@ -11,9 +11,7 @@ export const eventsQueryApi = {
   findById: (eventsId: string, enabled: boolean) =>
     queryOptions({
       queryKey: ["events", eventsId],
-      queryFn: async () => {
-        return await getEventById(eventsId);
-      },
+      queryFn: () => getEventById(eventsId),
       staleTime: 1000 * 60 * 30,
       enabled,
     }),
@@ -21,29 +19,21 @@ export const eventsQueryApi = {
     queryOptions({
       // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: ["events", date.format("YYYY-MM")],
-      queryFn: async () => {
-        if (!date) return {};
-        return await getEventsExistInMonth(date.toISOString());
-      },
-      staleTime: 1000 * 60 * 30,
+      queryFn: () => getEventsExistInMonth(date.toISOString()),
+      staleTime: 1000 * 60 * 60 * 1,
       enabled,
     }),
 
   findByLastEvents: () =>
     queryOptions({
-      // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: ["events", "last"],
-      queryFn: async () => {
-        return await getLastEventsByDate();
-      },
+      queryFn: () => getLastEventsByDate(),
       staleTime: 1000 * 60 * 30,
     }),
   findRecentByNow: () =>
     queryOptions({
       queryKey: ["events", "recent"],
-      queryFn: async () => {
-        return await getRecentEventByNow();
-      },
-      staleTime: 1000 * 60 * 30,
+      queryFn: () => getRecentEventByNow(),
+      staleTime: Infinity,
     }),
 };

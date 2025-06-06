@@ -5,12 +5,7 @@ import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { day_js } from "@/share/lib/dayjs";
 import { Tooltip } from "flowbite-react";
-import React, {
-  ButtonHTMLAttributes,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ButtonHTMLAttributes, useMemo, useRef, useState } from "react";
 import {
   CalendarDay,
   DayPicker,
@@ -27,28 +22,14 @@ interface DayPickersProps {}
 
 const DayPickers: React.FC<DayPickersProps> = ({}) => {
   const accordionRef = useRef<HTMLDivElement>(null);
-  const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
-  const [accordionHeight, setAccordionHeight] = useState<string | number>(
-    "auto",
-  );
   const isClose = !isOpen;
-  const defaultClassNames = getDefaultClassNames();
-  const { selectedDate, setSelectedDate } = useSelectedDate();
-
-  useEffect(() => {
-    if (accordionRef.current) {
-      setAccordionHeight(accordionRef.current.scrollHeight);
-    }
-  }, [selectedDate]);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const defaultClassNames = useMemo(() => getDefaultClassNames(), []);
+  const { selectedDate, selectedDateStr, setSelectedDate } = useSelectedDate();
 
   return (
     <div
-      className={`rounded-lg bg-white p-4 shadow-md transition-all ${isClose && "cursor-pointer"}`}
+      className={`rounded-lg bg-white p-4 shadow-md transition-all`}
       onClick={() => isClose && setIsOpen(!isOpen)}
     >
       <Tooltip
@@ -64,14 +45,13 @@ const DayPickers: React.FC<DayPickersProps> = ({}) => {
           <MdKeyboardArrowDown
             className={`text-2xl font-extrabold transition-all duration-300 ${isOpen && "rotate-180"}`}
           />
-          {day_js(selectedDate.toDate()).format("YYYY년 MM월 DD일 ddd요일")}
+          {selectedDate.format("YYYY년 MM월 DD일 ddd요일")}
           <IoCalendarOutline className="text-2xl font-extrabold" />
         </div>
       </Tooltip>
       <div
         ref={accordionRef}
-        className={"overflow-hidden transition-all duration-500"}
-        style={{ height: isOpen ? accordionHeight : 0 }}
+        className={`overflow-hidden transition-all duration-500 ${isOpen ? "h-auto" : "h-0"}`}
       >
         <hr className="my-2" />
         <DayPicker
@@ -114,7 +94,7 @@ const DayPickers: React.FC<DayPickersProps> = ({}) => {
           }}
           components={{
             DayButton: (props) => (
-              <CustomNode isMounted={isMounted} {...props} />
+              <CustomNode key={selectedDateStr} {...props} />
             ),
           }}
         />
@@ -134,11 +114,10 @@ export default DayPickers;
 type CustomNodeProps = {
   day: CalendarDay;
   modifiers: Modifiers;
-  isMounted: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const CustomNode: React.FC<CustomNodeProps> = React.memo(
-  ({ day, className, isMounted, modifiers: _, ...props }) => {
+  ({ day, className, modifiers: _, ...props }) => {
     const { selected } = useDayPicker();
 
     const isSelected = selected && day_js(selected).isSame(day.date, "day");
@@ -153,7 +132,7 @@ const CustomNode: React.FC<CustomNodeProps> = React.memo(
         >
           {props.children}
 
-          {(!isMounted || isLoading) && (
+          {isLoading && (
             <div
               className={`absolute bottom-[7px] h-2 w-2 animate-pulse rounded-full bg-gray-200 text-xs lg:bottom-0`}
             />

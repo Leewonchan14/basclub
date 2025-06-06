@@ -2,6 +2,8 @@ import QueryProviders from "@/share/lib/tasntack-query/query-providers";
 
 import { KakaoScripts } from "@/app/kakaoscripts";
 import FlowbiteWrapper from "@/app/ui/layout/flowbite-wrapper";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 import { NavBarLayout } from "@/app/ui/navbar/NavBarLayout";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -47,7 +49,9 @@ export default function RootLayout({
         <FlowbiteWrapper>
           <KakaoScripts />
           <QueryProviders>
-            <NavBarLayout>{children}</NavBarLayout>
+            <NuqsAdapter>
+              <NavBarLayout>{children}</NavBarLayout>
+            </NuqsAdapter>
           </QueryProviders>
         </FlowbiteWrapper>
       </body>
