@@ -25,7 +25,6 @@ const Page: NextPage<Props> = ({
   return (
     <div className="flex w-full flex-col gap-4">
       <DayPickers />
-      <UpsertEventButton />
       <div className="flex w-full justify-center">
         {isAdmin && <UpsertEventButton />}
       </div>
