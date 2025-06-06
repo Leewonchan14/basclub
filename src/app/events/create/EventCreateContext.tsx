@@ -86,17 +86,16 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
 
   const handleClickLastEvent = useCallback(
     (lastEvent: PlainEvents) => {
-      const start = day_js(lastEvent.timeSlot.start).set(
-        "date",
-        selectedDate.date(),
-      );
-      const end = day_js(lastEvent.timeSlot.end).set(
-        "date",
-        selectedDate.date(),
-      );
+      const dateStr = selectedDate.format("YYYY-MM-DD");
+      const startTime = day_js(lastEvent.timeSlot.start).format("HH:mm");
+      const endTime = day_js(lastEvent.timeSlot.end).format("HH:mm");
+
+      const start = day_js(`${dateStr} ${startTime}`);
+      const end = day_js(`${dateStr} ${endTime}`);
+
       handleChangeEvent({
-        ..._.omit(lastEvent, ["id"]),
-        date: selectedDate.format("YYYY-MM-DD"),
+        ..._.omit(lastEvent, "id"),
+        date: dateStr,
         timeSlot: { start, end },
       });
     },
