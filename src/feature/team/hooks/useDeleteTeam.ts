@@ -10,7 +10,10 @@ import {
 } from "@tanstack/react-query";
 import { useCallback } from "react";
 
-export const useDeleteTeam = (teamId: string) => {
+export const useDeleteTeam = (
+  teamId: string,
+  confirmFn?: (message: string) => Promise<boolean>,
+) => {
   const { isAdmin } = useFetchOwn();
   const queryClient = useQueryClient(getQueryClient());
   const { events } = useFetchSelectedEvents();
@@ -22,7 +25,9 @@ export const useDeleteTeam = (teamId: string) => {
     if (!events?.id) return;
     if (isMutating) return;
 
-    const isConfirm = window.confirm("삭제하시겠습니까?");
+    const isConfirm = confirmFn
+      ? await confirmFn("삭제하시겠습니까?")
+      : window.confirm("삭제하시겠습니까?");
 
     if (!isConfirm) return;
 
@@ -37,7 +42,15 @@ export const useDeleteTeam = (teamId: string) => {
     }
 
     await mutateAsync();
-  }, [isAdmin, events?.id, isMutating, queryClient, mutateAsync, teamId]);
+  }, [
+    isAdmin,
+    events?.id,
+    isMutating,
+    queryClient,
+    mutateAsync,
+    teamId,
+    confirmFn,
+  ]);
 
   return { isMutating, handleDeleteTeam };
 };

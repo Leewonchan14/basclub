@@ -2,6 +2,7 @@
 
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
 import { DeleteButton } from "@/app/ui/share/DeleteButton";
+import { useConfirm } from "@/app/ui/share/ConfirmModal";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { eventsMutateOption } from "@/feature/events/event-mutate";
@@ -17,6 +18,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
   const [message, setMessage] = useState("");
   const { inputEvent } = useEventCreateContext();
   const { address } = inputEvent;
+  const { showConfirm, ConfirmComponent } = useConfirm();
 
   const { mutateAsync: create, isPending: isPendingCreate } = useMutation(
     eventsMutateOption.upsert,
@@ -56,7 +58,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
           <DeleteButton
             disabled={isPendingDelete}
             onClick={async () => {
-              const isYes = window.confirm("정말 삭제하시겠습니까?");
+              const isYes = await showConfirm("정말 삭제하시겠습니까?");
               if (isYes) {
                 await remove(inputEvent.id);
                 goToDay(selectedDate);
@@ -74,6 +76,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
           {message}
         </div>
       )}
+      <ConfirmComponent />
     </>
   );
 };
