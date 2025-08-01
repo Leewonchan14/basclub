@@ -1,17 +1,47 @@
 "use client";
 
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { useConfirm } from "@/app/ui/share/ConfirmModal";
+import { useLoginConfirm } from "@/app/ui/share/LoginConfirmModal";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
+import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
 import { ChangeEvent, useCallback, useState } from "react";
 
 export const JoinEventsButton = () => {
   const [guestCnt, setGuestCnt] = useState<number>(0);
+  const { showConfirm, ConfirmComponent } = useConfirm();
+  const { showLoginConfirm, LoginConfirmComponent } = useLoginConfirm();
+  const { goToKakaoLogin } = useNeedLogin();
 
   const { ownGuestTeams, events } = useFetchSelectedEvents();
-  const { isJoin, isCanJoin, isPending, onJoin, isLoading } = useJoinEvents({
+  const {
+    isJoin,
+    isCanJoin,
+    isPending,
+    onJoin: originalOnJoin,
+    isLoading,
+  } = useJoinEvents({
     guestCnt,
+    confirmFn: showConfirm,
+    withLoginConfirm: true,
   });
+
+  const onJoin = useCallback(async () => {
+    try {
+      await originalOnJoin();
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        error.message === "LOGIN_CONFIRMATION_NEEDED"
+      ) {
+        const shouldLogin = await showLoginConfirm();
+        if (shouldLogin) {
+          goToKakaoLogin();
+        }
+      }
+    }
+  }, [originalOnJoin, showLoginConfirm, goToKakaoLogin]);
 
   if (isLoading || isPending || !events) return null;
 
@@ -26,22 +56,26 @@ export const JoinEventsButton = () => {
   }
 
   return (
-    <div className="flex h-12 w-full items-center gap-2">
-      <InputGuest
-        className="h-full w-full"
-        guestCnt={guestCnt}
-        setGuestCnt={setGuestCnt}
-        disabled={isPending || isJoin}
-      />
-      <PrimaryButton
-        className="flex h-full w-full flex-col text-nowrap !p-0 font-semibold"
-        disabled={isPending || !isCanJoin}
-        onClick={onJoin}
-      >
-        <div>{isJoin ? ownGuestTeams.length : guestCnt}명의 게스트와</div>
-        <div>{isJoin ? "참가취소" : "참가하기"}</div>
-      </PrimaryButton>
-    </div>
+    <>
+      <div className="flex h-12 w-full items-center gap-2">
+        <InputGuest
+          className="h-full w-full"
+          guestCnt={guestCnt}
+          setGuestCnt={setGuestCnt}
+          disabled={isPending || isJoin}
+        />
+        <PrimaryButton
+          className="flex h-full w-full flex-col text-nowrap !p-0 font-semibold"
+          disabled={isPending || !isCanJoin}
+          onClick={onJoin}
+        >
+          <div>{isJoin ? ownGuestTeams.length : guestCnt}명의 게스트와</div>
+          <div>{isJoin ? "참가취소" : "참가하기"}</div>
+        </PrimaryButton>
+      </div>
+      <ConfirmComponent />
+      <LoginConfirmComponent />
+    </>
   );
 };
 

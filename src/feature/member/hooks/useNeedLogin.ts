@@ -19,23 +19,36 @@ export const useNeedLogin = () => {
   const link = `${url}?${params}`;
 
   const needLoginPromise = useCallback(
-    () =>
+    (options?: { withConfirm?: boolean }) =>
       new Promise<PlainMember>((resolve, reject) => {
         if (isLoading) return;
         if (isLogin) return resolve(own);
 
         window.localStorage.setItem("redirectUri", window.location.href);
-        router.push(link);
-        // 로그인 페이지로 이동하는 경우 Promise를 reject하여 명확히 처리
-        reject(new Error("로그인이 필요합니다."));
+
+        if (options?.withConfirm) {
+          // 확인 모달이 필요한 경우 특별한 에러를 던짐
+          reject(new Error("LOGIN_CONFIRMATION_NEEDED"));
+        } else {
+          // 기존 방식: 바로 리다이렉트
+          router.push(link);
+          reject(new Error("로그인이 필요합니다."));
+        }
       }),
     [isLoading, isLogin, link, own, router],
   );
+
+  const goToKakaoLogin = useCallback(() => {
+    window.localStorage.setItem("redirectUri", window.location.href);
+    router.push(link);
+  }, [link, router]);
 
   return {
     own,
     isAdmin: own?.role === ERole.ADMIN,
     isLoading,
+    isLogin,
     needLoginPromise,
+    goToKakaoLogin,
   };
 };
