@@ -4,6 +4,7 @@ import { JoinEventsButton } from "@/app/events/JoinEventsButton";
 import LeafletMap from "@/app/events/leaflet-map";
 import { DisplayParticipants } from "@/app/teams/DisplayParticipants";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
+import { useAlert } from "@/app/ui/share/AlertModal";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { useFetchRecentEventByNow } from "@/feature/events/hooks/useFetchRecentEventByNow";
@@ -15,6 +16,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoNavigateCircleSharp } from "react-icons/io5";
+import { MdContentCopy } from "react-icons/md";
+import { useState, useCallback } from "react";
 
 interface Props {}
 
@@ -22,6 +25,22 @@ const DisplayEvents: NextPage<Props> = ({}) => {
   const { isExistSelectedEvents } = useFetchEventsExist();
   const { events, isLoading } = useFetchSelectedEvents();
   const { findLoadLink } = useShareKakao();
+  const { showAlert, AlertComponent } = useAlert();
+  const [isCopied, setIsCopied] = useState(false);
+
+  const copyAddressToClipboard = useCallback(
+    async (fullAddress: string) => {
+      try {
+        await navigator.clipboard.writeText(fullAddress);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000); // 2초 후 상태 리셋
+      } catch (err) {
+        console.error("주소 복사 실패:", err);
+        await showAlert("주소 복사에 실패했습니다.");
+      }
+    },
+    [showAlert],
+  );
 
   if (isLoading) {
     return <EventSkeleton />;
@@ -49,51 +68,72 @@ const DisplayEvents: NextPage<Props> = ({}) => {
   const { address, detailAddress } = events;
 
   return (
-    <EventContainer>
-      <div className="flex w-full flex-col items-center">
-        <div className="flex w-full items-center justify-between font-bold text-orange-500">
-          <div>{startTimeStr}</div>
-          <div className="text-lg font-bold">
-            총 {rangeHour}시간 {rangeMinute}분
+    <>
+      <EventContainer>
+        <div className="flex w-full flex-col items-center">
+          <div className="flex w-full items-center justify-between font-bold text-orange-500">
+            <div>{startTimeStr}</div>
+            <div className="text-lg font-bold">
+              총 {rangeHour}시간 {rangeMinute}분
+            </div>
+            <div>{endTimeStr}</div>
           </div>
-          <div>{endTimeStr}</div>
+          <div className="flex w-full items-center justify-center font-semibold">
+            <div className="aspect-square w-3 translate-x-1/2 rounded-full bg-orange-500" />
+            <div className="h-[4px] w-3/4 rounded-full bg-orange-500" />
+            <div className="aspect-square w-3 -translate-x-1/2 rounded-full bg-orange-500" />
+          </div>
         </div>
-        <div className="flex w-full items-center justify-center font-semibold">
-          <div className="aspect-square w-3 translate-x-1/2 rounded-full bg-orange-500" />
-          <div className="h-[4px] w-3/4 rounded-full bg-orange-500" />
-          <div className="aspect-square w-3 -translate-x-1/2 rounded-full bg-orange-500" />
+
+        <LeafletMap
+          key={events.id}
+          center={[events.coordinates.lat, events.coordinates.lng]}
+        />
+
+        <div className="flex w-full items-center gap-2">
+          <Link
+            href={"findLoadLink"}
+            target="_blank"
+            className="flex flex-1 gap-1 underline"
+          >
+            <span className="text-blue-600">
+              {address + " " + detailAddress}
+            </span>
+          </Link>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              copyAddressToClipboard(address + " " + detailAddress);
+            }}
+            className={`flex h-8 w-8 items-center justify-center rounded transition-colors ${
+              isCopied
+                ? "bg-green-100 text-green-600"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+            title={isCopied ? "복사 완료!" : "주소 복사"}
+          >
+            <MdContentCopy className="h-4 w-4" />
+          </button>
         </div>
-      </div>
 
-      <LeafletMap
-        key={events.id}
-        center={[events.coordinates.lat, events.coordinates.lng]}
-      />
+        <div className="flex h-12 w-full items-center gap-1">
+          <KakaoShareButton />
 
-      <Link
-        href={"findLoadLink"}
-        target="_blank"
-        className="flex w-full gap-1 underline"
-      >
-        <span className="text-blue-600">{address + " " + detailAddress}</span>
-      </Link>
+          <Button
+            onClick={() => window.open(findLoadLink, "_blank")}
+            className="flex h-full w-full items-center gap-1 !p-0"
+            color="alternative"
+          >
+            <IoNavigateCircleSharp className="inline text-center text-3xl text-yellow-300" />
+            <span className="text-sm font-bold">길찾기</span>
+          </Button>
+        </div>
 
-      <div className="flex h-12 w-full items-center gap-1">
-        <KakaoShareButton />
-
-        <Button
-          onClick={() => window.open(findLoadLink, "_blank")}
-          className="flex h-full w-full items-center gap-1 !p-0"
-          color="alternative"
-        >
-          <IoNavigateCircleSharp className="inline text-center text-3xl text-yellow-300" />
-          <span className="text-sm font-bold">길찾기</span>
-        </Button>
-      </div>
-
-      <DisplayParticipants />
-      <JoinEventsButton />
-    </EventContainer>
+        <DisplayParticipants />
+        <JoinEventsButton />
+      </EventContainer>
+      <AlertComponent />
+    </>
   );
 };
 
@@ -121,24 +161,30 @@ const EventSkeleton: React.FC = () => {
 const NotExistEvents: React.FC = () => {
   const { goToDay } = useSelectedDate();
   const { recentEvent, isLoading } = useFetchRecentEventByNow();
-  return (
-    <EventContainer>
-      <div className="flex w-full flex-col items-center justify-center gap-4 text-gray-500">
-        <div>관련 일정이 없습니다.</div>
-        <div
-          onClick={async () => {
-            if (!recentEvent) {
-              return window.alert("아직 일정이 없습니다.");
-            }
+  const { showAlert, AlertComponent } = useAlert();
 
-            goToDay(day_js(recentEvent.date));
-          }}
-          className={`inline-flex cursor-pointer items-center gap-2 border-b border-orange-500 font-bold text-orange-500 ${isLoading && "animate-pulse rounded-lg !border-gray-200 !bg-gray-200 !text-gray-200"}`}
-        >
-          가장 빠른 일정 보러가기! <FaExternalLinkAlt />
+  return (
+    <>
+      <EventContainer>
+        <div className="flex w-full flex-col items-center justify-center gap-4 text-gray-500">
+          <div>관련 일정이 없습니다.</div>
+          <div
+            onClick={async () => {
+              if (!recentEvent) {
+                await showAlert("아직 일정이 없습니다.");
+                return;
+              }
+
+              goToDay(day_js(recentEvent.date));
+            }}
+            className={`inline-flex cursor-pointer items-center gap-2 border-b border-orange-500 font-bold text-orange-500 ${isLoading && "animate-pulse rounded-lg !border-gray-200 !bg-gray-200 !text-gray-200"}`}
+          >
+            가장 빠른 일정 보러가기! <FaExternalLinkAlt />
+          </div>
         </div>
-      </div>
-    </EventContainer>
+      </EventContainer>
+      <AlertComponent />
+    </>
   );
 };
 
