@@ -20,12 +20,14 @@ export const useNeedLogin = () => {
 
   const needLoginPromise = useCallback(
     () =>
-      new Promise<PlainMember>((resolve) => {
+      new Promise<PlainMember>((resolve, reject) => {
         if (isLoading) return;
         if (isLogin) return resolve(own);
 
         window.localStorage.setItem("redirectUri", window.location.href);
         router.push(link);
+        // 로그인 페이지로 이동하는 경우 Promise를 reject하여 명확히 처리
+        reject(new Error("로그인이 필요합니다."));
       }),
     [isLoading, isLogin, link, own, router],
   );

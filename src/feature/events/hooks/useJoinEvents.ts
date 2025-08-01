@@ -23,7 +23,14 @@ export const useJoinEvents = ({ guestCnt }: { guestCnt: number }) => {
     events && day_js().isSameOrBefore(day_js(events.timeSlot.end));
 
   const onJoin = useCallback(async () => {
-    await needLoginPromise();
+    try {
+      await needLoginPromise();
+    } catch (_error) {
+      // 로그인이 필요한 경우 로그인 페이지로 리다이렉트되므로 여기서 중단
+      console.log("로그인 페이지로 리다이렉트됨");
+      return;
+    }
+    
     if (!memberId) return;
     if (!eventsId) return;
     if (
