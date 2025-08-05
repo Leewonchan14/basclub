@@ -8,6 +8,7 @@ import { NavBarLayout } from "@/app/ui/navbar/NavBarLayout";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { BrowserRedirect } from "./ui/share/BrowserRedirect";
 import { Tour } from "./ui/tour";
 
 const geistSans = localFont({
@@ -52,6 +53,7 @@ export default function RootLayout({
           <QueryProviders>
             <NuqsAdapter>
               <NavBarLayout>{children}</NavBarLayout>
+              <BrowserRedirect />
               <Tour />
             </NuqsAdapter>
           </QueryProviders>
