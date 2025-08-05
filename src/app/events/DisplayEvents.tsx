@@ -22,16 +22,8 @@ import { useState, useCallback } from "react";
 interface Props {}
 
 const DisplayEvents: NextPage<Props> = ({}) => {
-  const {
-    isExistSelectedEvents,
-    eventsExists,
-    isLoading: isLoading2,
-  } = useFetchEventsExist();
-  console.log("eventsExists: ", eventsExists);
-  console.log("isLoading2: ", isLoading2);
+  const { isExistSelectedEvents } = useFetchEventsExist();
   const { events, isLoading } = useFetchSelectedEvents();
-  console.log("events: ", events);
-  console.log("isLoading: ", isLoading);
   const { findLoadLink } = useShareKakao();
   const { showAlert, AlertComponent } = useAlert();
   const [isCopied, setIsCopied] = useState(false);
