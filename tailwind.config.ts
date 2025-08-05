@@ -8,6 +8,7 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     ".flowbite-react/class-list.json",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {

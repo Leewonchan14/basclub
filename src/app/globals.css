@@ -10,16 +10,10 @@
   }
 }
 
-/* :root {
+/* 다크 모드를 비활성화하여 항상 라이트 모드로 표시 */
+:root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
@@ -32,4 +26,4 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-} */
+}
