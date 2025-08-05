@@ -57,7 +57,7 @@ export const JoinEventsButton = () => {
 
   return (
     <>
-      <div className="flex h-12 w-full items-center gap-2">
+      <div className="join-button flex h-12 w-full items-center gap-2">
         <InputGuest
           className="h-full w-full"
           guestCnt={guestCnt}

@@ -19,7 +19,10 @@ export const eventsQueryApi = {
     queryOptions({
       // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: ["events", date.format("YYYY-MM")],
-      queryFn: () => getEventsExistInMonth(date.toISOString()),
+      queryFn: () => {
+        console.log("date: ", date);
+        return getEventsExistInMonth(date.toISOString());
+      },
       staleTime: 1000 * 60 * 60 * 1,
       enabled,
     }),

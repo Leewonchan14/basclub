@@ -49,7 +49,7 @@ export const DisplayTeams = () => {
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-white p-4 shadow-lg">
+    <div className="teams flex flex-col items-center justify-center gap-4 rounded-lg bg-white p-4 shadow-lg">
       {children}
     </div>
   );

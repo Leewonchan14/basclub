@@ -29,6 +29,7 @@ const DayPickers: React.FC<DayPickersProps> = ({}) => {
 
   return (
     <div
+      data-tour="date-picker"
       className={`rounded-lg bg-white p-4 shadow-md transition-all`}
       onClick={() => isClose && setIsOpen(!isOpen)}
     >

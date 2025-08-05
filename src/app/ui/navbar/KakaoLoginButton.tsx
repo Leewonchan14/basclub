@@ -32,7 +32,7 @@ const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({
 
   return (
     <>
-      <div onClick={handleLoginClick} className={className}>
+      <div onClick={handleLoginClick} className={`${className} login-button`}>
         <Image
           src="/kakao_button.png"
           alt="카카오 로그인 버튼"
