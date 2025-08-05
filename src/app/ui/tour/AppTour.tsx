@@ -1,13 +1,12 @@
 "use client";
 
-import { useTour } from "@/app/ui/share/useTour";
-import { useCallback, useEffect } from "react";
-import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
+import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { useFetchRecentEventByNow } from "@/feature/events/hooks/useFetchRecentEventByNow";
-import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { day_js } from "@/share/lib/dayjs";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import React, { useCallback, useEffect } from "react";
+import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
 
 const tourSteps: Step[] = [
   {
@@ -78,17 +77,17 @@ const tourSteps: Step[] = [
     content: (
       <div>
         <h3 className="mb-2 text-lg font-bold text-gray-800">🔑 로그인하기</h3>
-        <p className="text-gray-600">
-          카카오 로그인을 해야 참가가 가능합니다!
-        </p>
+        <p className="text-gray-600">카카오 로그인을 해야 참가가 가능합니다!</p>
       </div>
     ),
     placement: "bottom",
   },
 ];
 
-export const AppTour = () => {
-  const { showTour, completeTour } = useTour();
+export const AppTour: React.FC<{
+  showTour: boolean;
+  completeTour: () => void;
+}> = ({ showTour, completeTour }) => {
   const { isLoading: isFetching } = useFetchSelectedEvents();
   const { isExistSelectedEvents } = useFetchEventsExist();
   const { recentEvent, isLoading } = useFetchRecentEventByNow();

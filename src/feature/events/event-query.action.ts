@@ -6,14 +6,8 @@ import { getService } from "@/share/lib/typeorm/DIContainer";
 import _ from "lodash";
 
 export const getEventById = async (id: string) => {
-  const startTime = day_js();
-  console.log("startTime: ", startTime.format("YYYY-MM-DD HH:mm:ss:SSS"));
   const eventsService = getService(EventsService);
   const findEvent = await eventsService.findById(id);
-
-  const endTime = day_js();
-  console.log("endTime: ", endTime.format("YYYY-MM-DD HH:mm:ss:SSS"));
-  console.log("endTime - startTime: ", endTime.diff(startTime, "ms"));
 
   return findEvent?.toPlain();
 };

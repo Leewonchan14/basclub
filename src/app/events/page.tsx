@@ -4,7 +4,6 @@ import DayPickers from "@/app/events/DayPickers";
 import DisplayEvents from "@/app/events/DisplayEvents";
 import { UpsertEventButton } from "@/app/events/UpdateEventButton";
 import { DisplayTeams } from "@/app/teams/DisplayTeams";
-import { AppTour } from "@/app/ui/tour/AppTour";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { SELECTED_DATE_KEY, day_js } from "@/share/lib/dayjs";
 import { NextPage } from "next";
@@ -31,7 +30,6 @@ const Page: NextPage<Props> = ({
       </div>
       <DisplayEvents />
       <DisplayTeams />
-      <AppTour />
     </div>
   );
 };

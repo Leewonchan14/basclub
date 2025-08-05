@@ -8,6 +8,7 @@ import { NavBarLayout } from "@/app/ui/navbar/NavBarLayout";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Tour } from "./ui/tour";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -51,6 +52,7 @@ export default function RootLayout({
           <QueryProviders>
             <NuqsAdapter>
               <NavBarLayout>{children}</NavBarLayout>
+              <Tour />
             </NuqsAdapter>
           </QueryProviders>
         </FlowbiteWrapper>
