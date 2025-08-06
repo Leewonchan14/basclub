@@ -10,6 +10,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { BrowserRedirect } from "./ui/share/BrowserRedirect";
 import { Tour } from "./ui/tour";
+import { Suspense } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -54,7 +55,9 @@ export default function RootLayout({
             <NuqsAdapter>
               <NavBarLayout>{children}</NavBarLayout>
               <BrowserRedirect />
-              <Tour />
+              <Suspense fallback={null}>
+                <Tour />
+              </Suspense>
             </NuqsAdapter>
           </QueryProviders>
         </FlowbiteWrapper>
