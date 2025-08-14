@@ -1,7 +1,7 @@
 "use client";
 
 import { JoinEventsButton } from "@/app/events/JoinEventsButton";
-import LeafletMap from "@/app/events/leaflet-map";
+import DisplayMap from "@/app/events/create/DisplayMap";
 import { DisplayParticipants } from "@/app/teams/DisplayParticipants";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useAlert } from "@/app/ui/share/AlertModal";
@@ -86,10 +86,7 @@ const DisplayEvents: NextPage<Props> = ({}) => {
             </div>
           </div>
 
-          <LeafletMap
-            key={events.id}
-            center={[events.coordinates.lat, events.coordinates.lng]}
-          />
+        <DisplayMap address={events.address} point={events.coordinates} />
 
           <div className="flex w-full items-center gap-2">
             <Link

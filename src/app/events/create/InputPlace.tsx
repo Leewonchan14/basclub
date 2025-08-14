@@ -2,7 +2,7 @@
 
 import DaumPost from "@/app/events/create/DaumPost";
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
-import LeafletMap from "@/app/events/leaflet-map";
+import DisplayMap from "@/app/events/create/DisplayMap";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
 import { Button } from "flowbite-react";
 import { NextPage } from "next";
@@ -45,7 +45,7 @@ export const InputPlace: NextPage = () => {
           />
           {!!address && (
             <>
-              <LeafletMap key={point.lat} center={[point.lat, point.lng]} />
+              <DisplayMap address={address} point={point} />
               <Button
                 onClick={() => window.open(findLoadLink, "_blank")}
                 className="flex w-full items-center gap-1 py-2"
