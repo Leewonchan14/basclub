@@ -42,8 +42,8 @@ const DisplayMap: NextPage<Props> = ({ address, point }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="w-full overflow-clip rounded-lg border-2">
+    <div className="mt-4 flex flex-col gap-4">
+      <div className="w-full overflow-clip rounded-lg border-2 border-orange-500">
         <Map center={{ ...point }} style={{ height: "350px", width: "350px" }}>
           <MapMarker position={{ ...point }} />
         </Map>
