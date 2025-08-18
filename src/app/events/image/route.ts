@@ -40,8 +40,11 @@ const koreanFont = setupKoreanFont();
 
 export const GET = async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);
-  let count = searchParams.get("count");
-  const eventId = searchParams.get("eventId");
+  const params = Object.fromEntries(searchParams.entries());
+  let count = params.count || "0";
+  const eventId = params.eventId;
+  const width = Number(params.width || 800);
+  const height = Number(params.height || 400);
 
   if (eventId) {
     const teams = await getService(TeamService).findTeamsByEventId(eventId);
@@ -53,7 +56,7 @@ export const GET = async (request: NextRequest) => {
     count = teamCount.toString();
   }
 
-  const canvas = createCanvas(800, 400);
+  const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
 
   // 배경 설정
@@ -66,7 +69,7 @@ export const GET = async (request: NextRequest) => {
   ctx.textAlign = "center";
 
   // 동적 텍스트 그리기
-  ctx.fillText(`${count}명 참가중`, 400, 200);
+  ctx.fillText(`${count}명 참가중`, width / 2, height / 2);
 
   // 이미지를 버퍼로 변환
   return new NextResponse(canvas.toBuffer("image/png"), {
