@@ -41,10 +41,7 @@ export class MemberService implements IService<Member> {
   }
 
   async findById(id: string) {
-    const startTime = Date.now();
     const findMem = await this.memberRepository.findOne({ where: { id } });
-    const endTime = Date.now();
-    console.log(`findById: ${endTime - startTime}ms`);
     return findMem;
   }
 
