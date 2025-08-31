@@ -1,17 +1,11 @@
 "use client";
 
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
-import { useFetchScoreByMemberId } from "@/feature/score/hooks/useFetchScoreByMemberId";
 import { Avatar } from "flowbite-react";
 
 export const Profile: React.FC<{}> = () => {
-  "use client";
-
   const { own, isLoading } = useFetchOwn();
-  const { score: _avgScore, isLoading: _isLoadingScore } =
-    useFetchScoreByMemberId(own?.id ?? "");
 
-  // const score = avgScore ? Number(avgScore).toFixed(2) : "없음";
   if (isLoading || !own)
     return (
       <Avatar className="animate-pulse" rounded>

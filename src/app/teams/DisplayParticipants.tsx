@@ -3,6 +3,7 @@
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { PlainTeam } from "@/entity/team.entity";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
+import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import { useToggleDone } from "@/feature/events/hooks/useToggleDone";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { useDeleteTeam } from "@/feature/team/hooks/useDeleteTeam";
@@ -16,12 +17,13 @@ import { MdDelete, MdWarningAmber } from "react-icons/md";
 // 참가 인원들
 export const DisplayParticipants = () => {
   const { isAdmin } = useFetchOwn();
+  const { isPending } = useJoinEvents({ guestCnt: 0 });
   const { events, teamsArr, ownGuestTeams, isJoin, isLoading } =
     useFetchSelectedEvents();
 
   const { isPending: isPendingDone, toggleDone } = useToggleDone();
 
-  const isSkeleton = isLoading;
+  const isSkeleton = isLoading || isPending;
 
   const joinStateText = () => {
     const text = "참가중";

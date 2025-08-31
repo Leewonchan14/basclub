@@ -90,7 +90,7 @@ export const AppTour: React.FC<{
 }> = ({ showTour, completeTour }) => {
   const { isLoading: isFetching } = useFetchSelectedEvents();
   const { isExistSelectedEvents } = useFetchEventsExist();
-  const { recentEvent, isLoading } = useFetchRecentEventByNow();
+  const { data: recentEvent, isLoading } = useFetchRecentEventByNow();
   const { goToDay } = useSelectedDate();
 
   // 투어가 시작될 때 현재 페이지에 일정이 없다면 가장 빠른 일정으로 이동
