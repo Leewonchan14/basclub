@@ -11,8 +11,8 @@ export const GET = async () => {
     return NextResponse.json(event);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch recent event" },
-      { status: 500 }
+      { error: "Failed to fetch recent event: " + error },
+      { status: 500 },
     );
   }
 };

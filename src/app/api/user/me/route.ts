@@ -24,8 +24,8 @@ export const GET = async () => {
     return NextResponse.json(findMember.toPlain());
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch user information" },
-      { status: 500 }
+      { error: "Failed to fetch user information: " + error },
+      { status: 500 },
     );
   }
 };
