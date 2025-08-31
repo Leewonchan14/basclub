@@ -5,8 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useFetchRecentEventByNow = () => {
   const { data, isLoading, isFetching } = useQuery(
-    eventsQueryApi.findRecentByNow(),
+    eventsQueryApi.findRecentByNow()
   );
 
-  return { recentEvent: data, isLoading: isLoading || isFetching };
+  return { data, isLoading, isFetching };
 };

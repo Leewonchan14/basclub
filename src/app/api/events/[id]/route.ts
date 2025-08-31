@@ -1,11 +1,28 @@
-import { getEventById } from "@/feature/events/event-query.action";
+import { EventsService } from "@/feature/events/events.service";
+import { getService } from "@/share/lib/typeorm/DIContainer";
 import { NextResponse } from "next/server";
 
 export const GET = async (
   request: Request,
   context: { params: { id: string } },
 ) => {
-  const eventId = context.params.id;
+  try {
+    const eventId = context.params.id;
+    const eventsService = getService(EventsService);
+    const findEvent = await eventsService.findById(eventId);
 
-  return NextResponse.json(await getEventById(eventId));
+    if (!findEvent) {
+      return NextResponse.json(
+        { error: "Event not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(findEvent.toPlain());
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to fetch event" },
+      { status: 500 }
+    );
+  }
 };

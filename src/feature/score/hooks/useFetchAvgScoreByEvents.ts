@@ -1,14 +1,12 @@
 "use client";
 
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { scoreQueryApi } from "@/feature/score/score-query";
 import { useQuery } from "@tanstack/react-query";
 
-export const useFetchAvgScoreByEvents = () => {
-  const { events, isLoading } = useFetchSelectedEvents();
+export const useFetchAvgScoreByEvents = (eventsId: string) => {
   const { data: scoreMap, isLoading: isLoadingScore } = useQuery(
-    scoreQueryApi.findAvgScoresByEvents(events?.id ?? "")
+    scoreQueryApi.findAvgByEventsId(eventsId, !!eventsId)
   );
 
-  return { scoreMap, isLoading: isLoading || isLoadingScore };
+  return { scoreMap, isLoadingScore };
 };

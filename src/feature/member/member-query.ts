@@ -1,24 +1,19 @@
-import {
-  getMemberById,
-  getMemberOwn,
-} from "@/feature/member/member-query.actions";
+import { usersApi } from "@/share/lib/ky";
 import { queryOptions } from "@tanstack/react-query";
 
 export const memberQueryApi = {
-  findOwn: (enabled = true) =>
+  findOwn: (enabled: boolean) =>
     queryOptions({
       queryKey: ["member", "own"],
-      queryFn: () => getMemberOwn(),
-      staleTime: 1000 * 30,
+      queryFn: () => usersApi.get("me").json(),
+      staleTime: 1000 * 60 * 30,
       enabled,
     }),
-
-  findById: (id: string) =>
+  findById: (id: string, enabled: boolean) =>
     queryOptions({
       queryKey: ["member", id],
-      queryFn: () => {
-        return getMemberById(id);
-      },
-      staleTime: 1000 * 60 * 60 * 24,
+      queryFn: () => usersApi.get(`${id}`).json(),
+      staleTime: 1000 * 60 * 30,
+      enabled,
     }),
 };
