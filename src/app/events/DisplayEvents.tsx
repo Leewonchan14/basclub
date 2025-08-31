@@ -151,7 +151,7 @@ const EventSkeleton: React.FC = () => {
 
 const NotExistEvents: React.FC = () => {
   const { goToDay } = useSelectedDate();
-  const { recentEvent, isLoading } = useFetchRecentEventByNow();
+  const { data: recentEvent, isLoading } = useFetchRecentEventByNow();
   const { showAlert, AlertComponent } = useAlert();
 
   return (
