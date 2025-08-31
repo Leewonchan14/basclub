@@ -1,11 +1,17 @@
 import { PlainEvents } from "@/entity/event.entity";
+import { PlainMember } from "@/entity/member.entity";
+import { PlainTeam } from "@/entity/team.entity";
 import { eventsQueryApi } from "@/feature/events/event-query";
 import {
+  changeLimitMem,
   removeEvent,
+  toggleDone,
   toggleJoinEvent,
   upsertEvent,
 } from "@/feature/events/events-mutate.action";
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
+import { produce } from "immer";
+import { teamsQueryApi } from "../team/team-query";
 
 export const eventsMutateOption = {
   upsert: {
@@ -24,28 +30,91 @@ export const eventsMutateOption = {
     mutationKey: ["events", "toggleJoin"],
     mutationFn: async ({
       eventsId,
-      memberId,
+      member,
       guestCnt,
     }: {
       eventsId: string;
-      memberId: string;
+      member: PlainMember;
+      guestCnt: number;
+    }) => toggleJoinEvent(eventsId, member.id, guestCnt),
+
+    onMutate: (variables: {
+      eventsId: string;
+      member: PlainMember;
       guestCnt: number;
     }) => {
-      return await toggleJoinEvent(eventsId, memberId, guestCnt);
+      getQueryClient().setQueryData(
+        teamsQueryApi.findByEventsId(variables.eventsId, false).queryKey,
+        (old) => [
+          ...(old ?? []),
+          {
+            id: "0",
+            group: 0,
+            avgScore: 0,
+            isPaid: false,
+            member: variables.member,
+          },
+        ],
+      );
     },
+
     onSuccess: (
-      _data: unknown,
+      data: PlainTeam[],
       variables: {
         eventsId: string;
-        memberId: string;
+        member: PlainMember;
         guestCnt: number;
-      }
+      },
+      _context: unknown,
     ) => {
-      getQueryClient().invalidateQueries({
-        queryKey: [
-          ...eventsQueryApi.findById(variables.eventsId, false).queryKey,
-        ],
-      });
+      getQueryClient().setQueryData(
+        teamsQueryApi.findByEventsId(variables.eventsId, false).queryKey,
+        data,
+      );
+    },
+  },
+
+  toggleDone: {
+    mutationKey: ["events", "toggleDone"],
+    mutationFn: async (events: PlainEvents) => {
+      return await toggleDone(events.id);
+    },
+    onMutate: (variables: PlainEvents) => {
+      getQueryClient().setQueryData(
+        eventsQueryApi.findById(variables.id, false).queryKey,
+        (old) =>
+          produce(old, (draft) => {
+            if (!draft) return draft;
+            draft.isDone = !draft.isDone;
+          }),
+      );
+    },
+  },
+
+  changeLimitMem: {
+    mutationKey: ["events", "changeLimitMem"],
+    mutationFn: async ({
+      events,
+      limitTeamCnt,
+    }: {
+      events: PlainEvents;
+      limitTeamCnt: number;
+    }) => {
+      return changeLimitMem(events.id, limitTeamCnt);
+    },
+    onSuccess: (
+      data: PlainEvents | undefined,
+      variables: {
+        events: PlainEvents;
+        limitTeamCnt: number;
+      },
+      _context: unknown,
+    ) => {
+      if (!data) return;
+      getQueryClient().setQueryData(
+        eventsQueryApi.findById(variables.events.id, false).queryKey,
+        data,
+      );
     },
   },
 

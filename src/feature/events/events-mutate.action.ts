@@ -32,7 +32,22 @@ export const toggleJoinEvent = async (
 ) => {
   const eventsService = getService(TeamService);
   guestCnt = z.coerce.number().min(0).max(9).parse(guestCnt);
-  await eventsService.toggleJoin(eventsId, memberId, guestCnt);
+  if (!memberId) {
+    throw new Error("Member ID is required");
+  }
+  return await eventsService
+    .toggleJoin(eventsId, memberId, guestCnt)
+    .then((teams) => teams.map((t) => t.toPlain()));
+};
 
-  return;
+export const toggleDone = async (eventId: string) => {
+  const eventsService = getService(EventsService);
+  const event = await eventsService.toggleDone(eventId);
+  return event?.toPlain();
+};
+
+export const changeLimitMem = async (eventId: string, limitTeamCnt: number) => {
+  const eventsService = getService(EventsService);
+  const event = await eventsService.changeLimitMem(eventId, limitTeamCnt);
+  return event?.toPlain();
 };

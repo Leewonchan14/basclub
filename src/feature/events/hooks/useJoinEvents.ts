@@ -1,7 +1,7 @@
 "use client";
 
 import { eventsMutateOption } from "@/feature/events/event-mutate";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
 import { day_js } from "@/share/lib/dayjs";
 import { useIsMutating, useMutation } from "@tanstack/react-query";
@@ -20,15 +20,20 @@ export const useJoinEvents = ({
   const { mutateAsync } = useMutation(eventsMutateOption.toggleJoin);
   const isMutating = useIsMutating(eventsMutateOption.toggleJoin) === 1;
 
-  const { events, isJoin, isFetching, isLoading } = useFetchSelectedEvents();
+  const { events, teamsArr, isJoin, isFetching, isLoading } =
+    useFetchSelectedEvents();
+
   const eventsId = events?.id ?? "";
-  const memberId = own?.id ?? "";
 
   const isPending = isMutating || isFetching;
 
-  // events 기한이 지나면 참가하지 못한다.
-  const isCanJoin =
-    events && day_js().isSameOrBefore(day_js(events.timeSlot.end));
+  // events 기한이 지나거나 마감되면 참가하지 못한다.
+  const isEventEnd =
+    events &&
+    (day_js(events.timeSlot.end).isSameOrBefore(day_js()) || events.isDone);
+
+  const isEventLimit =
+    events && teamsArr.length + guestCnt + 1 > events.limitTeamCnt;
 
   const onJoin = useCallback(async () => {
     try {
@@ -46,7 +51,7 @@ export const useJoinEvents = ({
       return;
     }
 
-    if (!memberId) return;
+    if (!own) return;
     if (!eventsId) return;
     if (isJoin) {
       const isConfirmed = confirmFn
@@ -62,22 +67,23 @@ export const useJoinEvents = ({
       }
     }
 
-    await mutateAsync({ eventsId, memberId, guestCnt });
+    await mutateAsync({ eventsId, member: own, guestCnt });
   }, [
     eventsId,
-    guestCnt,
     isJoin,
-    memberId,
     mutateAsync,
+    own,
+    guestCnt,
     needLoginPromise,
-    confirmFn,
     withLoginConfirm,
+    confirmFn,
   ]);
 
   return {
     onJoin,
     isJoin,
-    isCanJoin,
+    isEventEnd,
+    isEventLimit,
     isLoading,
     isPending,
   };

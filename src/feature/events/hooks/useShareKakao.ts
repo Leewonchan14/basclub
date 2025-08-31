@@ -1,6 +1,6 @@
 "use client";
 
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { day_js } from "@/share/lib/dayjs";
 import { useCallback, useEffect, useMemo } from "react";
 

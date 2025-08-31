@@ -1,7 +1,7 @@
 "use server";
 
 import { EventsService } from "@/feature/events/events.service";
-import { day_js, dayjsZod } from "@/share/lib/dayjs";
+import { dayjsZod } from "@/share/lib/dayjs";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 import _ from "lodash";
 
@@ -12,19 +12,17 @@ export const getEventById = async (id: string) => {
   return findEvent?.toPlain();
 };
 
-export const getEventByDate = async (date: string) => {
-  const eventsService = getService(EventsService);
-  const findEvent = await eventsService.findByDate(day_js(date));
-
-  return findEvent?.toPlain();
-};
-
 export const getEventsExistInMonth = async (date: string) => {
+  const startTime = Date.now();
   const day = dayjsZod().parse(date);
   const eventsService = getService(EventsService);
   const events = await eventsService.findByMonth(day);
+  const ret = _.mapValues(events, (e) => e.id);
 
-  return { ..._.mapValues(events, (e) => e.id) };
+  const endTime = Date.now();
+  console.log(`getEventsExistInMonth: ${endTime - startTime}ms`);
+
+  return ret;
 };
 
 export const getLastEventsByDate = async () => {

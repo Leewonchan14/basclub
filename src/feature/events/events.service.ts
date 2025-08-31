@@ -54,6 +54,7 @@ export class EventsService implements IService<Events> {
   }
 
   async findByMonth(date: Dayjs) {
+    const startTime = Date.now();
     const { startOfMonth, endOfMonth } = getStartEndOfMonth(date);
 
     const events = await this.eventsRepository.find({
@@ -62,8 +63,24 @@ export class EventsService implements IService<Events> {
       },
     });
 
+    const endTime = Date.now();
+    console.log(`findByMonth: ${endTime - startTime}ms`);
+
     return Object.fromEntries(
       events.map((e) => [e.date.format("YYYY-MM-DD"), e]),
     );
+  }
+
+  async toggleDone(eventId: string) {
+    const event = await this.findById(eventId);
+    if (!event) return;
+    event.isDone = !event.isDone;
+    return this.eventsRepository.save(event);
+  }
+  async changeLimitMem(eventId: string, limitTeamCnt: number) {
+    const event = await this.findById(eventId);
+    if (!event) return;
+    event.limitTeamCnt = limitTeamCnt;
+    return this.eventsRepository.save(event);
   }
 }

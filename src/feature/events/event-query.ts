@@ -8,7 +8,7 @@ import { Dayjs } from "@/share/lib/dayjs";
 import { queryOptions } from "@tanstack/react-query";
 
 export const eventsQueryApi = {
-  findById: (eventsId: string, enabled: boolean) =>
+  findById: (eventsId: string, enabled?: boolean) =>
     queryOptions({
       queryKey: ["events", eventsId],
       queryFn: () => getEventById(eventsId),
