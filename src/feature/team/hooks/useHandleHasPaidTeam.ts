@@ -1,6 +1,6 @@
 "use client";
 
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
 import { teamMutateOption } from "@/feature/team/team-mutate";
 import { teamsQueryApi } from "@/feature/team/team-query";

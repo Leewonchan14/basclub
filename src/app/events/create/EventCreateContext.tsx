@@ -4,7 +4,7 @@ import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { PlainEvents } from "@/entity/event.entity";
 import type { GeoPoint } from "@/entity/transformer/point.transformer";
 import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { day_js } from "@/share/lib/dayjs";
 import { Dayjs } from "dayjs";
 import _ from "lodash";
@@ -21,7 +21,7 @@ export interface EventCreateContextType {
   setAddressPoint: (address: string, point: GeoPoint) => void;
   handleChangeDetailAddress: (nextValue: string) => void;
   handleClickLastEvent: (lastEvent: PlainEvents) => void;
-  handleChangeEvent: (event?: IInputEvent) => void;
+  handleChangeEvent: (event?: Partial<IInputEvent>) => void;
   setTimeSlot: (timeSlot: TimeSlot) => void;
 }
 
@@ -77,7 +77,7 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
     }));
   }, []);
 
-  const handleChangeEvent = useCallback((event?: Omit<IInputEvent, "id">) => {
+  const handleChangeEvent = useCallback((event?: Partial<IInputEvent>) => {
     setInputEvent((prev) => ({
       ...prev,
       ...event,
@@ -94,7 +94,11 @@ export const EventCreateProvider: React.FC<ProviderProps> = ({ children }) => {
       const end = day_js(`${dateStr} ${endTime}`);
 
       handleChangeEvent({
-        ..._.omit(lastEvent, "id"),
+        ..._.pick(lastEvent, [
+          "address",
+          "coordinates",
+          "detailAddress",
+        ] as (keyof IInputEvent)[]),
         date: dateStr,
         timeSlot: { start, end },
       });
@@ -154,6 +158,7 @@ const DEFAULT_INPUT_EVENT: (selectedDate: Dayjs) => Omit<
   coordinates: { lat: 0, lng: 0 },
   date: selectedDate.format("YYYY-MM-DD"),
   timeSlot: getInitTimeSlot(),
+  isDone: false,
 });
 
 export const useEventCreateContext = () => {

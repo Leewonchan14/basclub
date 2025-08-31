@@ -8,9 +8,7 @@ export const memberQueryApi = {
   findOwn: (enabled = true) =>
     queryOptions({
       queryKey: ["member", "own"],
-      queryFn: async () => {
-        return getMemberOwn();
-      },
+      queryFn: () => getMemberOwn(),
       staleTime: 1000 * 30,
       enabled,
     }),

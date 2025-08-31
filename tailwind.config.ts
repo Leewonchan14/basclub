@@ -8,12 +8,17 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     ".flowbite-react/class-list.json",
   ],
-  darkMode: 'class',
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: {
+          500: "#ff7f50",
+          700: "#ff6347",
+          DEFAULT: "#ff6347",
+        },
       },
       spacing: {
         "sidenav-width": "14rem",

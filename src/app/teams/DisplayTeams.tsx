@@ -3,7 +3,7 @@
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { PlainTeam } from "@/entity/team.entity";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import _ from "lodash";
 import { useRouter } from "next/navigation";

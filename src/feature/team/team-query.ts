@@ -9,9 +9,7 @@ export const teamsQueryApi = {
         ...eventsQueryApi.findById(eventsId, enabled).queryKey,
         "teams",
       ],
-      queryFn: async () => {
-        return await getTeamsByEventsId(eventsId);
-      },
+      queryFn: () => getTeamsByEventsId(eventsId),
       staleTime: 1000 * 60 * 30,
       enabled,
     }),

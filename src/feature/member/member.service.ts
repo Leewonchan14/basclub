@@ -33,15 +33,19 @@ export class MemberService implements IService<Member> {
 
     if (!findMember) {
       findMember = await this.memberRepository.save(
-        this.memberRepository.create(obj)
+        this.memberRepository.create(obj),
       );
     }
 
     return findMember;
   }
 
-  findById(id: string) {
-    return this.memberRepository.findOne({ where: { id } });
+  async findById(id: string) {
+    const startTime = Date.now();
+    const findMem = await this.memberRepository.findOne({ where: { id } });
+    const endTime = Date.now();
+    console.log(`findById: ${endTime - startTime}ms`);
+    return findMem;
   }
 
   findGuestByMemberId(memberId: string) {
@@ -53,7 +57,7 @@ export class MemberService implements IService<Member> {
 
   async generateOriginMemberGuest(
     memberId: string, //
-    guestCnt: number
+    guestCnt: number,
   ) {
     let originMember = await this.findById(memberId);
     // 게스트라면 진짜 멤버찾기
@@ -87,7 +91,7 @@ export class MemberService implements IService<Member> {
         newGuests.guestBy = originMember.id;
 
         return newGuests;
-      }
+      },
     );
 
     await this.memberRepository.save(newGuests);

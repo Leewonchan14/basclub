@@ -2,7 +2,7 @@
 
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { SELECTED_DATE_KEY, day_js } from "@/share/lib/dayjs";
 import { useRouter } from "next/navigation";
 import React from "react";

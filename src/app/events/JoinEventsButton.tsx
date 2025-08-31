@@ -1,15 +1,20 @@
 "use client";
 
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { useConfirm } from "@/app/ui/share/ConfirmModal";
 import { useLoginConfirm } from "@/app/ui/share/LoginConfirmModal";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { PlusMinusButton } from "@/app/ui/share/plus-minus-buttont";
+import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
-import { ChangeEvent, useCallback, useState } from "react";
+import { Alert } from "flowbite-react";
+import { useCallback, useState } from "react";
+import { HiInformationCircle } from "react-icons/hi";
 
 export const JoinEventsButton = () => {
   const [guestCnt, setGuestCnt] = useState<number>(0);
+  const [error, setError] = useState("");
+
   const { showConfirm, ConfirmComponent } = useConfirm();
   const { showLoginConfirm, LoginConfirmComponent } = useLoginConfirm();
   const { goToKakaoLogin } = useNeedLogin();
@@ -17,7 +22,8 @@ export const JoinEventsButton = () => {
   const { ownGuestTeams, events } = useFetchSelectedEvents();
   const {
     isJoin,
-    isCanJoin,
+    isEventEnd,
+    isEventLimit,
     isPending,
     onJoin: originalOnJoin,
     isLoading,
@@ -28,6 +34,11 @@ export const JoinEventsButton = () => {
   });
 
   const onJoin = useCallback(async () => {
+    setError("");
+    if (!isJoin && isEventLimit) {
+      setError("참가 인원이 초과되었습니다.");
+      return;
+    }
     try {
       await originalOnJoin();
     } catch (error: unknown) {
@@ -41,23 +52,21 @@ export const JoinEventsButton = () => {
         }
       }
     }
-  }, [originalOnJoin, showLoginConfirm, goToKakaoLogin]);
+  }, [isJoin, isEventLimit, originalOnJoin, showLoginConfirm, goToKakaoLogin]);
 
   if (isLoading || isPending || !events) return null;
 
-  if (!isCanJoin) {
+  if (isEventEnd) {
     return (
-      <div className="flex flex-col items-center gap-2">
-        <div className="flex flex-col items-center justify-center text-gray-500">
-          <p>참가 기한이 지났습니다.</p>
-        </div>
-      </div>
+      <Alert color="failure" icon={HiInformationCircle}>
+        <span className="font-medium">참가 기한이 마감되었습니다.</span>
+      </Alert>
     );
   }
 
   return (
     <>
-      <div className="join-button flex h-12 w-full items-center gap-2">
+      <div className="flex h-12 w-full items-center gap-2">
         <InputGuest
           className="h-full w-full"
           guestCnt={guestCnt}
@@ -66,13 +75,20 @@ export const JoinEventsButton = () => {
         />
         <PrimaryButton
           className="flex h-full w-full flex-col text-nowrap !p-0 font-semibold"
-          disabled={isPending || !isCanJoin}
+          disabled={isPending || isEventEnd}
           onClick={onJoin}
         >
           <div>{isJoin ? ownGuestTeams.length : guestCnt}명의 게스트와</div>
           <div>{isJoin ? "참가취소" : "참가하기"}</div>
         </PrimaryButton>
       </div>
+
+      {error && (
+        <Alert color="failure" icon={HiInformationCircle}>
+          <span className="font-medium">{error}</span>
+        </Alert>
+      )}
+
       <ConfirmComponent />
       <LoginConfirmComponent />
     </>
@@ -92,106 +108,21 @@ const InputGuest: React.FC<InputGuestProps> = ({
   disabled,
   className,
 }) => {
-  const readonly = disabled;
-  const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setGuestCnt(Number(e.target.value));
-    },
-    [setGuestCnt],
-  );
-
-  // 포커스가 해제될때 0, 30으로 최대 최소값을 제한하는 함수
+  // 포커스가 해제될때 0, 9으로 최대 최소값을 제한하는 함수
   const onBlur = useCallback(() => {
     const sorted = [0, guestCnt, 9].sort((a, b) => a - b);
     setGuestCnt(sorted[1]);
   }, [guestCnt, setGuestCnt]);
 
   return (
-    <div
-      className={`flex items-center ${className} ${disabled && "invisible"}`}
-    >
-      <MinusButton
-        disabled={readonly}
-        className={`${disabled && "cursor-not-allowed"}`}
-        onClick={() => setGuestCnt(guestCnt - 1)}
-      />
-      <input
-        type="text"
-        id="quantity-input"
-        data-input-counter
-        aria-describedby="helper-text-explanation"
-        className="block h-11 w-full min-w-10 border-x-0 border-gray-300 bg-gray-50 py-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-        value={guestCnt}
-        onChange={onChange}
-        max={9}
-        onBlur={onBlur}
-        disabled={readonly}
-      />
-      <PlusButton
-        disabled={readonly}
-        className={`${disabled && "cursor-not-allowed"}`}
-        onClick={() => setGuestCnt(guestCnt + 1)}
-      />
-    </div>
-  );
-};
-
-interface ButtonProps {
-  onClick: () => void;
-  className?: string;
-  disabled: boolean;
-}
-
-const MinusButton = ({ onClick, className, disabled }: ButtonProps) => {
-  return (
-    <button
-      type="button"
-      id="decrement-button"
-      className={`h-11 rounded-s-lg border border-gray-300 bg-gray-100 p-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 ${className}`}
-      onClick={onClick}
+    <PlusMinusButton
+      value={guestCnt}
+      className={className}
+      onChange={(v) => setGuestCnt([0, v, 9].sort((a, b) => a - b)[1])}
+      onBlur={onBlur}
       disabled={disabled}
-    >
-      <svg
-        className="h-3 w-3 text-gray-900"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 18 2"
-      >
-        <path
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M1 1h16"
-        />
-      </svg>
-    </button>
-  );
-};
-
-const PlusButton = ({ onClick, className, disabled }: ButtonProps) => {
-  return (
-    <button
-      type="button"
-      id="increment-button"
-      className={`h-11 rounded-e-lg border border-gray-300 bg-gray-100 p-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 ${className}`}
-      onClick={onClick}
-      disabled={disabled}
-    >
-      <svg
-        className="h-3 w-3 text-gray-900"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 18 18"
-      >
-        <path
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M9 1v16M1 9h16"
-        />
-      </svg>
-    </button>
+      min={0}
+      max={9}
+    />
   );
 };

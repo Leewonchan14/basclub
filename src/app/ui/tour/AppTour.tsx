@@ -1,7 +1,7 @@
 "use client";
 
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { useFetchRecentEventByNow } from "@/feature/events/hooks/useFetchRecentEventByNow";
 import { day_js } from "@/share/lib/dayjs";

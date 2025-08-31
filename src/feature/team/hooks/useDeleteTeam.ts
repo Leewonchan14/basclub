@@ -1,4 +1,4 @@
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { teamMutateOption } from "@/feature/team/team-mutate";
 import { teamsQueryApi } from "@/feature/team/team-query";

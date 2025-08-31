@@ -1,7 +1,7 @@
 "use client";
 
 import { TPicker } from "@/app/ui/share/TPicker";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { NextPage } from "next";
 
 interface IInputTimeProps {

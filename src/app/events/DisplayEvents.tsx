@@ -3,21 +3,21 @@
 import { JoinEventsButton } from "@/app/events/JoinEventsButton";
 import DisplayMap from "@/app/events/create/DisplayMap";
 import { DisplayParticipants } from "@/app/teams/DisplayParticipants";
-import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useAlert } from "@/app/ui/share/AlertModal";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { useFetchRecentEventByNow } from "@/feature/events/hooks/useFetchRecentEventByNow";
 import useShareKakao from "@/feature/events/hooks/useShareKakao";
 import { day_js } from "@/share/lib/dayjs";
-import { Button } from "flowbite-react";
+import { Button, Card } from "flowbite-react";
 import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { useCallback, useState } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoNavigateCircleSharp } from "react-icons/io5";
 import { MdContentCopy } from "react-icons/md";
-import { useState, useCallback } from "react";
 
 interface Props {}
 
@@ -69,68 +69,68 @@ const DisplayEvents: NextPage<Props> = ({}) => {
 
   return (
     <>
-      <EventContainer>
-        <div className="event-info">
-          <div className="flex w-full flex-col items-center">
-            <div className="flex w-full items-center justify-between font-bold text-orange-500">
-              <div>{startTimeStr}</div>
-              <div className="text-lg font-bold">
-                총 {rangeHour}시간 {rangeMinute}분
-              </div>
-              <div>{endTimeStr}</div>
+      <Card theme={{ root: { children: "p-4" } }} className="event-info">
+        <div className="flex w-full flex-col items-center">
+          <div className="flex w-full items-center justify-between font-bold text-orange-500">
+            <div>{startTimeStr}</div>
+            <div className="text-lg font-bold">
+              총 {rangeHour}시간 {rangeMinute}분
             </div>
-            <div className="flex w-full items-center justify-center font-semibold">
-              <div className="aspect-square w-3 translate-x-1/2 rounded-full bg-orange-500" />
-              <div className="h-[4px] w-3/4 rounded-full bg-orange-500" />
-              <div className="aspect-square w-3 -translate-x-1/2 rounded-full bg-orange-500" />
-            </div>
+            <div>{endTimeStr}</div>
           </div>
-
-        <DisplayMap address={events.address} point={events.coordinates} />
-
-          <div className="flex w-full items-center gap-2">
-            <Link
-              href={"findLoadLink"}
-              target="_blank"
-              className="flex flex-1 gap-1 underline"
-            >
-              <span className="text-blue-600">
-                {address + " " + detailAddress}
-              </span>
-            </Link>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                copyAddressToClipboard(address + " " + detailAddress);
-              }}
-              className={`flex h-8 w-8 items-center justify-center rounded transition-colors ${
-                isCopied
-                  ? "bg-green-100 text-green-600"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-              title={isCopied ? "복사 완료!" : "주소 복사"}
-            >
-              <MdContentCopy className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="flex h-12 w-full items-center gap-1">
-            <KakaoShareButton />
-
-            <Button
-              onClick={() => window.open(findLoadLink, "_blank")}
-              className="flex h-full w-full items-center gap-1 !p-0"
-              color="alternative"
-            >
-              <IoNavigateCircleSharp className="inline text-center text-3xl text-yellow-300" />
-              <span className="text-sm font-bold">길찾기</span>
-            </Button>
+          <div className="flex w-full items-center justify-center font-semibold">
+            <div className="aspect-square w-3 translate-x-1/2 rounded-full bg-orange-500" />
+            <div className="h-[4px] w-3/4 rounded-full bg-orange-500" />
+            <div className="aspect-square w-3 -translate-x-1/2 rounded-full bg-orange-500" />
           </div>
         </div>
 
+        <DisplayMap address={events.address} point={events.coordinates} />
+
+        <div className="flex w-full items-center gap-2">
+          <Link
+            href={"findLoadLink"}
+            target="_blank"
+            className="flex flex-1 gap-1 underline"
+          >
+            <span className="text-blue-600">
+              {address + " " + detailAddress}
+            </span>
+          </Link>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              copyAddressToClipboard(address + " " + detailAddress);
+            }}
+            className={`flex h-8 w-8 items-center justify-center rounded transition-colors ${
+              isCopied
+                ? "bg-green-100 text-green-600"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+            title={isCopied ? "복사 완료!" : "주소 복사"}
+          >
+            <MdContentCopy className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="flex h-12 w-full items-center gap-1">
+          <KakaoShareButton />
+
+          <Button
+            onClick={() => window.open(findLoadLink, "_blank")}
+            className="flex h-full w-full items-center gap-1 !p-0"
+            color="alternative"
+          >
+            <IoNavigateCircleSharp className="inline text-center text-3xl text-yellow-300" />
+            <span className="text-sm font-bold">길찾기</span>
+          </Button>
+        </div>
+      </Card>
+      <Card theme={{ root: { children: "p-4" } }}>
         <DisplayParticipants />
         <JoinEventsButton />
-      </EventContainer>
+      </Card>
+
       <AlertComponent />
     </>
   );
@@ -138,22 +138,14 @@ const DisplayEvents: NextPage<Props> = ({}) => {
 
 export default DisplayEvents;
 
-const EventContainer: React.FC<React.PropsWithChildren> = ({ children }) => {
-  return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-white p-4 shadow-lg">
-      {children}
-    </div>
-  );
-};
-
 const EventSkeleton: React.FC = () => {
   return (
-    <EventContainer>
-      <div className="flex w-full flex-col items-center justify-center gap-4 text-gray-500">
-        <div className="h-12 w-full animate-pulse rounded-lg bg-gray-200" />
+    <Card theme={{ root: { children: "p-4" } }}>
+      <div className="w-full">
+        <div className="mb-4 h-12 w-full animate-pulse rounded-lg bg-gray-200" />
         <div className="h-52 w-full animate-pulse rounded-lg bg-gray-200" />
       </div>
-    </EventContainer>
+    </Card>
   );
 };
 
@@ -164,7 +156,7 @@ const NotExistEvents: React.FC = () => {
 
   return (
     <>
-      <EventContainer>
+      <Card theme={{ root: { children: "p-4" } }}>
         <div className="flex w-full flex-col items-center justify-center gap-4 text-gray-500">
           <div>관련 일정이 없습니다.</div>
           <div
@@ -181,7 +173,7 @@ const NotExistEvents: React.FC = () => {
             가장 빠른 일정 보러가기! <FaExternalLinkAlt />
           </div>
         </div>
-      </EventContainer>
+      </Card>
       <AlertComponent />
     </>
   );

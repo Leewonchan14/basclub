@@ -29,6 +29,11 @@ export class TeamService implements IService<Team> {
   }
 
   async findTeamsByEventId(eventId: string) {
+    // 🛡️ 입력값 검증 (방어 코드)
+    if (!eventId || typeof eventId !== 'string' || eventId.trim() === '') {
+      throw new Error("Invalid eventId: eventId must be a non-empty string");
+    }
+
     return this.teamRepository.find({
       where: { events: { id: eventId } },
       order: {
@@ -42,6 +47,14 @@ export class TeamService implements IService<Team> {
   }
 
   async findTeamsByEventIdAndMemberId(eventId: string, memberId: string) {
+    // 🛡️ 입력값 검증 (방어 코드)
+    if (!eventId || typeof eventId !== 'string' || eventId.trim() === '') {
+      throw new Error("Invalid eventId: eventId must be a non-empty string");
+    }
+    if (!memberId || typeof memberId !== 'string' || memberId.trim() === '') {
+      throw new Error("Invalid memberId: memberId must be a non-empty string");
+    }
+
     const findTeam = await this.teamRepository.findOne({
       where: { events: { id: eventId }, member: { id: memberId } },
     });
@@ -50,6 +63,17 @@ export class TeamService implements IService<Team> {
   }
 
   async toggleJoin(eventId: string, memberId: string, guestCnt: number) {
+    // 🛡️ 입력값 검증 (방어 코드)
+    if (!eventId || typeof eventId !== 'string' || eventId.trim() === '') {
+      throw new Error("Invalid eventId: eventId must be a non-empty string");
+    }
+    if (!memberId || typeof memberId !== 'string' || memberId.trim() === '') {
+      throw new Error("Invalid memberId: memberId must be a non-empty string");
+    }
+    if (typeof guestCnt !== 'number' || guestCnt < 0 || guestCnt > 9) {
+      throw new Error("Invalid guestCnt: guestCnt must be a number between 0 and 9");
+    }
+
     const findTeam = await this.findTeamsByEventIdAndMemberId(
       eventId,
       memberId,
@@ -63,7 +87,7 @@ export class TeamService implements IService<Team> {
     // 이미 있다면 삭제
     if (findTeam) {
       await this.removeJoin(eventId, memberId);
-      return;
+      return this.findTeamsByEventId(eventId);
     }
 
     const { originMember, members } =
@@ -88,11 +112,19 @@ export class TeamService implements IService<Team> {
       return newTeam;
     });
 
-    await this.teamRepository.save(newTeams);
+    return this.teamRepository.save(newTeams);
   }
 
   // 참가 취소
   async removeJoin(eventId: string, memberId: string) {
+    // 🛡️ 입력값 검증 (방어 코드)
+    if (!eventId || typeof eventId !== 'string' || eventId.trim() === '') {
+      throw new Error("Invalid eventId: eventId must be a non-empty string");
+    }
+    if (!memberId || typeof memberId !== 'string' || memberId.trim() === '') {
+      throw new Error("Invalid memberId: memberId must be a non-empty string");
+    }
+
     const findMember = await this.memberService.findById(memberId);
 
     if (!findMember) {
@@ -118,11 +150,24 @@ export class TeamService implements IService<Team> {
   }
 
   async upsertTeams(teams: PlainTeam[][]) {
+    // 🛡️ 입력값 검증 (방어 코드)
+    if (!teams || !Array.isArray(teams)) {
+      throw new Error("Invalid teams: teams must be an array");
+    }
+    if (teams.length === 0) {
+      throw new Error("Invalid teams: teams array cannot be empty");
+    }
+
     teams = teams.map((team, i) => team.map((t) => ({ ...t, group: i })));
     await this.teamRepository.upsert(teams.flat(), ["id"]);
   }
 
   async togglePaidTeam(teamId: string) {
+    // 🛡️ 입력값 검증 (방어 코드)
+    if (!teamId || typeof teamId !== 'string' || teamId.trim() === '') {
+      throw new Error("Invalid teamId: teamId must be a non-empty string");
+    }
+
     const team = await this.teamRepository.findOne({ where: { id: teamId } });
     if (!team) {
       throw new Error("Team not found");
@@ -133,6 +178,11 @@ export class TeamService implements IService<Team> {
   }
 
   async deleteTeam(teamId: string) {
+    // 🛡️ 입력값 검증 (방어 코드)
+    if (!teamId || typeof teamId !== 'string' || teamId.trim() === '') {
+      throw new Error("Invalid teamId: teamId must be a non-empty string");
+    }
+
     const team = await this.teamRepository.findOne({ where: { id: teamId } });
     if (!team) {
       throw new Error("Team not found");

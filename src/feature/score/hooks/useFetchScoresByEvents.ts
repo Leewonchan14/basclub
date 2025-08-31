@@ -1,6 +1,6 @@
 "use client";
 
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { scoreQueryApi } from "@/feature/score/score-query";
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
 import { useInfiniteQuery } from "@tanstack/react-query";

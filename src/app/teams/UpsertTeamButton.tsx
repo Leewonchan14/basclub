@@ -1,6 +1,6 @@
 "use client";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEventsByDate";
+import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useRouter } from "next/navigation";
 import React from "react";
 
