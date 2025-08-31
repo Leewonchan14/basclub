@@ -7,11 +7,8 @@ export const GET = async (
   context: { params: { id: string } }
 ) => {
   try {
-    const memberId = context.params.id;
-    const scoreService = getService(ScoreService);
-    const scores = await scoreService.findScoresAVGByMemberId(memberId);
-
-    return NextResponse.json(scores);
+    // 점수 기능이 사용되지 않으므로 빈 객체 반환
+    return NextResponse.json({});
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch member scores" },

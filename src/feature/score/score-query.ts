@@ -5,22 +5,22 @@ export const scoreQueryApi = {
   findByMemberId: (memberId: string, enabled: boolean) =>
     queryOptions({
       queryKey: ["score", "member", memberId],
-      queryFn: () => scoresApi.get(`member/${memberId}`).json(),
+      queryFn: () => Promise.resolve({}), // 빈 객체 반환
       staleTime: 1000 * 60 * 30,
-      enabled,
+      enabled: false, // 항상 비활성화
     }),
   findAvgByEventsId: (eventsId: string, enabled: boolean) =>
     queryOptions({
       queryKey: ["score", "events", eventsId, "avg"],
-      queryFn: () => scoresApi.get(`events/${eventsId}`).json(),
+      queryFn: () => Promise.resolve({}), // 빈 객체 반환
       staleTime: 1000 * 60 * 30,
-      enabled,
+      enabled: false, // 항상 비활성화
     }),
   findPageByEventsId: (eventsId: string, cursor?: string, enabled: boolean = true) =>
     queryOptions({
       queryKey: ["score", "events", eventsId, "page", cursor],
-      queryFn: () => scoresApi.get(`events/${eventsId}/page${cursor ? `?cursor=${cursor}` : ''}`).json(),
+      queryFn: () => Promise.resolve([]), // 빈 배열 반환
       staleTime: 1000 * 60 * 30,
-      enabled,
+      enabled: false, // 항상 비활성화
     }),
 };
