@@ -11,6 +11,7 @@ interface Props {}
 export const NavBar: NextPage<Props> = async () => {
   const payload = await getPayload();
   const isLogin = !!payload;
+  
   return (
     <Navbar className="border-b border-gray-200 bg-white">
       <div className="mx-auto flex w-full max-w-content-width items-center justify-between">

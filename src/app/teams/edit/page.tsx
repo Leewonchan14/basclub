@@ -4,9 +4,9 @@ import { EditTeam } from "@/app/teams/edit/EditTeam";
 import { EditTeamProvider } from "@/app/teams/edit/EditTeamContext";
 import { MutateButton } from "@/app/teams/edit/MutateButton";
 import { getIsAdmin } from "@/feature/auth/auth-action";
-import { getEventById } from "@/feature/events/event-query.action";
-import { getAvgScoresByEventsId } from "@/feature/score/score-query.actions";
-import { getTeamsByEventsId } from "@/feature/team/team-query.actions";
+import { EventsService } from "@/feature/events/events.service";
+import { TeamService } from "@/feature/team/team.service";
+import { getService } from "@/share/lib/typeorm/DIContainer";
 import _ from "lodash";
 import { NextPage } from "next";
 import { redirect } from "next/navigation";
@@ -20,12 +20,16 @@ interface Props {
 const Page: NextPage<Props> = async ({ searchParams: { eventsId } }) => {
   const isAdmin = await getIsAdmin();
   if (!eventsId) redirect("/events");
-  const events = await getEventById(eventsId);
+  
+  const eventsService = getService(EventsService);
+  const teamService = getService(TeamService);
+  
+  const events = await eventsService.findById(eventsId);
   if (!events) redirect("/events");
 
-  const scoreMap = await getAvgScoresByEventsId(eventsId);
-  const teamsArr = await getTeamsByEventsId(eventsId);
-  const grouped = { ..._.groupBy(teamsArr, (t) => t.group) };
+  const teamsArr = await teamService.findTeamsByEventId(eventsId);
+  const teamsData = teamsArr.map(t => t.toPlain());
+  const grouped = { ..._.groupBy(teamsData, (t) => t.group) };
 
   let max = Math.max(...Object.keys(grouped).map(Number));
   max = Math.max(0, max);
@@ -38,11 +42,11 @@ const Page: NextPage<Props> = async ({ searchParams: { eventsId } }) => {
   return (
     <div className="flex w-full flex-col justify-center gap-4 rounded-lg bg-white p-4 shadow-lg">
       <Suspense fallback={null}>
-        <EditTeamProvider initTeams={teams} scoreMap={scoreMap}>
+        <EditTeamProvider initTeams={teams}>
           <EditTeam />
           <div className="flex w-full justify-center gap-4">
             <BackButton />
-            {isAdmin && <MutateButton date={events.date} eventsId={eventsId} />}
+            {isAdmin && <MutateButton date={events.date.toISOString()} eventsId={eventsId} />}
           </div>
         </EditTeamProvider>
       </Suspense>
