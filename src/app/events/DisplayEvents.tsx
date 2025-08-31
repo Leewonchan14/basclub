@@ -90,30 +90,47 @@ const DisplayEvents: NextPage<Props> = ({}) => {
         <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
           <div className="mb-2 flex items-center gap-2">
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
-              <svg className="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              <svg
+                className="h-4 w-4 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
             </div>
             <span className="text-sm font-semibold text-gray-700">위치</span>
           </div>
-          
+
           <div className="flex items-start gap-3">
             <div className="flex-1">
               <div className="mb-1 text-sm font-medium text-gray-600">주소</div>
-              <div className="text-base font-semibold text-gray-900 leading-relaxed">
+              <div className="text-base font-semibold leading-relaxed text-gray-900">
                 {address}
               </div>
               {detailAddress && (
                 <>
-                  <div className="mt-1 text-sm font-medium text-gray-600">상세주소</div>
-                  <div className="text-sm text-gray-700 leading-relaxed">
+                  <div className="mt-1 text-sm font-medium text-gray-600">
+                    상세주소
+                  </div>
+                  <div className="text-sm leading-relaxed text-gray-700">
                     {detailAddress}
                   </div>
                 </>
               )}
             </div>
-            
+
             <div className="flex flex-col gap-2">
               <button
                 onClick={(e) => {
@@ -129,15 +146,25 @@ const DisplayEvents: NextPage<Props> = ({}) => {
               >
                 <MdContentCopy className="h-5 w-5" />
               </button>
-              
+
               <Link
                 href={findLoadLink}
                 target="_blank"
                 className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 transition-all duration-200 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm"
                 title="지도에서 보기"
               >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
                 </svg>
               </Link>
             </div>
