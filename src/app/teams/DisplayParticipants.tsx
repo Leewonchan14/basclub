@@ -1,19 +1,15 @@
 "use client";
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
-import { PlusMinusButton } from "@/app/ui/share/plus-minus-button";
 import { PlainTeam } from "@/entity/team.entity";
-import { useChangeLimitMem } from "@/feature/events/hooks/useChangeLimitMem";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
-import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import { useToggleDone } from "@/feature/events/hooks/useToggleDone";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { useDeleteTeam } from "@/feature/team/hooks/useDeleteTeam";
 import { useHandleHasPaidTeam } from "@/feature/team/hooks/useHandleHasPaidTeam";
-import { useDebounceFn } from "@/share/utils/use-debount-fn";
 import { ToggleSwitch, Tooltip } from "flowbite-react";
 import _ from "lodash";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { MdDelete, MdWarningAmber } from "react-icons/md";
 
@@ -23,35 +19,9 @@ export const DisplayParticipants = () => {
   const { events, teamsArr, ownGuestTeams, isJoin, isLoading } =
     useFetchSelectedEvents();
 
-  const { isPending } = useJoinEvents({ guestCnt: 0 });
   const { isPending: isPendingDone, toggleDone } = useToggleDone();
-  const { isPending: isPendingChangeLimitMem, changeLimitMem } =
-    useChangeLimitMem();
 
-  const [limitTeamCnt, setLimitMemberCnt] = useState(
-    events?.limitTeamCnt || 25,
-  );
-  useEffect(() => {
-    if (events?.limitTeamCnt) {
-      setLimitMemberCnt(events.limitTeamCnt);
-    }
-  }, [events?.limitTeamCnt]);
-
-  const handleChangeLimitTeamCnt = useDebounceFn(
-    () => {
-      if (!events) return;
-      changeLimitMem({
-        events,
-        limitTeamCnt,
-      });
-    },
-    {
-      term: limitTeamCnt,
-      delay: 1000,
-    },
-  );
-
-  const isSkeleton = isLoading || isPending;
+  const isSkeleton = isLoading;
 
   const joinStateText = () => {
     const text = "참가중";
@@ -81,8 +51,12 @@ export const DisplayParticipants = () => {
         )}
       </div>
       <div className="flex w-full flex-col">
+        <div className="mb-4 flex w-1/2 flex-col">
+          <span className="text-sm">인원 제한</span>
+          <div className="text-sm text-red-600">{events?.limitTeamCnt}명</div>
+        </div>
         {isAdmin && !!events && (
-          <div className="mb-4 w-1/2">
+          <div className="w-1/2">
             <div className="text-sm">참가 마감</div>
             <ToggleSwitch
               className="-ml-[1px] items-start"
@@ -92,23 +66,6 @@ export const DisplayParticipants = () => {
             />
           </div>
         )}
-        <div className="flex w-1/2 flex-col">
-          <span className="text-sm">참가 인원 제한</span>
-          {isAdmin && (
-            <PlusMinusButton
-              className="w-full"
-              value={limitTeamCnt}
-              disabled={isPendingChangeLimitMem}
-              onChange={(v) => {
-                setLimitMemberCnt(v);
-                handleChangeLimitTeamCnt();
-              }}
-            />
-          )}
-          {!isAdmin && (
-            <div className="text-sm text-gray-500">{limitTeamCnt}명</div>
-          )}
-        </div>
       </div>
       {!isSkeleton && teamsArr.length === 0 && (
         <div className="flex h-20 flex-col items-center justify-center text-gray-500">

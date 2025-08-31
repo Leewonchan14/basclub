@@ -3,7 +3,6 @@
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
-import { teamsQueryApi } from "@/feature/team/team-query";
 import { day_js } from "@/share/lib/dayjs";
 import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
@@ -27,14 +26,7 @@ export const useFetchSelectedEvents = () => {
     isRefetching,
   } = useQuery(eventsQueryApi.findById(eventsId ?? "", enabled));
 
-  const {
-    data: teamData,
-    isFetching: isFetchingTeam,
-    isRefetching: isRefetchingTeam,
-    isLoading: isLoadingTeam,
-  } = useQuery(teamsQueryApi.findByEventsId(events?.id ?? "", !!events));
-
-  const teamsArr = teamData ?? [];
+  const teamsArr = events?.teams ?? [];
 
   const teamsMap: { [k: string]: typeof teamsArr } = {
     ..._.groupBy(teamsArr, (t) => t.group),
@@ -50,6 +42,7 @@ export const useFetchSelectedEvents = () => {
 
   const members = (teamsArr ?? []).map((t) => t.member);
   const ownGuestTeams = teamsArr.filter((t) => t.member.guestById === own?.id);
+
   const isJoin = members.some((m) => m.id === own?.id);
 
   return {
@@ -61,14 +54,8 @@ export const useFetchSelectedEvents = () => {
     notGroupedTeam,
     groupedTeam,
     isJoin,
-    isLoading:
-      isLoadingExist ||
-      isLoading ||
-      isLoadingTeam ||
-      isLoadingOwn ||
-      isFetchingTeam ||
-      isRefetchingTeam,
-    isFetching: isFetching || isFetchingTeam || isRefetchingTeam,
-    isRefetching: isRefetching || isRefetchingTeam,
+    isLoading: isLoadingExist || isLoading || isLoadingOwn,
+    isFetching: isFetching || isRefetching,
+    isRefetching: isRefetching,
   };
 };

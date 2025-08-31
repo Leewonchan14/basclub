@@ -50,7 +50,7 @@ export const JoinEventsButton = () => {
     }
   }, [isJoin, isEventLimit, onJoin, showLoginConfirm, goToKakaoLogin]);
 
-  if (isLoading || isPending) return null;
+  if (isLoading) return null;
 
   if (isEventEnd) {
     return (
