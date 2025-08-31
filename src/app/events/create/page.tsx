@@ -10,6 +10,7 @@ import { BackButton } from "@/app/teams/edit/BackButton";
 import ProtectByAdmin from "@/app/ui/layout/protect-by-admin";
 import { SELECTED_DATE_KEY } from "@/share/lib/dayjs";
 import { NextPage } from "next";
+import { InputLimitTeamCnt } from "./InputLimitTeamCnt";
 
 interface Props {
   searchParams: { [SELECTED_DATE_KEY]: string };
@@ -25,6 +26,7 @@ const Page: NextPage<Props> = () => {
           <LastEvents />
           <InputPlace />
           <InputTime readonly={false} />
+          <InputLimitTeamCnt />
           <EventMutateButton />
         </EventCreateProvider>
       </div>

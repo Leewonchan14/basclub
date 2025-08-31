@@ -10,11 +10,14 @@ import { useMutation } from "@tanstack/react-query";
 import { Spinner } from "flowbite-react";
 import { NextPage } from "next";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { SELECTED_DATE_KEY } from "@/share/lib/dayjs";
 
 interface Props {}
 
 export const EventMutateButton: NextPage<Props> = ({}) => {
   const { selectedDate, goToDay } = useSelectedDate();
+  const router = useRouter();
   const [message, setMessage] = useState("");
   const { inputEvent } = useEventCreateContext();
   const { address } = inputEvent;
@@ -40,7 +43,9 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
         end: inputEvent.timeSlot.end.toString(),
       },
     });
-    goToDay(selectedDate);
+    router.push(
+      `/events?${SELECTED_DATE_KEY}=${selectedDate.format("YYYY-MM-DD")}`,
+    );
   };
 
   return (

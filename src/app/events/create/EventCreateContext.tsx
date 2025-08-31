@@ -159,6 +159,8 @@ const DEFAULT_INPUT_EVENT: (selectedDate: Dayjs) => Omit<
   date: selectedDate.format("YYYY-MM-DD"),
   timeSlot: getInitTimeSlot(),
   isDone: false,
+  limitTeamCnt: 25,
+  teams: [],
 });
 
 export const useEventCreateContext = () => {
