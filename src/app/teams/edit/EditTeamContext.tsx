@@ -6,6 +6,7 @@ import { createContext, useContext, useState } from "react";
 interface EditTeamContextType {
   teams: PlainTeam[][];
   setTeams: (fn: (old: PlainTeam[][]) => PlainTeam[][]) => void;
+  scoreMap: { [k: string]: number };
   groupedTeam: PlainTeam[][];
   notGroupedTeam: PlainTeam[];
 }
@@ -17,8 +18,9 @@ const EditTeamContext = createContext<EditTeamContextType | undefined>(
 export const EditTeamProvider: React.FC<
   React.PropsWithChildren & {
     initTeams: PlainTeam[][];
+    scoreMap: { [k: string]: number };
   }
-> = ({ children, initTeams }) => {
+> = ({ children, initTeams, scoreMap }) => {
   const [teams, setTeams] = useState(() => {
     if (initTeams.length <= 1) {
       return [...initTeams, [], []];
@@ -29,7 +31,7 @@ export const EditTeamProvider: React.FC<
   const notGroupedTeam = teams[0];
   return (
     <EditTeamContext.Provider
-      value={{ setTeams, teams, groupedTeam, notGroupedTeam }}
+      value={{ setTeams, teams, scoreMap, groupedTeam, notGroupedTeam }}
     >
       {children}
     </EditTeamContext.Provider>
