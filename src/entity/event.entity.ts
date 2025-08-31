@@ -5,19 +5,21 @@ import type { GeoPoint } from "@/entity/transformer/point.transformer";
 import { GeoPointTransFormer } from "@/entity/transformer/point.transformer";
 import type { TimeSlot } from "@/entity/transformer/timSlot.transformer";
 import { TimeSlotTransformer } from "@/entity/transformer/timSlot.transformer";
-import { dayjsZod, type Dayjs } from "@/share/lib/dayjs";
+import { day_js, dayjsZod, type Dayjs } from "@/share/lib/dayjs";
 import {
   Column,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
-  Index,
 } from "typeorm";
 import { z } from "zod";
 
 export interface PlainEvents {
   id: string;
   address: string;
+  isDone: boolean;
+  limitTeamCnt: number;
   detailAddress: string;
   coordinates: GeoPoint;
   date: string;
@@ -48,6 +50,12 @@ export class Events
   @Index("IDX_events_date", { unique: true })
   date: Dayjs;
 
+  @Column({ type: "boolean", default: false })
+  isDone: boolean;
+
+  @Column({ type: "int", default: 25 })
+  limitTeamCnt: number;
+
   @Column({
     type: "simple-json",
     transformer: new TimeSlotTransformer(),
@@ -64,6 +72,8 @@ export class Events
     return {
       id: this.id,
       address: this.address,
+      isDone: this.isDone,
+      limitTeamCnt: this.limitTeamCnt,
       detailAddress: this.detailAddress,
       coordinates: this.coordinates,
       date: this.date.toDate().toISOString(),
@@ -76,6 +86,8 @@ export class Events
 }
 
 export const EventsScheme = z.object({
+  isDone: z.boolean(),
+  limitTeamCnt: z.number().default(25),
   address: z.string(),
   detailAddress: z.string(),
   coordinates: z.object({
@@ -88,3 +100,20 @@ export const EventsScheme = z.object({
     end: dayjsZod(),
   }),
 });
+
+export const mockEvents: Partial<PlainEvents> = {
+  id: "1",
+  address: "서울시 강남구 역삼동",
+  isDone: true,
+  limitTeamCnt: 10,
+  coordinates: {
+    lat: 127.0385643,
+    lng: 37.4983355,
+  },
+  date: day_js().startOf("day").toISOString(),
+  detailAddress: "123-456",
+  timeSlot: {
+    start: day_js().startOf("day").toISOString(),
+    end: day_js().endOf("day").toISOString(),
+  },
+};

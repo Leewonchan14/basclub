@@ -15,21 +15,21 @@ const originDataSource = new DataSource({
   synchronize: false,
   logging: ["error"],
   migrations: [],
-  ssl: true,
+  ssl: { rejectUnauthorized: false },
   subscribers: [],
   // 연결 풀 설정 추가
   extra: {
-    // 연결 풀 크기 설정
-    max: 20, // 최대 연결 수
-    min: 5, // 최소 연결 수
-    // 연결 타임아웃 설정
-    acquireTimeoutMillis: 30000,
-    // 유휴 연결 타임아웃
-    idleTimeoutMillis: 30000,
-    // 연결 생성 타임아웃
-    createTimeoutMillis: 30000,
-    // 연결 재시도 설정
-    createRetryIntervalMillis: 200,
+    max: 1, // 서버리스는 단일 연결이 효율적
+    min: 0, // 최소 연결 불필요
+    acquireTimeoutMillis: 5000, // 빠른 타임아웃
+    idleTimeoutMillis: 10000, // 짧은 유휴시간
+    createTimeoutMillis: 5000, // 빠른 생성 타임아웃
+    createRetryIntervalMillis: 100, // 빠른 재시도
+
+    // 서버리스 DB 전용 설정
+    connectionTimeoutMillis: 5000,
+    statement_timeout: 10000,
+    query_timeout: 10000,
   },
 });
 
