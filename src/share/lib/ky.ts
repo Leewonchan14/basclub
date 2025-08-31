@@ -45,3 +45,8 @@ export const teamsApi = api.extend({
 export const scoresApi = api.extend({
   prefixUrl: '/api/score'
 });
+
+// 인증 관련 API 클라이언트
+export const authApi = api.extend({
+  prefixUrl: '/api/auth'
+});

@@ -1,12 +1,20 @@
 import { Member } from "@/entity/member.entity";
-import { getPayload, logout } from "@/feature/auth/auth-action";
+import { logout } from "@/feature/auth/auth-action";
 import { MemberService } from "@/feature/member/member.service";
+import { jwtHandler, JWTHandler } from "@/feature/auth/jwt-handler";
 import { getService } from "@/share/lib/typeorm/DIContainer";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
   try {
-    const payload = await getPayload();
+    const token = cookies().get(JWTHandler.STORE_KEY)?.value;
+    if (!token) {
+      await logout();
+      return NextResponse.json(null);
+    }
+
+    const payload = await jwtHandler.verifyToken(token);
     if (!payload) {
       await logout();
       return NextResponse.json(null);
