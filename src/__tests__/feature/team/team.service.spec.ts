@@ -1,12 +1,12 @@
-import { Team } from "@/entity/team.entity";
 import { Events } from "@/entity/event.entity";
 import { Member } from "@/entity/member.entity";
-import { TeamService } from "@/feature/team/team.service";
+import { Team } from "@/entity/team.entity";
 import { EventsService } from "@/feature/events/events.service";
 import { MemberService } from "@/feature/member/member.service";
 import { ScoreService } from "@/feature/score/score.service";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { TeamService } from "@/feature/team/team.service";
 import { Repository } from "typeorm";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock dependencies
 vi.mock("@/feature/events/events.service");
@@ -560,128 +560,161 @@ describe("TeamService", () => {
     describe("findTeamsByEventId 입력값 검증", () => {
       it("eventId가 undefined이면 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.findTeamsByEventId(undefined as any)
-        ).rejects.toThrow("Invalid eventId: eventId must be a non-empty string");
+          teamService.findTeamsByEventId(undefined as any),
+        ).rejects.toThrow(
+          "Invalid eventId: eventId must be a non-empty string",
+        );
       });
 
       it("eventId가 빈 문자열이면 에러를 발생시켜야 한다", async () => {
-        await expect(
-          teamService.findTeamsByEventId("")
-        ).rejects.toThrow("Invalid eventId: eventId must be a non-empty string");
+        await expect(teamService.findTeamsByEventId("")).rejects.toThrow(
+          "Invalid eventId: eventId must be a non-empty string",
+        );
       });
 
       it("eventId가 공백만 있으면 에러를 발생시켜야 한다", async () => {
-        await expect(
-          teamService.findTeamsByEventId("   ")
-        ).rejects.toThrow("Invalid eventId: eventId must be a non-empty string");
+        await expect(teamService.findTeamsByEventId("   ")).rejects.toThrow(
+          "Invalid eventId: eventId must be a non-empty string",
+        );
       });
 
       it("eventId가 null이면 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.findTeamsByEventId(null as any)
-        ).rejects.toThrow("Invalid eventId: eventId must be a non-empty string");
+          teamService.findTeamsByEventId(null as any),
+        ).rejects.toThrow(
+          "Invalid eventId: eventId must be a non-empty string",
+        );
       });
     });
 
     describe("findTeamsByEventIdAndMemberId 입력값 검증", () => {
       it("eventId가 잘못된 경우 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.findTeamsByEventIdAndMemberId(undefined as any, "member-1")
-        ).rejects.toThrow("Invalid eventId: eventId must be a non-empty string");
+          teamService.findTeamsByEventIdAndMemberId(
+            undefined as any,
+            "member-1",
+          ),
+        ).rejects.toThrow(
+          "Invalid eventId: eventId must be a non-empty string",
+        );
       });
 
       it("memberId가 잘못된 경우 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.findTeamsByEventIdAndMemberId("event-1", undefined as any)
-        ).rejects.toThrow("Invalid memberId: memberId must be a non-empty string");
+          teamService.findTeamsByEventIdAndMemberId(
+            "event-1",
+            undefined as any,
+          ),
+        ).rejects.toThrow(
+          "Invalid memberId: memberId must be a non-empty string",
+        );
       });
 
       it("둘 다 잘못된 경우 eventId 에러를 먼저 발생시켜야 한다", async () => {
         await expect(
-          teamService.findTeamsByEventIdAndMemberId(undefined as any, undefined as any)
-        ).rejects.toThrow("Invalid eventId: eventId must be a non-empty string");
+          teamService.findTeamsByEventIdAndMemberId(
+            undefined as any,
+            undefined as any,
+          ),
+        ).rejects.toThrow(
+          "Invalid eventId: eventId must be a non-empty string",
+        );
       });
     });
 
     describe("toggleJoin 입력값 검증", () => {
       it("eventId가 잘못된 경우 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.toggleJoin(undefined as any, "member-1", 0)
-        ).rejects.toThrow("Invalid eventId: eventId must be a non-empty string");
+          teamService.toggleJoin(undefined as any, "member-1", 0),
+        ).rejects.toThrow(
+          "Invalid eventId: eventId must be a non-empty string",
+        );
       });
 
       it("memberId가 잘못된 경우 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.toggleJoin("event-1", undefined as any, 0)
-        ).rejects.toThrow("Invalid memberId: memberId must be a non-empty string");
+          teamService.toggleJoin("event-1", undefined as any, 0),
+        ).rejects.toThrow(
+          "Invalid memberId: memberId must be a non-empty string",
+        );
       });
 
       it("guestCnt가 음수면 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.toggleJoin("event-1", "member-1", -1)
-        ).rejects.toThrow("Invalid guestCnt: guestCnt must be a number between 0 and 9");
+          teamService.toggleJoin("event-1", "member-1", -1),
+        ).rejects.toThrow(
+          "Invalid guestCnt: guestCnt must be a number between 0 and 9",
+        );
       });
 
       it("guestCnt가 9를 초과하면 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.toggleJoin("event-1", "member-1", 10)
-        ).rejects.toThrow("Invalid guestCnt: guestCnt must be a number between 0 and 9");
+          teamService.toggleJoin("event-1", "member-1", 10),
+        ).rejects.toThrow(
+          "Invalid guestCnt: guestCnt must be a number between 0 and 9",
+        );
       });
 
       it("guestCnt가 문자열이면 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.toggleJoin("event-1", "member-1", "invalid" as any)
-        ).rejects.toThrow("Invalid guestCnt: guestCnt must be a number between 0 and 9");
+          teamService.toggleJoin("event-1", "member-1", "invalid" as any),
+        ).rejects.toThrow(
+          "Invalid guestCnt: guestCnt must be a number between 0 and 9",
+        );
       });
     });
 
     describe("removeJoin 입력값 검증", () => {
       it("eventId가 잘못된 경우 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.removeJoin(undefined as any, "member-1")
-        ).rejects.toThrow("Invalid eventId: eventId must be a non-empty string");
+          teamService.removeJoin(undefined as any, "member-1"),
+        ).rejects.toThrow(
+          "Invalid eventId: eventId must be a non-empty string",
+        );
       });
 
       it("memberId가 잘못된 경우 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.removeJoin("event-1", undefined as any)
-        ).rejects.toThrow("Invalid memberId: memberId must be a non-empty string");
+          teamService.removeJoin("event-1", undefined as any),
+        ).rejects.toThrow(
+          "Invalid memberId: memberId must be a non-empty string",
+        );
       });
     });
 
     describe("upsertTeams 입력값 검증", () => {
       it("teams가 배열이 아니면 에러를 발생시켜야 한다", async () => {
-        await expect(
-          teamService.upsertTeams(undefined as any)
-        ).rejects.toThrow("Invalid teams: teams must be an array");
+        await expect(teamService.upsertTeams(undefined as any)).rejects.toThrow(
+          "Invalid teams: teams must be an array",
+        );
       });
 
       it("teams가 빈 배열이면 에러를 발생시켜야 한다", async () => {
-        await expect(
-          teamService.upsertTeams([])
-        ).rejects.toThrow("Invalid teams: teams array cannot be empty");
+        await expect(teamService.upsertTeams([])).rejects.toThrow(
+          "Invalid teams: teams array cannot be empty",
+        );
       });
     });
 
     describe("togglePaidTeam 입력값 검증", () => {
       it("teamId가 잘못된 경우 에러를 발생시켜야 한다", async () => {
         await expect(
-          teamService.togglePaidTeam(undefined as any)
+          teamService.togglePaidTeam(undefined as any),
         ).rejects.toThrow("Invalid teamId: teamId must be a non-empty string");
       });
 
       it("teamId가 빈 문자열이면 에러를 발생시켜야 한다", async () => {
-        await expect(
-          teamService.togglePaidTeam("")
-        ).rejects.toThrow("Invalid teamId: teamId must be a non-empty string");
+        await expect(teamService.togglePaidTeam("")).rejects.toThrow(
+          "Invalid teamId: teamId must be a non-empty string",
+        );
       });
     });
 
     describe("deleteTeam 입력값 검증", () => {
       it("teamId가 잘못된 경우 에러를 발생시켜야 한다", async () => {
-        await expect(
-          teamService.deleteTeam(undefined as any)
-        ).rejects.toThrow("Invalid teamId: teamId must be a non-empty string");
+        await expect(teamService.deleteTeam(undefined as any)).rejects.toThrow(
+          "Invalid teamId: teamId must be a non-empty string",
+        );
       });
     });
   });
@@ -706,9 +739,7 @@ describe("TeamService", () => {
       const memberId = undefined as unknown as string;
 
       // when & then
-      await expect(
-        teamService.removeJoin(eventId, memberId),
-      ).rejects.toThrow();
+      await expect(teamService.removeJoin(eventId, memberId)).rejects.toThrow();
     });
 
     it("findTeamsByEventIdAndMemberId에서 memberId가 undefined이면 방어 코드로 에러를 발생시켜야 한다", async () => {
@@ -718,8 +749,10 @@ describe("TeamService", () => {
 
       // when & then - 🛡️ 방어 코드가 작동해서 에러 발생
       await expect(
-        teamService.findTeamsByEventIdAndMemberId(eventId, memberId)
-      ).rejects.toThrow("Invalid memberId: memberId must be a non-empty string");
+        teamService.findTeamsByEventIdAndMemberId(eventId, memberId),
+      ).rejects.toThrow(
+        "Invalid memberId: memberId must be a non-empty string",
+      );
 
       // 중요: 위험한 쿼리가 실행되지 않음
       expect(mockTeamRepository.findOne).not.toHaveBeenCalled();
@@ -731,9 +764,9 @@ describe("TeamService", () => {
       const memberId = undefined as unknown as string;
 
       // when & then - 🛡️ 방어 코드가 먼저 작동해서 더 안전한 에러 발생
-      await expect(
-        teamService.removeJoin(eventId, memberId),
-      ).rejects.toThrow("Invalid memberId: memberId must be a non-empty string");
+      await expect(teamService.removeJoin(eventId, memberId)).rejects.toThrow(
+        "Invalid memberId: memberId must be a non-empty string",
+      );
 
       // 중요: 모든 위험한 로직이 실행되지 않음
       expect(mockMemberService.findById).not.toHaveBeenCalled();
