@@ -40,15 +40,6 @@ export const getPayload = async () => {
       role: ERole.ADMIN,
       guestById: null,
     } as IPayLoad;
-
-    // return {
-    //   id: "f92a1ddc-0026-41aa-93df-9effe303eadf",
-    //   nickname: "이원찬-Guest-1",
-    //   profileUrl:
-    //     "https://img1.kakaocdn.net/thumb/R640x640.q70/?fname=https://t1.kakaocdn.net/account_images/default_profile.jpeg",
-    //   role: ERole.MEMBER,
-    //   guestById: null,
-    // } as IPayLoad;
   }
   const token = await getToken();
   const payload = await jwtHandler.verifyToken(token);

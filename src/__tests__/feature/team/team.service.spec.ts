@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Events } from "@/entity/event.entity";
 import { Member } from "@/entity/member.entity";
 import { Team } from "@/entity/team.entity";
