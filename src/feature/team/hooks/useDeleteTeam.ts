@@ -1,7 +1,7 @@
+import { eventsQueryApi } from "@/feature/events/event-query";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { teamMutateOption } from "@/feature/team/team-mutate";
-import { teamsQueryApi } from "@/feature/team/team-query";
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
 import {
   useIsMutating,
@@ -31,13 +31,16 @@ export const useDeleteTeam = (
 
     if (!isConfirm) return;
 
-    const queryKey = teamsQueryApi.findByEventsId(events.id, false).queryKey;
-    const previous = queryClient.getQueryData(queryKey);
+    const queryKey = eventsQueryApi.findById(events.id, false).queryKey;
+    const previous = queryClient.getQueryData(queryKey) as any;
 
     if (previous) {
       queryClient.setQueryData(
         queryKey,
-        previous.filter((team) => team.id !== teamId),
+        {
+          ...previous,
+          teams: previous.teams.filter((team: any) => team.id !== teamId),
+        }
       );
     }
 

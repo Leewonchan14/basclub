@@ -1,9 +1,9 @@
 "use client";
 
+import { eventsQueryApi } from "@/feature/events/event-query";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
 import { teamMutateOption } from "@/feature/team/team-mutate";
-import { teamsQueryApi } from "@/feature/team/team-query";
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
 import {
   useIsMutating,
@@ -26,16 +26,19 @@ export const useHandleHasPaidTeam = (teamId: string) => {
     if (!events?.id) return;
     if (isMutating) return;
 
-    const queryKey = teamsQueryApi.findByEventsId(events.id, false).queryKey;
-    const previous = queryClient.getQueryData(queryKey);
+    const queryKey = eventsQueryApi.findById(events.id, false).queryKey;
+    const previous = queryClient.getQueryData(queryKey) as any;
 
     if (previous) {
       queryClient.setQueryData(
         queryKey,
-        previous.map((team) => ({
-          ...team,
-          isPaid: team.id === teamId ? !team.isPaid : team.isPaid,
-        })),
+        {
+          ...previous,
+          teams: previous.teams.map((team: any) => ({
+            ...team,
+            isPaid: team.id === teamId ? !team.isPaid : team.isPaid,
+          })),
+        }
       );
     }
 

@@ -36,11 +36,6 @@ export const usersApi = api.extend({
   prefixUrl: '/api/user'
 });
 
-// 팀 관련 API 클라이언트
-export const teamsApi = api.extend({
-  prefixUrl: '/api/events'
-});
-
 // 점수 관련 API 클라이언트
 export const scoresApi = api.extend({
   prefixUrl: '/api/score'
