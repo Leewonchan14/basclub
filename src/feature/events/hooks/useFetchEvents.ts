@@ -25,17 +25,14 @@ export const useFetchSelectedEvents = () => {
     isLoading,
     isFetching,
     isRefetching,
-  } = useQuery(eventsQueryApi.findById(eventsId!, enabled));
+  } = useQuery(eventsQueryApi.findById(eventsId ?? "", enabled));
 
   const {
     data: teamData,
     isFetching: isFetchingTeam,
     isRefetching: isRefetchingTeam,
     isLoading: isLoadingTeam,
-  } = useQuery(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    teamsQueryApi.findByEventsId(events?.id!, !!events),
-  );
+  } = useQuery(teamsQueryApi.findByEventsId(events?.id ?? "", !!events));
 
   const teamsArr = teamData ?? [];
 

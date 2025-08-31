@@ -12,6 +12,7 @@ import {
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
 import { produce } from "immer";
 import { teamsQueryApi } from "../team/team-query";
+import { uuid } from "@/share/lib/uuid/uuid";
 
 export const eventsMutateOption = {
   upsert: {
@@ -48,11 +49,12 @@ export const eventsMutateOption = {
         (old) => [
           ...(old ?? []),
           {
-            id: "0",
+            id: uuid(),
             group: 0,
             avgScore: 0,
             isPaid: false,
             member: variables.member,
+            guestCnt: variables.guestCnt,
           },
         ],
       );

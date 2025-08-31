@@ -35,6 +35,11 @@ export const toggleJoinEvent = async (
   if (!memberId) {
     throw new Error("Member ID is required");
   }
+
+  if (!eventsId) {
+    throw new Error("Events ID is required");
+  }
+
   return await eventsService
     .toggleJoin(eventsId, memberId, guestCnt)
     .then((teams) => teams.map((t) => t.toPlain()));
