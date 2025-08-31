@@ -1,7 +1,7 @@
 "use client";
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
-import { PlusMinusButton } from "@/app/ui/share/plus-minus-buttont";
+import { PlusMinusButton } from "@/app/ui/share/plus-minus-button";
 import { PlainTeam } from "@/entity/team.entity";
 import { useChangeLimitMem } from "@/feature/events/hooks/useChangeLimitMem";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";

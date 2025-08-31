@@ -2,7 +2,7 @@
 
 import { useConfirm } from "@/app/ui/share/ConfirmModal";
 import { useLoginConfirm } from "@/app/ui/share/LoginConfirmModal";
-import { PlusMinusButton } from "@/app/ui/share/plus-minus-buttont";
+import { PlusMinusButton } from "@/app/ui/share/plus-minus-button";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
@@ -19,28 +19,22 @@ export const JoinEventsButton = () => {
   const { showLoginConfirm, LoginConfirmComponent } = useLoginConfirm();
   const { goToKakaoLogin } = useNeedLogin();
 
-  const { ownGuestTeams, events } = useFetchSelectedEvents();
-  const {
-    isJoin,
-    isEventEnd,
-    isEventLimit,
-    isPending,
-    onJoin: originalOnJoin,
-    isLoading,
-  } = useJoinEvents({
-    guestCnt,
-    confirmFn: showConfirm,
-    withLoginConfirm: true,
-  });
+  const { ownGuestTeams } = useFetchSelectedEvents();
+  const { isJoin, isEventEnd, isEventLimit, isPending, onJoin, isLoading } =
+    useJoinEvents({
+      guestCnt,
+      confirmFn: showConfirm,
+      withLoginConfirm: true,
+    });
 
-  const onJoin = useCallback(async () => {
+  const handleOnJoin = useCallback(async () => {
     setError("");
     if (!isJoin && isEventLimit) {
       setError("참가 인원이 초과되었습니다.");
       return;
     }
     try {
-      await originalOnJoin();
+      await onJoin();
     } catch (error: unknown) {
       if (
         error instanceof Error &&
@@ -51,10 +45,12 @@ export const JoinEventsButton = () => {
           goToKakaoLogin();
         }
       }
+      // 잠시후 다시 시도 하게 해주는 메시지
+      setError("잠시후 다시 시도 해주세요.");
     }
-  }, [isJoin, isEventLimit, originalOnJoin, showLoginConfirm, goToKakaoLogin]);
+  }, [isJoin, isEventLimit, onJoin, showLoginConfirm, goToKakaoLogin]);
 
-  if (isLoading || isPending || !events) return null;
+  if (isLoading || isPending) return null;
 
   if (isEventEnd) {
     return (
@@ -76,7 +72,7 @@ export const JoinEventsButton = () => {
         <PrimaryButton
           className="flex h-full w-full flex-col text-nowrap !p-0 font-semibold"
           disabled={isPending || isEventEnd}
-          onClick={onJoin}
+          onClick={handleOnJoin}
         >
           <div>{isJoin ? ownGuestTeams.length : guestCnt}명의 게스트와</div>
           <div>{isJoin ? "참가취소" : "참가하기"}</div>
