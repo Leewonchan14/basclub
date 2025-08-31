@@ -1,5 +1,6 @@
 "use client";
 
+import { PlainTeam } from "@/entity/team.entity";
 import { eventsQueryApi } from "@/feature/events/event-query";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
@@ -27,19 +28,16 @@ export const useHandleHasPaidTeam = (teamId: string) => {
     if (isMutating) return;
 
     const queryKey = eventsQueryApi.findById(events.id, false).queryKey;
-    const previous = queryClient.getQueryData(queryKey) as any;
+    const previous = queryClient.getQueryData(queryKey);
 
     if (previous) {
-      queryClient.setQueryData(
-        queryKey,
-        {
-          ...previous,
-          teams: previous.teams.map((team: any) => ({
-            ...team,
-            isPaid: team.id === teamId ? !team.isPaid : team.isPaid,
-          })),
-        }
-      );
+      queryClient.setQueryData(queryKey, {
+        ...previous,
+        teams: previous.teams.map((team: PlainTeam) => ({
+          ...team,
+          isPaid: team.id === teamId ? !team.isPaid : team.isPaid,
+        })),
+      });
     }
 
     await mutateAsync();

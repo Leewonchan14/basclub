@@ -1,3 +1,4 @@
+import { PlainTeam } from "@/entity/team.entity";
 import { eventsQueryApi } from "@/feature/events/event-query";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
@@ -32,16 +33,13 @@ export const useDeleteTeam = (
     if (!isConfirm) return;
 
     const queryKey = eventsQueryApi.findById(events.id, false).queryKey;
-    const previous = queryClient.getQueryData(queryKey) as any;
+    const previous = queryClient.getQueryData(queryKey);
 
     if (previous) {
-      queryClient.setQueryData(
-        queryKey,
-        {
-          ...previous,
-          teams: previous.teams.filter((team: any) => team.id !== teamId),
-        }
-      );
+      queryClient.setQueryData(queryKey, {
+        ...previous,
+        teams: previous.teams.filter((team: PlainTeam) => team.id !== teamId),
+      });
     }
 
     await mutateAsync();

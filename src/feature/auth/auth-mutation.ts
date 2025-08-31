@@ -10,7 +10,7 @@ export const authMutateOption = {
     },
     onSuccess: () => {
       getQueryClient().invalidateQueries({
-        queryKey: memberQueryApi.findOwn().queryKey,
+        queryKey: memberQueryApi.findOwn(false).queryKey,
       });
     },
   },

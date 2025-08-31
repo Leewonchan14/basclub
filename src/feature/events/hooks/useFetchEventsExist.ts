@@ -1,11 +1,29 @@
+import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { eventsQueryApi } from "@/feature/events/event-query";
-import { day_js } from "@/share/lib/dayjs";
+import { Dayjs } from "@/share/lib/dayjs";
 import { useQuery } from "@tanstack/react-query";
+import { useCallback, useMemo } from "react";
 
 export const useFetchEventsExist = () => {
+  const { selectedDate } = useSelectedDate();
   const { isLoading, data: eventsExists } = useQuery(
-    eventsQueryApi.findByMonthExist(day_js(), true)
+    eventsQueryApi.findByMonthExist(selectedDate, true),
   );
 
-  return { eventsExists, isLoading };
+  const isExist = useCallback(
+    (date: Dayjs) => date.format("YYYY-MM-DD") in (eventsExists ?? {}),
+    [eventsExists],
+  );
+
+  const isExistSelectedEvents = useMemo(
+    () => isExist(selectedDate),
+    [isExist, selectedDate],
+  );
+
+  return {
+    eventsExists,
+    isLoading,
+    isExistSelectedEvents,
+    isExist,
+  };
 };
