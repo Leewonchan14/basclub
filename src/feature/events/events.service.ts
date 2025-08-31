@@ -54,7 +54,6 @@ export class EventsService implements IService<Events> {
   }
 
   async findByMonth(date: Dayjs) {
-    const startTime = Date.now();
     const { startOfMonth, endOfMonth } = getStartEndOfMonth(date);
 
     const events = await this.eventsRepository.find({
@@ -62,9 +61,6 @@ export class EventsService implements IService<Events> {
         date: Between(startOfMonth, endOfMonth),
       },
     });
-
-    const endTime = Date.now();
-    console.log(`findByMonth: ${endTime - startTime}ms`);
 
     return Object.fromEntries(
       events.map((e) => [e.date.format("YYYY-MM-DD"), e]),

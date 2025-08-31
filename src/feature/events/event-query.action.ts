@@ -13,14 +13,10 @@ export const getEventById = async (id: string) => {
 };
 
 export const getEventsExistInMonth = async (date: string) => {
-  const startTime = Date.now();
   const day = dayjsZod().parse(date);
   const eventsService = getService(EventsService);
   const events = await eventsService.findByMonth(day);
   const ret = _.mapValues(events, (e) => e.id);
-
-  const endTime = Date.now();
-  console.log(`getEventsExistInMonth: ${endTime - startTime}ms`);
 
   return ret;
 };
@@ -29,7 +25,7 @@ export const getLastEventsByDate = async () => {
   const eventService = getService(EventsService);
   const lastEvents = await eventService.findLasted(5);
 
-  return lastEvents.map((e) => e.toPlain());
+  return Promise.all(lastEvents.map((e) => e.toPlain()));
 };
 
 export const getRecentEventByNow = async () => {

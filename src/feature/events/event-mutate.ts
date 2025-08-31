@@ -10,19 +10,24 @@ import {
   upsertEvent,
 } from "@/feature/events/events-mutate.action";
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
-import { produce } from "immer";
-import { teamsQueryApi } from "../team/team-query";
 import { uuid } from "@/share/lib/uuid/uuid";
+import { produce } from "immer";
 
 export const eventsMutateOption = {
   upsert: {
     mutationKey: ["events", "upsert"],
     mutationFn: async (data: Partial<PlainEvents>) => {
-      return await upsertEvent(data);
+      return new Promise((resolve) => {
+        setTimeout(async () => {
+          resolve(await upsertEvent(data));
+        }, 2000);
+      });
     },
     onSuccess: (_data: unknown, _variables: Partial<PlainEvents>) => {
-      getQueryClient().invalidateQueries({
-        queryKey: [eventsQueryApi.findById("", false).queryKey[0]],
+      const queryClient = getQueryClient();
+
+      queryClient.invalidateQueries({
+        queryKey: ["events"],
       });
     },
   },
@@ -45,18 +50,31 @@ export const eventsMutateOption = {
       guestCnt: number;
     }) => {
       getQueryClient().setQueryData(
-        teamsQueryApi.findByEventsId(variables.eventsId, false).queryKey,
-        (old) => [
-          ...(old ?? []),
-          {
-            id: uuid(),
-            group: 0,
-            avgScore: 0,
-            isPaid: false,
-            member: variables.member,
-            guestCnt: variables.guestCnt,
-          },
-        ],
+        eventsQueryApi.findById(variables.eventsId, false).queryKey,
+        (old) =>
+          produce(old, (draft) => {
+            if (!draft) return;
+            const isJoinBefore = draft.teams.some(
+              (t) => t.member.id === variables.member.id,
+            );
+            if (isJoinBefore) {
+              draft.teams = draft.teams.filter(
+                (t) => t.member.id !== variables.member.id,
+              );
+              return;
+            }
+            draft.teams = [
+              ...(draft.teams ?? []),
+              {
+                id: uuid(),
+                group: 0,
+                avgScore: 0,
+                isPaid: false,
+                member: variables.member,
+              },
+            ];
+            return;
+          }),
       );
     },
 
@@ -70,8 +88,12 @@ export const eventsMutateOption = {
       _context: unknown,
     ) => {
       getQueryClient().setQueryData(
-        teamsQueryApi.findByEventsId(variables.eventsId, false).queryKey,
-        data,
+        eventsQueryApi.findById(variables.eventsId, false).queryKey,
+        (old) =>
+          produce(old, (draft) => {
+            if (!draft) return;
+            draft.teams = data;
+          }),
       );
     },
   },

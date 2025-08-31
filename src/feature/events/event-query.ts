@@ -17,7 +17,6 @@ export const eventsQueryApi = {
     }),
   findByMonthExist: (date: Dayjs, enabled: boolean) =>
     queryOptions({
-      // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: ["events", date.format("YYYY-MM")],
       queryFn: () => getEventsExistInMonth(date.toISOString()),
       staleTime: 1000 * 60 * 60 * 1,

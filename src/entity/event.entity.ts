@@ -1,4 +1,4 @@
-import { Team } from "@/entity/team.entity";
+import { PlainTeam, Team } from "@/entity/team.entity";
 import { TimeStampEntity } from "@/entity/timestamp.entity";
 import { DateTransFormer } from "@/entity/transformer/date.transformer";
 import type { GeoPoint } from "@/entity/transformer/point.transformer";
@@ -27,6 +27,7 @@ export interface PlainEvents {
     start: string;
     end: string;
   };
+  teams: PlainTeam[];
 }
 
 @Entity({ name: "events" })
@@ -66,9 +67,9 @@ export class Events
   @OneToMany(() => Team, (team) => team.events, {
     lazy: true,
   })
-  teams: Promise<Team[]> = Promise.resolve([]);
+  teams: Promise<Team[]>;
 
-  toPlain(): PlainEvents {
+  async toPlain(): Promise<PlainEvents> {
     return {
       id: this.id,
       address: this.address,
@@ -81,6 +82,7 @@ export class Events
         start: this.timeSlot.start.toDate().toISOString(),
         end: this.timeSlot.end.toDate().toISOString(),
       },
+      teams: (await this.teams).map((t) => t.toPlain()),
     };
   }
 }
