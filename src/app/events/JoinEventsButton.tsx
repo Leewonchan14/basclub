@@ -7,7 +7,16 @@ import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
-import { Alert } from "flowbite-react";
+import { Label } from "@/share/shadcn/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/share/shadcn/ui/select";
+import { Alert, Badge } from "flowbite-react";
+import _ from "lodash";
 import { useCallback, useState } from "react";
 import { HiInformationCircle } from "react-icons/hi";
 
@@ -74,8 +83,7 @@ export const JoinEventsButton = () => {
           disabled={isPending || isEventEnd}
           onClick={handleOnJoin}
         >
-          <div>{isJoin ? ownGuestTeams.length : guestCnt}명의 게스트와</div>
-          <div>{isJoin ? "참가취소" : "참가하기"}</div>
+          {isJoin ? "참가취소" : "참가하기"}
         </PrimaryButton>
       </div>
 
@@ -104,21 +112,27 @@ const InputGuest: React.FC<InputGuestProps> = ({
   disabled,
   className,
 }) => {
-  // 포커스가 해제될때 0, 9으로 최대 최소값을 제한하는 함수
-  const onBlur = useCallback(() => {
-    const sorted = [0, guestCnt, 9].sort((a, b) => a - b);
-    setGuestCnt(sorted[1]);
-  }, [guestCnt, setGuestCnt]);
-
   return (
-    <PlusMinusButton
-      value={guestCnt}
-      className={className}
-      onChange={(v) => setGuestCnt([0, v, 9].sort((a, b) => a - b)[1])}
-      onBlur={onBlur}
+    <Select
+      value={guestCnt.toString()}
       disabled={disabled}
-      min={0}
-      max={9}
-    />
+      onValueChange={(v) => setGuestCnt(Number(v))}
+    >
+      <SelectTrigger className={className}>
+        <SelectValue className="flex" placeholder="게스트 수">
+          <span className="flex items-center gap-1">
+            <Badge color="indigo">GUEST</Badge>
+            {guestCnt}명 과 함께
+          </span>
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        {_.range(0, 5).map((v) => (
+          <SelectItem key={v} value={v.toString()}>
+            {v}명
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 };
