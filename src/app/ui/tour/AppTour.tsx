@@ -4,6 +4,7 @@ import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
 import { useFetchRecentEventByNow } from "@/feature/events/hooks/useFetchRecentEventByNow";
+import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { day_js } from "@/share/lib/dayjs";
 import React, { useCallback, useEffect } from "react";
 import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
@@ -91,6 +92,7 @@ export const AppTour: React.FC<{
   const { isLoading: isFetching } = useFetchSelectedEvents();
   const { isExistSelectedEvents } = useFetchEventsExist();
   const { data: recentEvent, isLoading } = useFetchRecentEventByNow();
+  const { own } = useFetchOwn();
   const { goToDay } = useSelectedDate();
 
   // 투어가 시작될 때 현재 페이지에 일정이 없다면 가장 빠른 일정으로 이동
@@ -123,7 +125,7 @@ export const AppTour: React.FC<{
       scrollToFirstStep={true}
       showProgress={true}
       showSkipButton={true}
-      steps={tourSteps}
+      steps={own ? tourSteps.slice(0, -1) : tourSteps}
       styles={{
         options: {
           primaryColor: "#ea580c", // orange-600

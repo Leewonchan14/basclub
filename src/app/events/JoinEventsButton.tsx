@@ -2,23 +2,20 @@
 
 import { useConfirm } from "@/app/ui/share/ConfirmModal";
 import { useLoginConfirm } from "@/app/ui/share/LoginConfirmModal";
-import { PlusMinusButton } from "@/app/ui/share/plus-minus-button";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
-import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
-import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
-import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
-import { Label } from "@/share/shadcn/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/share/shadcn/ui/select";
+} from "@/app/share/ui/select";
+import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
+import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
 import { Alert, Badge } from "flowbite-react";
-import _ from "lodash";
 import { useCallback, useState } from "react";
 import { HiInformationCircle } from "react-icons/hi";
+import _ from "lodash";
 
 export const JoinEventsButton = () => {
   const [guestCnt, setGuestCnt] = useState<number>(0);
@@ -28,7 +25,6 @@ export const JoinEventsButton = () => {
   const { showLoginConfirm, LoginConfirmComponent } = useLoginConfirm();
   const { goToKakaoLogin } = useNeedLogin();
 
-  const { ownGuestTeams } = useFetchSelectedEvents();
   const { isJoin, isEventEnd, isEventLimit, isPending, onJoin, isLoading } =
     useJoinEvents({
       guestCnt,
@@ -71,7 +67,7 @@ export const JoinEventsButton = () => {
 
   return (
     <>
-      <div className="flex h-12 w-full items-center gap-2">
+      <div className="join-button flex h-12 w-full items-center gap-2">
         <InputGuest
           className="h-full w-full"
           guestCnt={guestCnt}
@@ -92,7 +88,6 @@ export const JoinEventsButton = () => {
           <span className="font-medium">{error}</span>
         </Alert>
       )}
-
       <ConfirmComponent />
       <LoginConfirmComponent />
     </>
@@ -119,17 +114,21 @@ const InputGuest: React.FC<InputGuestProps> = ({
       onValueChange={(v) => setGuestCnt(Number(v))}
     >
       <SelectTrigger className={className}>
-        <SelectValue className="flex" placeholder="게스트 수">
-          <span className="flex items-center gap-1">
-            <Badge color="indigo">GUEST</Badge>
-            {guestCnt}명 과 함께
+        <SelectValue placeholder="게스트 수">
+          <span className="flex gap-1">
+            <span className="absolute -mt-6 bg-white px-2 font-bold text-gray-400">
+              GUEST
+            </span>{" "}
+            <Badge color="indigo">{guestCnt}명</Badge> 과 함께
           </span>
         </SelectValue>
       </SelectTrigger>
-      <SelectContent>
-        {_.range(0, 5).map((v) => (
+      <SelectContent className="">
+        {_.range(0, 10).map((v) => (
           <SelectItem key={v} value={v.toString()}>
-            {v}명
+            <span className="flex gap-1">
+              <Badge color="indigo">{v}명</Badge>
+            </span>
           </SelectItem>
         ))}
       </SelectContent>
