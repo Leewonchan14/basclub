@@ -4,8 +4,10 @@ import { eventsMutateOption } from "@/feature/events/event-mutate";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
 import { day_js } from "@/share/lib/dayjs";
+import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
 import { useIsMutating, useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
+import { eventsQueryApi } from "../event-query";
 
 export const useJoinEvents = ({
   guestCnt,
@@ -54,13 +56,9 @@ export const useJoinEvents = ({
     if (!own) return;
     if (!eventsId) return;
     if (isJoin) {
-      const isConfirmed = confirmFn
-        ? await confirmFn(
-            "참가 취소시 게스트의 참가 기록과 함께 모두 삭제 됩니다.",
-          )
-        : window.confirm(
-            "참가 취소시 게스트의 참가 기록과 함께 모두 삭제 됩니다.",
-          );
+      const isConfirmed = await confirmFn?.(
+        "참가 취소시 게스트의 참가 기록과 함께 모두 삭제 됩니다.",
+      );
 
       if (!isConfirmed) {
         return;
@@ -68,6 +66,10 @@ export const useJoinEvents = ({
     }
 
     await mutateAsync({ eventsId, member: own, guestCnt });
+
+    getQueryClient().invalidateQueries({
+      ...eventsQueryApi.findById(eventsId, false),
+    });
   }, [
     eventsId,
     isJoin,

@@ -1,6 +1,5 @@
 import { PlainEvents } from "@/entity/event.entity";
 import { PlainMember } from "@/entity/member.entity";
-import { PlainTeam } from "@/entity/team.entity";
 import { eventsQueryApi } from "@/feature/events/event-query";
 import {
   changeLimitMem,
@@ -10,7 +9,6 @@ import {
   upsertEvent,
 } from "@/feature/events/events-mutate.action";
 import { getQueryClient } from "@/share/lib/tasntack-query/get-query-client";
-import { uuid } from "@/share/lib/uuid/uuid";
 import { produce } from "immer";
 
 export const eventsMutateOption = {
@@ -43,59 +41,6 @@ export const eventsMutateOption = {
       member: PlainMember;
       guestCnt: number;
     }) => toggleJoinEvent(eventsId, member.id, guestCnt),
-
-    onMutate: (variables: {
-      eventsId: string;
-      member: PlainMember;
-      guestCnt: number;
-    }) => {
-      getQueryClient().setQueryData(
-        eventsQueryApi.findById(variables.eventsId, false).queryKey,
-        (old) =>
-          produce(old, (draft) => {
-            if (!draft) return;
-            const isJoinBefore = draft.teams.some(
-              (t) => t.member.id === variables.member.id,
-            );
-            if (isJoinBefore) {
-              draft.teams = draft.teams.filter(
-                (t) => t.member.id !== variables.member.id,
-              );
-              return;
-            }
-            draft.teams = [
-              ...(draft.teams ?? []),
-              {
-                id: uuid(),
-                group: 0,
-                avgScore: 0,
-                isPaid: false,
-                member: variables.member,
-              },
-            ];
-            return;
-          }),
-      );
-    },
-
-    onSuccess: (
-      data: PlainTeam[],
-      variables: {
-        eventsId: string;
-        member: PlainMember;
-        guestCnt: number;
-      },
-      _context: unknown,
-    ) => {
-      getQueryClient().setQueryData(
-        eventsQueryApi.findById(variables.eventsId, false).queryKey,
-        (old) =>
-          produce(old, (draft) => {
-            if (!draft) return;
-            draft.teams = data;
-          }),
-      );
-    },
   },
 
   toggleDone: {
