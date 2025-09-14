@@ -30,7 +30,7 @@ const useShareKakao = () => {
 
   const onClickShare = useCallback(() => {
     if (!events) return;
-    const imageUrl = `http://35.212.177.154:4000?teamCount=${teamsArr.length}&width=300&height=150`;
+    const imageUrl = `https://basclub.vercel.app/api/events?teamCount=${teamsArr.length}&width=300&height=150`;
     const joinLink = `${window.location.href}`;
 
     Kakao.Share.sendDefault({
