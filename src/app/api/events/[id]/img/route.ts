@@ -1,12 +1,22 @@
 import { EventsService } from "@/feature/events/events.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
-import { createCanvas } from "canvas";
+import "@fontsource/noto-sans-kr";
+import { createCanvas, registerFont } from "canvas";
 import { NextRequest, NextResponse } from "next/server";
+import path from "path";
+
+let isFirst = true;
 
 export const GET = async (
   request: NextRequest,
   context: { params: { id: string } },
 ) => {
+  if (isFirst) {
+    registerFont(path.join(process.cwd(), "src/assets/NanumGothic-Bold.ttf"), {
+      family: "Nanum Gothic",
+    });
+    isFirst = false;
+  }
   const eventId = context.params.id;
   const eventsService = getService(EventsService);
 
@@ -32,7 +42,8 @@ export const GET = async (
 
     // 텍스트 스타일 설정
     ctx.fillStyle = "#333333";
-    ctx.font = `bold 28px Arial`;
+    ctx.font = `bold 28px "Nanum Gothic"`;
+    // ctx.font = `bold 28px Arial`;
     ctx.textAlign = "center";
 
     // 동적 텍스트 그리기

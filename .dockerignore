@@ -1,0 +1,16 @@
+# 기본적으로 무시해야 할 파일 및 폴더
+.env
+.git
+.gitignore
+.next/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# 개발 관련 파일
+.vscode/
+.DS_Store
+
+# 빌드 및 배포 과정에서 자동으로 생성되는 파일 및 폴더
+/out/
+/dist/
