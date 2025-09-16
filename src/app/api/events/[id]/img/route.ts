@@ -1,6 +1,5 @@
 import { EventsService } from "@/feature/events/events.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
-import "@fontsource/noto-sans-kr";
 import { createCanvas, registerFont } from "canvas";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
