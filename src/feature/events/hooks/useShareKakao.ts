@@ -30,7 +30,7 @@ const useShareKakao = () => {
 
   const onClickShare = useCallback(() => {
     if (!events) return;
-    const imageUrl = `http://35.212.177.154:4000?teamCount=${teamsArr.length}&width=300&height=150`;
+    const imageUrl = `http://35.212.237.187:4000?teamCount=${teamsArr.length}&width=300&height=150`;
     const joinLink = `${window.location.href}`;
 
     Kakao.Share.sendDefault({
