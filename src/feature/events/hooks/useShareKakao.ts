@@ -31,7 +31,7 @@ const useShareKakao = () => {
   const onClickShare = useCallback(() => {
     if (!events) return;
     // const imageUrl = `http://35.212.237.187:4000?teamCount=${teamsArr.length}&width=300&height=150`;
-    const imageUrl = `https://basclub.vercel.app/api/events/${events.id}/img?width=300&height=150`;
+    const imageUrl = `https://basclub.vercel.app/api/events/${events.id}/img?width=300&height=150&cnt=${events.teams.length}`;
     const joinLink = `${window.location.href}`;
 
     Kakao.Share.sendDefault({
@@ -67,7 +67,7 @@ const useShareKakao = () => {
         },
       ],
     });
-  }, [events, findLoadLink, teamsArr.length]);
+  }, [events, findLoadLink]);
 
   return { findLoadLink, onClickShare };
 };

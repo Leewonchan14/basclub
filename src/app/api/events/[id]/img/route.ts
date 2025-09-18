@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { EventsService } from "@/feature/events/events.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 import { createCanvas, registerFont } from "canvas";
