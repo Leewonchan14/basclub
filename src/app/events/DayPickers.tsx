@@ -60,6 +60,8 @@ const DayPickers: React.FC<DayPickersProps> = ({}) => {
           mode="single"
           showOutsideDays
           locale={ko}
+          startMonth={new Date(2024, 0)}
+          endMonth={new Date(new Date().getFullYear() + 2, 11)}
           month={selectedDate.toDate()}
           selected={selectedDate.toDate()}
           onSelect={(date) => {
