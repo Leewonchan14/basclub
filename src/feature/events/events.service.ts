@@ -40,7 +40,11 @@ export class EventsService implements IService<Events> {
   }
 
   async findLasted(take: number) {
-    return this.eventsRepository.find({ take, order: { date: "DESC" } });
+    return this.eventsRepository.find({
+      take,
+      order: { date: "DESC" },
+      withDeleted: true,
+    });
   }
 
   async findRecentByNow() {
