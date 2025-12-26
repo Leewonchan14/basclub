@@ -23,7 +23,7 @@ export const eventsQueryApi = {
     queryOptions({
       queryKey: ["events", "last"],
       queryFn: () => eventsApi.get("last").json<PlainEvents[]>(),
-      staleTime: 1000 * 60 * 30,
+      staleTime: 0, // 항상 최신 데이터 fetch
     }),
   findRecentByNow: () =>
     queryOptions({

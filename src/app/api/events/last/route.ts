@@ -2,6 +2,9 @@ import { EventsService } from "@/feature/events/events.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 import { NextResponse } from "next/server";
 
+// Next.js 캐싱 비활성화 - 항상 최신 데이터 반환
+export const dynamic = "force-dynamic";
+
 export const GET = async () => {
   try {
     const eventService = getService(EventsService);
