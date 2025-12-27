@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo } from "react";
 declare const Kakao: any;
 
 const useShareKakao = () => {
-  const { events, teamsArr } = useFetchSelectedEvents();
+  const { events } = useFetchSelectedEvents();
 
   const findLoadLink = useMemo(() => {
     if (!events) return "";

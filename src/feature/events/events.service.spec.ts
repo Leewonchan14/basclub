@@ -1,12 +1,24 @@
 import { describe, expect, test, vi, beforeEach } from "vitest";
 import { day_js } from "@/share/lib/dayjs";
 
+interface MockEvent {
+  date: ReturnType<typeof day_js>;
+  address?: string;
+}
+
+interface FindOptions {
+  order?: {
+    date?: "ASC" | "DESC";
+  };
+  take?: number;
+}
+
 // 날짜 정렬 로직 테스트 (Mock 기반)
 describe("EventsService - Date Sorting Logic Test", () => {
   // Mock repository
-  const mockEvents: any[] = [];
+  const mockEvents: MockEvent[] = [];
   const mockRepository = {
-    find: vi.fn(async (options: any) => {
+    find: vi.fn(async (options: FindOptions) => {
       let result = [...mockEvents];
 
       // order 적용
