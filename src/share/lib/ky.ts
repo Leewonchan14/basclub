@@ -39,3 +39,8 @@ export const usersApi = api.extend({
 export const scoresApi = api.extend({
   prefixUrl: "/api/score",
 });
+
+// 키워드 관련 API 클라이언트
+export const keywordsApi = api.extend({
+  prefixUrl: "/api/keywords",
+});

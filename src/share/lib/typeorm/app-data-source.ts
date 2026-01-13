@@ -1,8 +1,9 @@
 import { Events } from "@/entity/event.entity";
+import { Keyword } from "@/entity/keyword.entity";
 import { Member } from "@/entity/member.entity";
+import { Score } from "@/entity/score.entity";
 import { Team } from "@/entity/team.entity";
 import { DataSource } from "typeorm";
-import { Score } from "./../../../entity/score.entity";
 
 const originDataSource = new DataSource({
   type: "postgres",
@@ -11,7 +12,7 @@ const originDataSource = new DataSource({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
-  entities: [Member, Team, Events, Score],
+  entities: [Member, Team, Events, Score, Keyword],
   synchronize: false,
   logging: ["error"],
   migrations: [],

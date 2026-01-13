@@ -10,9 +10,10 @@ import { useDeleteTeam } from "@/feature/team/hooks/useDeleteTeam";
 import { useHandleHasPaidTeam } from "@/feature/team/hooks/useHandleHasPaidTeam";
 import { ToggleSwitch, Tooltip } from "flowbite-react";
 import _ from "lodash";
-import React from "react";
+import React, { useState } from "react";
 import { FaRegCircleCheck } from "react-icons/fa6";
-import { MdDelete, MdWarningAmber } from "react-icons/md";
+import { MdDelete, MdWarningAmber, MdKeyboardArrowDown } from "react-icons/md";
+import { KeywordAccordion } from "./keyword/KeywordAccordion";
 
 // 참가 인원들
 export const DisplayParticipants = () => {
@@ -125,51 +126,69 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
   const { own, isAdmin } = useFetchOwn();
   const { handleTogglePaidTeam, isMutating } = useHandleHasPaidTeam(team.id);
   const { isMutating: isDeleting, handleDeleteTeam } = useDeleteTeam(team.id);
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+
   return (
-    <div className="flex h-full w-full items-center gap-2">
-      <div
-        key={team.id}
-        className={`relative flex w-full items-center justify-between rounded-lg border-2 border-gray-200 bg-gray-50 p-4 shadow-lg ${team.member.id === own?.id && "!border-orange-500"}`}
-      >
-        <MemberProfile member={team.member} />
-        <div className="flex h-full flex-col items-center justify-center">
-          {/* <Checkbox className="h-5 w-5" color="green" /> */}
-          <div className="flex h-full flex-col-reverse items-center justify-center">
-            {isAdmin && (
-              <Tooltip
-                content="참가비 확인 여부"
-                placement="top"
-                className="text-nowrap"
-              >
-                <div
-                  onClick={handleTogglePaidTeam}
-                  className="flex h-full flex-col items-center justify-between"
+    <div className="flex h-full w-full flex-col items-center gap-2">
+      <div className="flex h-full w-full items-center gap-2">
+        <div
+          key={team.id}
+          onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+          className={`relative flex w-full cursor-pointer items-center justify-between rounded-lg border-2 border-gray-200 bg-gray-50 p-4 shadow-lg transition-all hover:bg-gray-100 ${team.member.id === own?.id && "!border-orange-500"} ${isAccordionOpen ? "border-orange-300" : ""}`}
+        >
+          <div className="flex items-center gap-2">
+            <MemberProfile member={team.member} />
+            <MdKeyboardArrowDown
+              className={`text-gray-600 transition-transform ${isAccordionOpen ? "rotate-180" : ""}`}
+            />
+          </div>
+          <div className="flex h-full flex-col items-center justify-center">
+            {/* <Checkbox className="h-5 w-5" color="green" /> */}
+            <div className="flex h-full flex-col-reverse items-center justify-center">
+              {isAdmin && (
+                <Tooltip
+                  content="참가비 확인 여부"
+                  placement="top"
+                  className="text-nowrap"
                 >
-                  <ToggleSwitch
-                    checked={team.isPaid}
-                    onChange={() => {}}
-                    disabled={isMutating}
-                  />
-                  <span className="w-full cursor-pointer text-center text-sm text-gray-500">
-                    참가비
-                  </span>
-                </div>
-              </Tooltip>
-            )}
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleTogglePaidTeam();
+                    }}
+                    className="flex h-full flex-col items-center justify-between"
+                  >
+                    <ToggleSwitch
+                      checked={team.isPaid}
+                      onChange={() => {}}
+                      disabled={isMutating}
+                    />
+                    <span className="w-full cursor-pointer text-center text-sm text-gray-500">
+                      참가비
+                    </span>
+                  </div>
+                </Tooltip>
+              )}
+            </div>
           </div>
         </div>
+        {isAdmin && (
+          <Tooltip theme={{ target: "h-full" }} content="팀 삭제">
+            <button
+              disabled={isDeleting}
+              onClick={handleDeleteTeam}
+              className="flex h-full items-center rounded-md bg-red-600 px-1 disabled:opacity-30"
+            >
+              <MdDelete className="text-lg text-white" />
+            </button>
+          </Tooltip>
+        )}
       </div>
-      {isAdmin && (
-        <Tooltip theme={{ target: "h-full" }} content="팀 삭제">
-          <button
-            disabled={isDeleting}
-            onClick={handleDeleteTeam}
-            className="flex h-full items-center rounded-md bg-red-600 px-1 disabled:opacity-30"
-          >
-            <MdDelete className="text-lg text-white" />
-          </button>
-        </Tooltip>
-      )}
+      <KeywordAccordion
+        targetMemberId={team.member.id}
+        isOpen={isAccordionOpen}
+        onToggle={() => setIsAccordionOpen(false)}
+      />
     </div>
   );
 };
