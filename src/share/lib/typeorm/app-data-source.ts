@@ -1,5 +1,6 @@
 import { Events } from "@/entity/event.entity";
 import { Keyword } from "@/entity/keyword.entity";
+import { KeywordVote } from "@/entity/keyword-vote.entity";
 import { Member } from "@/entity/member.entity";
 import { Score } from "@/entity/score.entity";
 import { Team } from "@/entity/team.entity";
@@ -12,22 +13,19 @@ const originDataSource = new DataSource({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
-  entities: [Member, Team, Events, Score, Keyword],
-  synchronize: false,
+  entities: [Member, Team, Events, Score, Keyword, KeywordVote],
+  synchronize: true,
   logging: ["error"],
   migrations: [],
   ssl: { rejectUnauthorized: false },
   subscribers: [],
-  // 연결 풀 설정 추가
   extra: {
-    max: 1, // 서버리스는 단일 연결이 효율적
-    min: 0, // 최소 연결 불필요
-    acquireTimeoutMillis: 5000, // 빠른 타임아웃
-    idleTimeoutMillis: 10000, // 짧은 유휴시간
-    createTimeoutMillis: 5000, // 빠른 생성 타임아웃
-    createRetryIntervalMillis: 100, // 빠른 재시도
-
-    // 서버리스 DB 전용 설정
+    max: 1,
+    min: 0,
+    acquireTimeoutMillis: 5000,
+    idleTimeoutMillis: 10000,
+    createTimeoutMillis: 5000,
+    createRetryIntervalMillis: 100,
     connectionTimeoutMillis: 5000,
     statement_timeout: 10000,
     query_timeout: 10000,
@@ -36,19 +34,30 @@ const originDataSource = new DataSource({
 
 export class AppDataSource {
   private static instance: DataSource | null = null;
+  private static initializationPromise: Promise<DataSource> | null = null;
+
   public static async getInstance() {
-    if (!AppDataSource.instance || !AppDataSource.instance.isInitialized) {
-      try {
-        await originDataSource.initialize();
-      } catch (error) {
-        //초기화 실패시 다시 시도 종료
-        console.error("AppDataSource.getInstance() error: ", error);
-        throw error;
-      }
-      AppDataSource.instance = originDataSource;
+    if (AppDataSource.instance && AppDataSource.instance.isInitialized) {
+      return AppDataSource.instance;
     }
 
-    return AppDataSource.instance;
+    if (!AppDataSource.initializationPromise) {
+      AppDataSource.initializationPromise = (async () => {
+        try {
+          if (!originDataSource.isInitialized) {
+            await originDataSource.initialize();
+          }
+          AppDataSource.instance = originDataSource;
+          return originDataSource;
+        } catch (error) {
+          console.error("AppDataSource.getInstance() error: ", error);
+          AppDataSource.initializationPromise = null;
+          throw error;
+        }
+      })();
+    }
+
+    return AppDataSource.initializationPromise;
   }
 }
 
