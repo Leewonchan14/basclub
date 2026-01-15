@@ -1,0 +1,16 @@
+
+> basclub@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.18
+  - Local:        http://localhost:3000
+  - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 1415ms
+ ✓ Compiled /src/middleware in 100ms (162 modules)
+ ○ Compiling /events ...
+ ✓ Compiled /events in 2.7s (3353 modules)
+ GET /events?selectedDate=2025-09-20 200 in 3489ms
+ ✓ Compiled in 917ms (1555 modules)
+[?25h

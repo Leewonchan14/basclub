@@ -7,6 +7,9 @@ export const GET = async (request: NextRequest) => {
   try {
     const searchParams = request.nextUrl.searchParams;
     const targetMemberId = searchParams.get("targetMemberId");
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "5", 10);
+    const sortBy = searchParams.get("sortBy") || "popularity";
 
     if (!targetMemberId) {
       return NextResponse.json(
@@ -16,9 +19,21 @@ export const GET = async (request: NextRequest) => {
     }
 
     const keywordService = getService(KeywordService);
-    const keywords = await keywordService.findByTargetMemberId(targetMemberId);
+    const result = await keywordService.findByTargetMemberId(
+      targetMemberId,
+      page,
+      limit,
+      sortBy as "popularity" | "newest",
+    );
 
-    return NextResponse.json(keywords.map((k) => k.toPlain()));
+    return NextResponse.json({
+      items: result.items,
+      meta: {
+        total: result.total,
+        page: result.page,
+        totalPages: result.totalPages,
+      },
+    });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch keywords: " + error },

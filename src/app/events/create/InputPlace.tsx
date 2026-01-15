@@ -4,7 +4,7 @@ import DaumPost from "@/app/events/create/DaumPost";
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
 import DisplayMap from "@/app/events/create/DisplayMap";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
-import { Button } from "flowbite-react";
+import { Button } from "@/app/share/ui/button";
 import { NextPage } from "next";
 import { IoNavigateCircleSharp } from "react-icons/io5";
 

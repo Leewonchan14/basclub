@@ -4,25 +4,21 @@ import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
 import { DeleteButton } from "@/app/ui/share/DeleteButton";
 import { useConfirm } from "@/app/ui/share/ConfirmModal";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { Spinner } from "@/app/share/ui/spinner";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { eventsMutateOption } from "@/feature/events/event-mutate";
 import { useMutation } from "@tanstack/react-query";
-import { Spinner } from "flowbite-react";
-import { NextPage } from "next";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SELECTED_DATE_KEY } from "@/share/lib/dayjs";
+import { useState } from "react";
 
 interface Props {}
 
-export const EventMutateButton: NextPage<Props> = ({}) => {
+export const EventCreateButton: React.FC<Props> = () => {
   const { selectedDate, goToDay } = useSelectedDate();
   const router = useRouter();
   const [message, setMessage] = useState("");
   const { inputEvent } = useEventCreateContext();
-  const { address } = inputEvent;
   const { showConfirm, ConfirmComponent } = useConfirm();
-
   const { mutateAsync: create, isPending: isPendingCreate } = useMutation(
     eventsMutateOption.upsert,
   );
@@ -32,7 +28,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
 
   const handleClick = async () => {
     setMessage("");
-    if (!address) {
+    if (!inputEvent?.address) {
       setMessage("주소를 입력해주세요");
       return;
     }
@@ -43,9 +39,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
         end: inputEvent.timeSlot.end.toString(),
       },
     });
-    router.push(
-      `/events?${SELECTED_DATE_KEY}=${selectedDate.format("YYYY-MM-DD")}`,
-    );
+    goToDay(selectedDate);
   };
 
   return (
@@ -57,9 +51,9 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
           className="inline-flex w-full justify-center gap-2 rounded-lg p-2 font-bold text-white disabled:opacity-80"
         >
           저장하기
-          {isPendingCreate && <Spinner color="warning" />}
+          {isPendingCreate && <Spinner />}
         </PrimaryButton>
-        {inputEvent.id && (
+        {inputEvent?.id && (
           <DeleteButton
             disabled={isPendingDelete}
             onClick={async () => {
@@ -72,7 +66,7 @@ export const EventMutateButton: NextPage<Props> = ({}) => {
             className="w-full justify-center"
           >
             일정 삭제
-            {isPendingDelete && <Spinner color="warning" />}
+            {isPendingDelete && <Spinner />}
           </DeleteButton>
         )}
       </div>

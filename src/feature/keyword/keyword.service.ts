@@ -1,4 +1,6 @@
 import { Keyword } from "@/entity/keyword.entity";
+import { KeywordVote } from "@/entity/keyword-vote.entity";
+import { EVoteType } from "@/entity/enum/vote-type";
 import {
   InjectRepository,
   IService,
@@ -11,18 +13,60 @@ export class KeywordService implements IService<Keyword> {
   @InjectRepository(Keyword)
   private keywordRepository: Repository<Keyword>;
 
-  async findByTargetMemberId(targetMemberId: string) {
-    return this.keywordRepository.find({
+  @InjectRepository(KeywordVote)
+  private voteRepository: Repository<KeywordVote>;
+
+  async findByTargetMemberId(
+    targetMemberId: string,
+    page: number = 1,
+    limit: number = 5,
+    sortBy: "popularity" | "newest" = "popularity",
+  ) {
+    const allKeywords = await this.keywordRepository.find({
       where: { targetMemberId },
-      relations: ["author", "targetMember"],
+      relations: ["author", "targetMember", "votes", "votes.voter"],
       order: { createdAt: "ASC" },
     });
+
+    const keywordsWithScores = allKeywords.map((k) => {
+      const plain = k.toPlain();
+      const likeCount = plain.votes.filter(
+        (v) => v.type === EVoteType.LIKE,
+      ).length;
+      const dislikeCount = plain.votes.filter(
+        (v) => v.type === EVoteType.DISLIKE,
+      ).length;
+      const netScore = likeCount - dislikeCount;
+      return { ...plain, netScore, likeCount, dislikeCount };
+    });
+
+    const sortedKeywords = keywordsWithScores.sort((a, b) => {
+      if (sortBy === "newest") {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      } else {
+        return b.netScore - a.netScore;
+      }
+    });
+
+    const total = sortedKeywords.length;
+    const totalPages = Math.ceil(total / limit);
+    const offset = (page - 1) * limit;
+    const items = sortedKeywords.slice(offset, offset + limit);
+
+    return {
+      items,
+      total,
+      page,
+      totalPages,
+    };
   }
 
   async findByTeamId(teamId: string) {
     return this.keywordRepository.find({
       where: { teamId },
-      relations: ["author", "targetMember"],
+      relations: ["author", "targetMember", "votes", "votes.voter"],
       order: { createdAt: "ASC" },
     });
   }
@@ -30,7 +74,7 @@ export class KeywordService implements IService<Keyword> {
   async findByAuthorId(authorId: string) {
     return this.keywordRepository.find({
       where: { authorId },
-      relations: ["author", "targetMember"],
+      relations: ["author", "targetMember", "votes", "votes.voter"],
       order: { createdAt: "ASC" },
     });
   }
@@ -49,7 +93,7 @@ export class KeywordService implements IService<Keyword> {
   async findById(id: string) {
     return this.keywordRepository.findOne({
       where: { id },
-      relations: ["author", "targetMember"],
+      relations: ["author", "targetMember", "votes", "votes.voter"],
     });
   }
 
@@ -67,6 +111,33 @@ export class KeywordService implements IService<Keyword> {
       where: { keyword: trimmedKeyword, targetMemberId },
     });
     return count > 0;
+  }
+
+  async toggleVote(keywordId: string, voterId: string, type: EVoteType) {
+    const keyword = await this.findById(keywordId);
+    if (!keyword) throw new Error("Keyword not found");
+
+    const existingVote = await this.voteRepository.findOne({
+      where: { keywordId, voterId },
+    });
+
+    if (existingVote) {
+      if (existingVote.type === type) {
+        await this.voteRepository.remove(existingVote);
+      } else {
+        existingVote.type = type;
+        await this.voteRepository.save(existingVote);
+      }
+    } else {
+      const newVote = this.voteRepository.create({
+        keywordId,
+        voterId,
+        type,
+      });
+      await this.voteRepository.save(newVote);
+    }
+
+    return this.findById(keywordId);
   }
 
   async getRepository() {

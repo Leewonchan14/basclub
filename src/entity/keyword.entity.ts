@@ -7,8 +7,10 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import type { KeywordVote } from "./keyword-vote.entity";
 
 @Entity({ name: "keyword" })
 export class Keyword extends TimeStampEntity {
@@ -57,6 +59,11 @@ export class Keyword extends TimeStampEntity {
   @Column({ type: "uuid", nullable: true, name: "teamId" })
   teamId?: string;
 
+  @OneToMany("KeywordVote", (vote: KeywordVote) => vote.keyword, {
+    cascade: true,
+  })
+  votes: KeywordVote[];
+
   toPlain() {
     return {
       id: this.id,
@@ -66,6 +73,12 @@ export class Keyword extends TimeStampEntity {
       teamId: this.teamId,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      votes:
+        this.votes?.map((v) => ({
+          id: v.id,
+          type: v.type,
+          voter: v.voter.toPlain(),
+        })) || [],
     };
   }
 }

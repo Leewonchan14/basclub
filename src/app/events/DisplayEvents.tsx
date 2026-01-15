@@ -10,7 +10,7 @@ import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist"
 import { useFetchRecentEventByNow } from "@/feature/events/hooks/useFetchRecentEventByNow";
 import useShareKakao from "@/feature/events/hooks/useShareKakao";
 import { day_js } from "@/share/lib/dayjs";
-import { Button, Card } from "flowbite-react";
+import { Button } from "@/app/share/ui/button";
 import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -69,7 +69,7 @@ const DisplayEvents: NextPage<Props> = ({}) => {
 
   return (
     <>
-      <Card theme={{ root: { children: "p-4" } }} className="event-info">
+      <div className="event-info rounded-lg bg-white p-4 shadow-md">
         <div className="flex w-full flex-col items-center">
           <div className="flex w-full items-center justify-between font-bold text-orange-500">
             <div>{startTimeStr}</div>
@@ -171,23 +171,23 @@ const DisplayEvents: NextPage<Props> = ({}) => {
           </div>
         </div>
 
-        <div className="flex h-12 w-full items-center gap-1">
+        <div className="mt-4 flex h-12 w-full items-center gap-1">
           <KakaoShareButton />
 
           <Button
+            variant="outline"
             onClick={() => window.open(findLoadLink, "_blank")}
             className="flex h-full w-full items-center gap-1 !p-0"
-            color="alternative"
           >
             <IoNavigateCircleSharp className="inline text-center text-3xl text-yellow-300" />
             <span className="text-sm font-bold">길찾기</span>
           </Button>
         </div>
-      </Card>
-      <Card theme={{ root: { children: "p-4" } }}>
+      </div>
+      <div className="flex flex-col gap-6 rounded-lg bg-white p-4 shadow-md">
         <DisplayParticipants />
         <JoinEventsButton />
-      </Card>
+      </div>
 
       <AlertComponent />
     </>
@@ -198,12 +198,12 @@ export default DisplayEvents;
 
 const EventSkeleton: React.FC = () => {
   return (
-    <Card theme={{ root: { children: "p-4" } }}>
+    <div className="rounded-lg bg-white p-4 shadow-md">
       <div className="w-full">
         <div className="mb-4 h-12 w-full animate-pulse rounded-lg bg-gray-200" />
         <div className="h-52 w-full animate-pulse rounded-lg bg-gray-200" />
       </div>
-    </Card>
+    </div>
   );
 };
 
@@ -214,7 +214,7 @@ const NotExistEvents: React.FC = () => {
 
   return (
     <>
-      <Card theme={{ root: { children: "p-4" } }}>
+      <div className="rounded-lg bg-white p-4 shadow-md">
         <div className="flex w-full flex-col items-center justify-center gap-4 text-gray-500">
           <div>관련 일정이 없습니다.</div>
           <div
@@ -231,7 +231,7 @@ const NotExistEvents: React.FC = () => {
             가장 빠른 일정 보러가기! <FaExternalLinkAlt />
           </div>
         </div>
-      </Card>
+      </div>
       <AlertComponent />
     </>
   );
@@ -243,9 +243,9 @@ export const KakaoShareButton: React.FC<KakaoShareButtonProps> = () => {
   const { onClickShare } = useShareKakao();
   return (
     <Button
+      variant="outline"
       onClick={onClickShare}
       className="flex h-full w-full items-center gap-2 !p-0"
-      color="alternative"
     >
       <div className="relative flex h-8 w-8 cursor-pointer flex-col overflow-clip rounded-xl">
         <Image

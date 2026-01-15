@@ -1,6 +1,6 @@
 "use client";
 
-import { EventMutateButton } from "@/app/events/create/EventCreateButton";
+import { EventCreateButton } from "@/app/events/create/EventCreateButton";
 import { EventCreateProvider } from "@/app/events/create/EventCreateContext";
 import { InputPlace } from "@/app/events/create/InputPlace";
 import { InputTime } from "@/app/events/create/InputTime";
@@ -27,7 +27,7 @@ const Page: NextPage<Props> = () => {
           <InputPlace />
           <InputTime readonly={false} />
           <InputLimitTeamCnt />
-          <EventMutateButton />
+          <EventCreateButton />
         </EventCreateProvider>
       </div>
     </ProtectByAdmin>
