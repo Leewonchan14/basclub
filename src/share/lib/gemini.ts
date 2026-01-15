@@ -1,27 +1,32 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { HumanMessage } from "@langchain/core/messages";
+import { Service } from "@/share/lib/typeorm/DIContainer";
 
 /**
- * Gemini AI 서비스 (LangChain 미사용 버전)
+ * Gemini AI 서비스 (LangChain 버전)
  * API 키만 설정하면 즉시 사용 가능
  *
  * 사용법:
  * 1. .env.local에 GEMINI_API_KEY 설정
  * 2. import { GeminiService } from '@/share/lib/gemini';
- * 3. GeminiService.generateBasketballRoast(nickname, position, height, style);
+ * 3. await GeminiService.getInstance().generateBasketballRoast(nickname, position, height, style);
  */
 
+@Service
 export class GeminiService {
   private static instance: GeminiService;
-  private genAI: GoogleGenerativeAI | null = null;
-  private model: any = null;
+  private model: ChatGoogleGenerativeAI | null = null;
 
-  private constructor() {
+  constructor() {
     // API 키가 있을 때만 모델 초기화
     const apiKey = process.env.GEMINI_API_KEY;
     if (apiKey) {
-      this.genAI = new GoogleGenerativeAI(apiKey);
-      this.model = this.genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-      console.log("✅ Gemini API가 초기화되었습니다.");
+      this.model = new ChatGoogleGenerativeAI({
+        apiKey: apiKey,
+        model: "gemini-1.5-flash",
+        temperature: 0.7,
+      });
+      console.log("✅ Gemini API (LangChain)가 초기화되었습니다.");
     } else {
       console.warn(
         "⚠️ GEMINI_API_KEY가 설정되지 않았습니다. Mock 모드로 동작합니다.",
@@ -68,9 +73,13 @@ export class GeminiService {
         style,
       );
 
-      const result = await this.model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
+      const messages = [new HumanMessage(prompt)];
+      const result = await this.model!.invoke(messages);
+      const text =
+        typeof result.content === "string"
+          ? result.content
+          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            result.content.map((c) => (c as any).text || "").join("");
 
       return text.trim();
     } catch (error) {
@@ -100,9 +109,13 @@ export class GeminiService {
         style,
       );
 
-      const result = await this.model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
+      const messages = [new HumanMessage(prompt)];
+      const result = await this.model.invoke(messages);
+      const text =
+        typeof result.content === "string"
+          ? result.content
+          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            result.content.map((c) => (c as any).text || "").join("");
 
       return text.trim();
     } catch (error) {
@@ -121,7 +134,7 @@ export class GeminiService {
     style?: string,
   ): string {
     return `
-당신은 농구 전문가이자 유머 조롱大师입니다. 
+당신은 농구 전문가이자 유머 조롱 master입니다. 
 농구 선수들의 실력, 포지션, 플레이 스타일을 재미있게 조롱하는 농담을 만들어야 합니다.
 
 규칙:
@@ -181,14 +194,14 @@ export class GeminiService {
     style?: string,
   ): string {
     const roasts = [
-      `${nickname}? 그 이름一听就知道 못하겠는데... 드리블은 어때요? 🏀`,
+      `${nickname}? 그 이름을一听就知道 못하겠는데... 드리블은 어때요? 🏀`,
       `${nickname}님, ${position || "코트"}에서 뭐하는지 알아요? 그저 서 있는 거요!`,
       `키가 ${height || "알 수 없"}cm라고? 그래도 리바운드 하나는 제대로 못 해요!`,
       `${style || "농구"}스타일이라니... 그게 웃긴다고요, ${nickname}! 🏀`,
       `${nickname}의 슈팅은 항상 "벗어났습니다!" 외쳐야 해서 성嗓이 났어요!`,
       `가드(${position?.includes("가드") ? "O" : "X"}), 포워드(${position?.includes("포워드") ? "O" : "X"}), 센터(${position?.includes("센터") ? "O" : "X"})... 어디에도 안 어울리는 ${nickname}!`,
       `${nickname}의 바스켓볼 스킬은... 솔직히 말하면, 그것보다 ${nickname}이(가) 하는 다른 일이 더 재밌어요! 🏀`,
-      ` "${nickname}"라는 이름이 과대평가된 것 같아요. 실제 실력은 ${style || "평범"} 수준이고요!`,
+      `"${nickname}"라는 이름이 과대평가된 것 같아요. 실제 실력은 ${style || "평범"} 수준이고요!`,
     ];
 
     return roasts[Math.floor(Math.random() * roasts.length)];
@@ -217,16 +230,12 @@ ${nickname}은(는) 농구 코트에서 자신만의 플레이 스타일로 팬�
 }
 
 /**
- * 간편하게 사용할 수 있는 인스턴스 함수
- */
-export const geminiService = GeminiService.getInstance();
-
-/**
  * 사용 예시:
  *
- * import { geminiService } from '@/share/lib/gemini';
+ * import { GeminiService } from '@/share/lib/gemini';
  *
- * const roast = await geminiService.generateBasketballRoast(
+ * const service = GeminiService.getInstance();
+ * const roast = await service.generateBasketballRoast(
  *   '농구왕',
  *   '가드',
  *   '180',
@@ -234,5 +243,5 @@ export const geminiService = GeminiService.getInstance();
  * );
  *
  * console.log(roast);
- * // 출력: "농구왕? 그 이름一听就知道 못하겠는데... 드리블은 어때요? 🏀"
+ * // 출력: "농구왕? 그 이름을一听就知道 못하겠는데... 드리블은 어때요? 🏀"
  */
