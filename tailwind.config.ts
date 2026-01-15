@@ -1,4 +1,3 @@
-import flowbiteReact from "flowbite-react/plugin/tailwindcss";
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
@@ -7,7 +6,6 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    ".flowbite-react/class-list.json",
   ],
   darkMode: ["class", "class"],
   theme: {
@@ -69,6 +67,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [flowbiteReact, animate],
+  plugins: [animate],
 };
 export default config;
