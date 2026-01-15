@@ -58,27 +58,22 @@ export const MemberProfile: React.FC<{
             onClick={() => shareProfile(id)}
             disabled={isShared}
             className={cn(
-              "flex items-center gap-2 rounded-md bg-blue-500 px-3 py-2 text-white hover:bg-blue-600 transition-colors",
-              isShared ? "opacity-50 cursor-not-allowed" : ""
+              "flex items-center gap-2 rounded-md bg-blue-500 px-3 py-2 text-white transition-colors hover:bg-blue-600",
+              isShared ? "cursor-not-allowed opacity-50" : "",
             )}
           >
             <MdShare className="text-sm" />
             <span>프로필 공유</span>
           </button>
-          
+
           <button
-            onClick={() => window.open('/api/kakao-share', '_blank')}
-            className="flex items-center gap-2 rounded-md bg-yellow-400 px-3 py-2 text-white hover:bg-yellow-500 transition-colors"
+            onClick={() => window.open("/api/kakao-share", "_blank")}
+            className="flex items-center gap-2 rounded-md bg-yellow-400 px-3 py-2 text-white transition-colors hover:bg-yellow-500"
           >
             <MdMessage className="text-sm" />
             <span>카톡 공유</span>
           </button>
         </div>
-      )}
-        >
-          <MdShare className="text-sm" />
-          <span>{isShared ? "공유됨" : "프로필 공유"}</span>
-        </button>
       )}
     </div>
   );
