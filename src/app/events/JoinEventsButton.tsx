@@ -12,9 +12,10 @@ import {
 } from "@/app/share/ui/select";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
-import { Alert, Badge } from "flowbite-react";
+import { Alert, AlertDescription } from "@/app/share/ui/alert";
+import { Badge } from "@/app/share/ui/badge";
 import { useCallback, useState } from "react";
-import { HiInformationCircle } from "react-icons/hi";
+import { MdInfo } from "react-icons/md";
 import _ from "lodash";
 
 export const JoinEventsButton = () => {
@@ -59,8 +60,9 @@ export const JoinEventsButton = () => {
 
   if (isEventEnd) {
     return (
-      <Alert color="failure" icon={HiInformationCircle}>
-        <span className="font-medium">참가 기한이 마감되었습니다.</span>
+      <Alert variant="destructive">
+        <MdInfo className="h-4 w-4" />
+        <AlertDescription>참가 기한이 마감되었습니다.</AlertDescription>
       </Alert>
     );
   }
@@ -84,8 +86,9 @@ export const JoinEventsButton = () => {
       </div>
 
       {error && (
-        <Alert color="failure" icon={HiInformationCircle}>
-          <span className="font-medium">{error}</span>
+        <Alert variant="destructive" className="mt-2">
+          <MdInfo className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
       <ConfirmComponent />
@@ -119,7 +122,10 @@ const InputGuest: React.FC<InputGuestProps> = ({
             <span className="absolute -mt-6 bg-white px-2 font-bold text-gray-400">
               GUEST
             </span>{" "}
-            <Badge color="indigo">{guestCnt}명</Badge> 과 함께
+            <Badge className="bg-indigo-500 text-white hover:bg-indigo-600">
+              {guestCnt}명
+            </Badge>{" "}
+            과 함께
           </span>
         </SelectValue>
       </SelectTrigger>
@@ -127,7 +133,9 @@ const InputGuest: React.FC<InputGuestProps> = ({
         {_.range(0, 10).map((v) => (
           <SelectItem key={v} value={v.toString()}>
             <span className="flex gap-1">
-              <Badge color="indigo">{v}명</Badge>
+              <Badge className="bg-indigo-500 text-white hover:bg-indigo-600">
+                {v}명
+              </Badge>
             </span>
           </SelectItem>
         ))}
