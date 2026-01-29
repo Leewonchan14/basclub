@@ -1,11 +1,14 @@
 "use client";
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
+import { PositionSelectModal } from "@/app/ui/member/PositionSelectModal";
+import { EPosition } from "@/entity/enum/position";
 import { PlainTeam } from "@/entity/team.entity";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import { useToggleDone } from "@/feature/events/hooks/useToggleDone";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
+import { useUpdatePositions } from "@/feature/member/hooks/useUpdatePositions";
 import { useDeleteTeam } from "@/feature/team/hooks/useDeleteTeam";
 import { useHandleHasPaidTeam } from "@/feature/team/hooks/useHandleHasPaidTeam";
 import { Switch } from "@/app/share/ui/switch";
@@ -110,14 +113,37 @@ interface IParticipantListItemProps {
 
 const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
   const { own, isAdmin } = useFetchOwn();
+  const { mutate: updatePositions, isPending: isUpdatingPositions } =
+    useUpdatePositions();
   const handleTogglePaidTeamHook = useHandleHasPaidTeam(team.id);
   const deleteTeamHook = useDeleteTeam(team.id);
   const { isMutating } = deleteTeamHook;
   const handleDeleteTeam = deleteTeamHook.handleDeleteTeam;
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [isPositionModalOpen, setIsPositionModalOpen] = useState(false);
 
   const handleToggleAccordion = () => {
     setIsAccordionOpen(!isAccordionOpen);
+  };
+
+  const canEditPositions = isAdmin || own?.id === team.member.id;
+
+  const handleOpenPositionModal = (e: React.MouseEvent) => {
+    if (canEditPositions) {
+      e.stopPropagation();
+      setIsPositionModalOpen(true);
+    }
+  };
+
+  const handleClosePositionModal = () => {
+    setIsPositionModalOpen(false);
+  };
+
+  const handleSavePositions = (positions: EPosition[]) => {
+    updatePositions({
+      memberId: team.member.id,
+      positions,
+    });
   };
 
   return (
@@ -125,10 +151,17 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
       <div className="flex gap-2">
         <div
           key={team.id}
-          onClick={handleToggleAccordion}
-          className="flex flex-1 cursor-pointer items-center justify-between rounded-lg border-2 border-gray-200 bg-white p-4 shadow-lg transition-all hover:bg-gray-100 active:bg-gray-50"
+          onClick={handleOpenPositionModal}
+          className={`relative flex flex-1 cursor-pointer items-center justify-between rounded-lg border-2 border-gray-200 bg-white p-4 shadow-lg transition-all hover:bg-gray-100 active:bg-gray-50 ${canEditPositions ? "" : "cursor-default"}`}
         >
-          <div className="flex flex-col gap-1">
+          {isUpdatingPositions && (
+            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/80 backdrop-blur-sm">
+              <span className="h-5 w-5 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+            </div>
+          )}
+          <div
+            className={`flex flex-col gap-1 ${isUpdatingPositions ? "opacity-50" : ""}`}
+          >
             <div className="flex items-center gap-2">
               <MemberProfile member={team.member} />
               {/* <MdKeyboardArrowDown
@@ -186,6 +219,13 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
         isOpen={isAccordionOpen}
         onToggle={handleToggleAccordion}
       /> */}
+      <PositionSelectModal
+        isOpen={isPositionModalOpen}
+        onClose={handleClosePositionModal}
+        onSave={handleSavePositions}
+        currentPositions={team.member.positions || []}
+        isLoading={isUpdatingPositions}
+      />
     </div>
   );
 };
