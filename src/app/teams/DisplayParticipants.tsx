@@ -131,11 +131,11 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <MemberProfile member={team.member} />
-              <MdKeyboardArrowDown
+              {/* <MdKeyboardArrowDown
                 className={`text-gray-600 transition-transform ${isAccordionOpen ? "rotate-180" : ""}`}
-              />
+              /> */}
             </div>
-            <MemberTopKeywords memberId={team.member.id} />
+            {/* <MemberTopKeywords memberId={team.member.id} /> */}
           </div>
           <div className="flex items-center gap-2">
             {isAdmin && (
@@ -181,11 +181,11 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
           </TooltipProvider>
         )}
       </div>
-      <KeywordAccordion
+      {/* <KeywordAccordion
         targetMemberId={team.member.id}
         isOpen={isAccordionOpen}
         onToggle={handleToggleAccordion}
-      />
+      /> */}
     </div>
   );
 };

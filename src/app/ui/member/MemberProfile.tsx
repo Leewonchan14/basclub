@@ -52,7 +52,7 @@ export const MemberProfile: React.FC<{
           )}
         </div>
       </div>
-      {isOwn && (
+      {/* {isOwn && (
         <div className="mt-2 flex gap-2">
           <button
             onClick={() => shareProfile(id)}
@@ -74,7 +74,7 @@ export const MemberProfile: React.FC<{
             <span>카톡 공유</span>
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

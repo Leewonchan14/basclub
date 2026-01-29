@@ -6,8 +6,8 @@ import { FaGithub } from "react-icons/fa";
 const Footer = () => {
   return (
     <footer className="flex flex-col border-t border-gray-200 bg-gray-50 py-4">
-      <div className="w-full max-w-content-width">
-        <div className="flex w-full flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center sm:gap-6">
+      <div className="mx-auto w-full max-w-content-width">
+        <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row sm:items-center sm:justify-center sm:gap-6">
           <div className="flex items-center gap-4">
             <img src="/basclub_logo.jpeg" alt="Logo" className="h-8 w-auto" />
             <span className="text-xs text-gray-500">

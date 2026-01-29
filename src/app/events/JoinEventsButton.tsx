@@ -60,8 +60,10 @@ export const JoinEventsButton = () => {
 
   if (isEventEnd) {
     return (
-      <Alert variant="destructive">
-        <MdInfo className="h-4 w-4" />
+      <Alert variant="destructive" className="flex items-center">
+        <div className="mr-4 h-4 w-4">
+          <MdInfo className="h-full w-full" />
+        </div>
         <AlertDescription>참가 기한이 마감되었습니다.</AlertDescription>
       </Alert>
     );
