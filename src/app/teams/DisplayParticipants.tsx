@@ -136,7 +136,7 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div data-member-id={team.member.id} className="flex w-full flex-col gap-2">
       {/* <KeywordAccordion
         targetMemberId={team.member.id}
         isOpen={isAccordionOpen}

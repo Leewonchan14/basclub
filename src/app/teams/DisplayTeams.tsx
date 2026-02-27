@@ -76,7 +76,7 @@ const TeamCard: React.FC<{ teams: PlainTeam[]; idx: number }> = ({
   const isOwnTeam = teams.some((t) => t.member.id === own?.id);
 
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div data-team-index={idx} className="flex w-full flex-col gap-2">
       <div className="flex w-full items-end gap-2">
         <div className="text-xl font-bold text-gray-800">{teamCharacter}팀</div>
         <div className="font-bold text-orange-500">{teamCnt}명</div>
