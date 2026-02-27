@@ -90,7 +90,7 @@ export const PositionSelectModal = ({
             >
               {POSITION_LABELS[position]}
               <div
-                className={`flex h-5 w-5 items-center justify-center rounded-sm border p-0.5 transition-all ${selectedPositions.includes(position) && POSITION_BADGE_COLORS[position]}`}
+                className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-sm border p-0.5 transition-all ${selectedPositions.includes(position) && POSITION_BADGE_COLORS[position]}`}
               >
                 {POSITION_BADGE[position]}
               </div>

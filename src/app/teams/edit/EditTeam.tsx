@@ -61,8 +61,6 @@ export const EditTeam: React.FC<{}> = () => {
         while (membersByPosition[key].length) {
           const team = membersByPosition[key][0];
 
-          console.log(team.member.nickname);
-
           const countGroup = newTeams
             // [pos count,mem count, group]
             .map((t, idx) => [
@@ -71,8 +69,6 @@ export const EditTeam: React.FC<{}> = () => {
               t.length,
               idx,
             ]);
-
-          console.log(countGroup);
 
           const group = _.sortBy(
             countGroup.slice(1),
@@ -88,8 +84,6 @@ export const EditTeam: React.FC<{}> = () => {
               teams.filter((t) => t.member.id !== team.member.id),
             ]),
           );
-
-          console.log(newTeams.map((t) => t.length));
         }
       });
 

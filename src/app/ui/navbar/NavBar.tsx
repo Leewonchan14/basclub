@@ -10,7 +10,7 @@ export const NavBar = async () => {
 
   return (
     <nav className="border-b border-gray-200 bg-white">
-      <div className="mx-auto flex w-full max-w-content-width items-center justify-between px-4 py-4">
+      <div className="mx-auto flex w-full max-w-content-width items-center justify-between px-4 py-2">
         <Link href="/events" className="relative flex items-center gap-2">
           <LogoIcon size={2} color="black" />
           <span className="whitespace-nowrap text-xl font-extrabold">
