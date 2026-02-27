@@ -51,9 +51,10 @@ export const getIsAdmin = async () => {
 };
 
 export const logout = async () => {
-  await cookies().set(JWTHandler.STORE_KEY, "", {
+  cookies().set(JWTHandler.STORE_KEY, "", {
     ...JWTHandler.COOKIE_OPTION,
     expires: new Date(0),
+    maxAge: 0,
   });
 
   return;

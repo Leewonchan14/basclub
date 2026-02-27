@@ -7,14 +7,11 @@ export const Spinner = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "h-8 w-8 animate-spin rounded-full border-4 border-solid border-gray-300 border-t-transparent",
-      className,
-    )}
+    className={cn("flex h-8 w-8 items-center justify-center", className)}
     {...props}
   >
     <svg
-      className="h-5 w-5 animate-spin text-gray-600"
+      className="h-6 w-6 animate-spin text-primary-500"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
@@ -30,9 +27,10 @@ export const Spinner = React.forwardRef<
       <path
         className="opacity-75"
         fill="none"
-        d="M4 12a8 8 0 0 0 0 0 0 0"
+        d="M4 12a8 8 0 0 0 16 0a8 8 0 0 0-16 0"
         stroke="currentColor"
         strokeWidth="4"
+        strokeLinecap="round"
       />
     </svg>
   </div>

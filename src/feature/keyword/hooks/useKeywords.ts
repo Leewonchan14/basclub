@@ -141,6 +141,7 @@ export const useKeywords = (targetMemberId: string, currentUserId?: string) => {
                     profileUrl: "",
                     role: ERole.MEMBER,
                     guestById: undefined,
+                    positions: [],
                   },
                 });
                 if (type === EVoteType.LIKE) {

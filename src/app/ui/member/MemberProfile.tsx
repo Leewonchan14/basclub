@@ -1,19 +1,27 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/share/ui/avatar";
+import { Badge } from "@/app/share/ui/badge";
+import { EPosition } from "@/entity/enum/position";
 import { ERole } from "@/entity/enum/role";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
-import { Avatar, AvatarImage, AvatarFallback } from "@/app/share/ui/avatar";
-import { Badge } from "@/app/share/ui/badge";
-import React, { useState } from "react";
-import { MdShare } from "react-icons/md";
 import { useShareProfile } from "@/feature/member/hooks/useShareProfile";
-import { cn } from "@/share/utils";
-import { MdMessage } from "react-icons/md";
+import React from "react";
+import { POSITION_BADGE, POSITION_BADGE_COLORS } from "./PositionSelectModal";
 
 export const MemberProfile: React.FC<{
-  member: { nickname: string; profileUrl: string; role: ERole; id: string };
+  member: {
+    nickname: string;
+    profileUrl: string;
+    role: ERole;
+    id: string;
+    positions?: EPosition[];
+  };
   className?: string;
-}> = ({ member: { nickname, profileUrl, role, id }, className = "" }) => {
+}> = ({
+  member: { nickname, profileUrl, role, id, positions = [] },
+  className = "",
+}) => {
   const { own } = useFetchOwn();
   const isGuest = role === ERole.GUEST;
   const isOwn = own?.id === id;
@@ -39,7 +47,16 @@ export const MemberProfile: React.FC<{
       </Avatar>
       <div className="flex flex-col gap-0.5">
         <span className="text-sm font-bold text-gray-800">{getNickname()}</span>
-        <div className="flex gap-1">
+        <div className="flex flex-wrap gap-1">
+          {positions.map((position) => (
+            <Badge
+              key={position}
+              variant="outline"
+              className={`px-1.5 py-0 text-[10px] ${POSITION_BADGE_COLORS[position]}`}
+            >
+              {POSITION_BADGE[position]}
+            </Badge>
+          ))}
           {isGuest && (
             <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
               GUEST

@@ -98,9 +98,10 @@ interface IParticipantListProps {
 }
 
 const ParticipantList: React.FC<IParticipantListProps> = ({ teams }) => {
+  const sortedTeams = _.sortBy(teams, (team) => team.createdAt);
   return (
     <div className="flex w-full flex-col gap-2">
-      {teams.map((team) => (
+      {sortedTeams.map((team) => (
         <ParticipantListItem key={team.id} team={team} />
       ))}
     </div>
@@ -120,24 +121,12 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
   const { isMutating } = deleteTeamHook;
   const handleDeleteTeam = deleteTeamHook.handleDeleteTeam;
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
-  const [isPositionModalOpen, setIsPositionModalOpen] = useState(false);
 
   const handleToggleAccordion = () => {
     setIsAccordionOpen(!isAccordionOpen);
   };
 
   const canEditPositions = isAdmin || own?.id === team.member.id;
-
-  const handleOpenPositionModal = (e: React.MouseEvent) => {
-    if (canEditPositions) {
-      e.stopPropagation();
-      setIsPositionModalOpen(true);
-    }
-  };
-
-  const handleClosePositionModal = () => {
-    setIsPositionModalOpen(false);
-  };
 
   const handleSavePositions = (positions: EPosition[]) => {
     updatePositions({
@@ -148,83 +137,82 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="flex gap-2">
-        <div
-          key={team.id}
-          onClick={handleOpenPositionModal}
-          className={`relative flex flex-1 cursor-pointer items-center justify-between rounded-lg border-2 border-gray-200 bg-white p-4 shadow-lg transition-all hover:bg-gray-100 active:bg-gray-50 ${canEditPositions ? "" : "cursor-default"}`}
-        >
-          {isUpdatingPositions && (
-            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/80 backdrop-blur-sm">
-              <span className="h-5 w-5 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
-            </div>
-          )}
-          <div
-            className={`flex flex-col gap-1 ${isUpdatingPositions ? "opacity-50" : ""}`}
-          >
-            <div className="flex items-center gap-2">
-              <MemberProfile member={team.member} />
-              {/* <MdKeyboardArrowDown
-                className={`text-gray-600 transition-transform ${isAccordionOpen ? "rotate-180" : ""}`}
-              /> */}
-            </div>
-            {/* <MemberTopKeywords memberId={team.member.id} /> */}
-          </div>
-          <div className="flex items-center gap-2">
-            {isAdmin && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleTogglePaidTeamHook.handleTogglePaidTeam();
-                      }}
-                      className="flex h-full cursor-pointer flex-col items-center justify-between"
-                    >
-                      <Switch
-                        checked={team.isPaid}
-                        onChange={() => {}}
-                        disabled={isMutating}
-                        className="data-[state=checked]:bg-blue-600"
-                      />
-                      <span className="text-xs text-gray-500">참가비</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>참가비 확인 여부</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-          </div>
-        </div>
-        {isAdmin && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  disabled={isMutating}
-                  onClick={handleDeleteTeam}
-                  className="flex h-auto min-h-[72px] items-center justify-center rounded-md bg-red-600 px-3 disabled:opacity-30"
-                >
-                  <MdDelete className="text-lg text-white" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>팀 삭제</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
-      </div>
       {/* <KeywordAccordion
         targetMemberId={team.member.id}
         isOpen={isAccordionOpen}
         onToggle={handleToggleAccordion}
       /> */}
       <PositionSelectModal
-        isOpen={isPositionModalOpen}
-        onClose={handleClosePositionModal}
         onSave={handleSavePositions}
         currentPositions={team.member.positions || []}
         isLoading={isUpdatingPositions}
+        trigger={
+          <div className="flex gap-2">
+            <div
+              key={team.id}
+              className={`relative flex flex-1 cursor-pointer items-center justify-between rounded-lg border-2 border-gray-200 bg-white p-4 shadow-lg transition-all hover:bg-gray-100 active:bg-gray-50 ${canEditPositions ? "" : "cursor-default"}`}
+            >
+              {isUpdatingPositions && (
+                <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/80 backdrop-blur-sm">
+                  <span className="h-5 w-5 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+                </div>
+              )}
+              <div
+                className={`flex flex-col gap-1 ${isUpdatingPositions ? "opacity-50" : ""}`}
+              >
+                <div className="flex items-center gap-2">
+                  <MemberProfile member={team.member} />
+                  {/* <MdKeyboardArrowDown
+                className={`text-gray-600 transition-transform ${isAccordionOpen ? "rotate-180" : ""}`}
+              /> */}
+                </div>
+                {/* <MemberTopKeywords memberId={team.member.id} /> */}
+              </div>
+              <div className="flex items-center gap-2">
+                {isAdmin && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleTogglePaidTeamHook.handleTogglePaidTeam();
+                          }}
+                          className="flex h-full cursor-pointer flex-col items-center justify-between"
+                        >
+                          <Switch
+                            checked={team.isPaid}
+                            onChange={() => {}}
+                            disabled={isMutating}
+                            className="data-[state=checked]:bg-blue-600"
+                          />
+                          <span className="text-xs text-gray-500">참가비</span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>참가비 확인 여부</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+            </div>
+            {isAdmin && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      disabled={isMutating}
+                      onClick={handleDeleteTeam}
+                      className="flex h-auto min-h-[72px] items-center justify-center rounded-md bg-red-600 px-3 disabled:opacity-30"
+                    >
+                      <MdDelete className="text-lg text-white" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>팀 삭제</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+        }
       />
     </div>
   );

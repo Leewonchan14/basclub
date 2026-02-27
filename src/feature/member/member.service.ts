@@ -1,4 +1,5 @@
 import { ERole } from "@/entity/enum/role";
+import { EPosition } from "@/entity/enum/position";
 import { Member } from "@/entity/member.entity";
 import {
   InjectRepository,
@@ -127,5 +128,18 @@ export class MemberService implements IService<Member> {
 
   async getRepository() {
     return this.memberRepository;
+  }
+
+  async updatePositions(memberId: string, positions: EPosition[]) {
+    const member = await this.memberRepository.findOne({
+      where: { id: memberId },
+    });
+
+    if (!member) {
+      throw new Error("Member not found");
+    }
+
+    member.positions = positions;
+    return this.memberRepository.save(member);
   }
 }

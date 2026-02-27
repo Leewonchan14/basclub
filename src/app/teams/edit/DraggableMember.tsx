@@ -1,73 +1,77 @@
 "use client";
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
-import { PositionSelectModal } from "@/app/ui/member/PositionSelectModal";
-import { EPosition } from "@/entity/enum/position";
 import { PlainMember } from "@/entity/member.entity";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
-import { useUpdatePositions } from "@/feature/member/hooks/useUpdatePositions";
+import { Pin } from "lucide-react";
+import { cn } from "@/share/utils";
 import { Draggable } from "@hello-pangea/dnd";
-import { useState } from "react";
+import { useEditTeamContext } from "./EditTeamContext";
+import _ from "lodash";
+import { produce } from "immer";
+import { useCallback } from "react";
+import { Button } from "@/app/share/ui/button";
 
 export const DraggableMember: React.FC<{
   member: PlainMember;
+  isPinned: boolean;
   index: number;
-}> = ({ member, index }) => {
+}> = ({ member, index, isPinned }) => {
   const { own, isAdmin } = useFetchOwn();
-  const { mutate: updatePositions, isPending: isUpdatingPositions } =
-    useUpdatePositions();
-  const [isPositionModalOpen, setIsPositionModalOpen] = useState(false);
+  const { setTeams } = useEditTeamContext();
+  const handlePin = useCallback((memberId: string) => {
+    setTeams(
+      produce((teamGroups) => {
+        teamGroups.forEach((teams) => {
+          const findTeam = teams.find((t) => t.member.id === memberId);
+          if (!findTeam) return;
+
+          findTeam.isPinned = !findTeam.isPinned;
+        });
+      }),
+    );
+  }, []);
 
   const canEditPositions = isAdmin || own?.id === member.id;
 
-  const handleClick = (e: React.MouseEvent) => {
-    if (canEditPositions && e.target === e.currentTarget) {
-      setIsPositionModalOpen(true);
-    }
-  };
-
-  const handleClosePositionModal = () => {
-    setIsPositionModalOpen(false);
-  };
-
-  const handleSavePositions = (positions: EPosition[]) => {
-    updatePositions({
-      memberId: member.id,
-      positions,
-    });
-  };
-
   return (
-    <>
-      <Draggable draggableId={member.id} index={index}>
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            className={`border-primary-100 relative flex rounded-lg border-2 bg-white p-4 shadow ${canEditPositions ? "cursor-pointer" : ""}`}
-            onClick={handleClick}
-          >
-            {isUpdatingPositions && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/80 backdrop-blur-sm">
-                <span className="h-5 w-5 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
-              </div>
+    <Draggable draggableId={member.id} index={index} isDragDisabled={isPinned}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          className={`border-primary-100 relative flex rounded-lg border-2 bg-white p-4 shadow ${canEditPositions ? "cursor-pointer" : ""}`}
+        >
+          <PinComp isPinned={isPinned} onClick={() => handlePin(member.id)} />
+          <MemberProfile
+            member={member}
+            className={cn(
+              "justify-start transition-transform",
+              snapshot.isDragging && "scale-105",
+              snapshot.isDropAnimating && "!scale-100",
             )}
-            <MemberProfile
-              member={member}
-              className={`justify-start transition-transform ${
-                snapshot.isDragging && "scale-105"
-              } ${snapshot.isDropAnimating && "!scale-100"} ${isUpdatingPositions ? "opacity-50" : ""}`}
-            />
-          </div>
-        )}
-      </Draggable>
-      <PositionSelectModal
-        isOpen={isPositionModalOpen}
-        onClose={handleClosePositionModal}
-        onSave={handleSavePositions}
-        currentPositions={member.positions || []}
-        isLoading={isUpdatingPositions}
-      />
-    </>
+          />
+        </div>
+      )}
+    </Draggable>
+  );
+};
+
+const PinComp = ({
+  isPinned,
+  onClick,
+}: {
+  isPinned: boolean;
+  onClick: () => void;
+}) => {
+  return (
+    <Button
+      className="absolute right-0 top-0"
+      variant="ghost"
+      size={"icon"}
+      onClick={onClick}
+    >
+      <Pin fill={isPinned ? "black" : "white"} />
+    </Button>
   );
 };

@@ -14,7 +14,7 @@ const originDataSource = new DataSource({
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
   entities: [Member, Team, Events, Score, Keyword, KeywordVote],
-  synchronize: true,
+  synchronize: false,
   logging: ["error"],
   migrations: [],
   ssl: { rejectUnauthorized: false },
