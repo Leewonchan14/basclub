@@ -101,7 +101,11 @@ const ShowTeams: React.FC<{}> = ({}) => {
   return (
     <div className="flex w-full flex-col gap-6">
       {groupedTeam.map((teams, idx) => (
-        <TeamCard key={idx} teams={teams} idx={idx} />
+        <TeamCard
+          key={idx}
+          teams={_.sortBy(teams, (t) => t.createdAt)}
+          idx={idx}
+        />
       ))}
     </div>
   );

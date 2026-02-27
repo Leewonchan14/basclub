@@ -10,7 +10,7 @@ export const DroppableTeam: React.FC<{ teams: PlainTeam[]; group: number }> = ({
   teams,
   group,
 }) => {
-  const { setTeams } = useEditTeamContext();
+  const { setTeams, teams: teamGroups } = useEditTeamContext();
   const teamCharacter = String.fromCharCode(64 + group);
 
   const removeTeam = (group: number) => {
@@ -44,6 +44,7 @@ export const DroppableTeam: React.FC<{ teams: PlainTeam[]; group: number }> = ({
             {teams.map((t, index) => (
               <DraggableMember
                 key={t.member.id}
+                isPinned={t.isPinned}
                 member={t.member}
                 index={index}
               />

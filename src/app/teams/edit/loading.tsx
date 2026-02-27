@@ -1,4 +1,4 @@
-import { Spinner } from "flowbite-react";
+import { Spinner } from "@/app/share/ui/spinner";
 import { NextPage } from "next";
 
 interface Props {}

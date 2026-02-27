@@ -1,20 +1,29 @@
 "use client";
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
+import { PositionSelectModal } from "@/app/ui/member/PositionSelectModal";
+import { EPosition } from "@/entity/enum/position";
 import { PlainTeam } from "@/entity/team.entity";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import { useToggleDone } from "@/feature/events/hooks/useToggleDone";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
+import { useUpdatePositions } from "@/feature/member/hooks/useUpdatePositions";
 import { useDeleteTeam } from "@/feature/team/hooks/useDeleteTeam";
 import { useHandleHasPaidTeam } from "@/feature/team/hooks/useHandleHasPaidTeam";
-import { ToggleSwitch, Tooltip } from "flowbite-react";
+import { Switch } from "@/app/share/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/app/share/ui/tooltip";
 import _ from "lodash";
-import React from "react";
-import { FaRegCircleCheck } from "react-icons/fa6";
-import { MdDelete, MdWarningAmber } from "react-icons/md";
+import React, { useState } from "react";
+import { MdDelete, MdKeyboardArrowDown } from "react-icons/md";
+import { KeywordAccordion } from "./keyword/KeywordAccordion";
+import { MemberTopKeywords } from "./keyword/MemberTopKeywords";
 
-// 참가 인원들
 export const DisplayParticipants = () => {
   const { isAdmin } = useFetchOwn();
   const { isPending } = useJoinEvents({ guestCnt: 0 });
@@ -30,12 +39,8 @@ export const DisplayParticipants = () => {
     if (ownGuestTeams.length === 0) {
       return text;
     }
-
     return `게스트 ${ownGuestTeams.length}명과 함께 ${text}`;
   };
-
-  const hasPaiedTeams = teamsArr.filter((team) => team.isPaid);
-  const hasNotPaiedTeams = teamsArr.filter((team) => !team.isPaid);
 
   if (!isSkeleton && !events) return null;
 
@@ -48,7 +53,7 @@ export const DisplayParticipants = () => {
         )}
         {!isSkeleton && (
           <div className="text-sm text-orange-500">
-            {teamsArr.length}명 {isJoin && `(${joinStateText()})`}
+            {teamsArr.length}명 {isJoin && joinStateText()}
           </div>
         )}
       </div>
@@ -60,8 +65,8 @@ export const DisplayParticipants = () => {
         {isAdmin && !!events && (
           <div className="w-1/2">
             <div className="text-sm">참가 마감</div>
-            <ToggleSwitch
-              className="-ml-[1px] items-start"
+            <Switch
+              className="-ml-1"
               checked={events?.isDone}
               onChange={() => toggleDone(events)}
               disabled={isPendingDone}
@@ -82,22 +87,7 @@ export const DisplayParticipants = () => {
           />
         ))}
       {!isSkeleton && teamsArr.length !== 0 && (
-        <>
-          <div className="flex w-full flex-col gap-1">
-            <div className="flex w-full items-center gap-1 text-gray-500">
-              <MdWarningAmber className="text-xl text-red-600" />
-              <span className="font-bold text-red-600">참가비 미확인 인원</span>
-            </div>
-            <ParticipantList teams={hasNotPaiedTeams} />
-          </div>
-          <div className="flex w-full flex-col gap-1">
-            <div className="flex w-full items-center gap-1">
-              <FaRegCircleCheck className="text-xl text-green-500" />
-              <span className="font-bold text-green-500">참가비 확인 인원</span>
-            </div>
-            <ParticipantList teams={hasPaiedTeams} />
-          </div>
-        </>
+        <ParticipantList teams={teamsArr} />
       )}
     </div>
   );
@@ -108,9 +98,10 @@ interface IParticipantListProps {
 }
 
 const ParticipantList: React.FC<IParticipantListProps> = ({ teams }) => {
+  const sortedTeams = _.sortBy(teams, (team) => team.createdAt);
   return (
     <div className="flex w-full flex-col gap-2">
-      {teams.map((team) => (
+      {sortedTeams.map((team) => (
         <ParticipantListItem key={team.id} team={team} />
       ))}
     </div>
@@ -123,53 +114,106 @@ interface IParticipantListItemProps {
 
 const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
   const { own, isAdmin } = useFetchOwn();
-  const { handleTogglePaidTeam, isMutating } = useHandleHasPaidTeam(team.id);
-  const { isMutating: isDeleting, handleDeleteTeam } = useDeleteTeam(team.id);
+  const { mutate: updatePositions, isPending: isUpdatingPositions } =
+    useUpdatePositions();
+  const handleTogglePaidTeamHook = useHandleHasPaidTeam(team.id);
+  const deleteTeamHook = useDeleteTeam(team.id);
+  const { isMutating } = deleteTeamHook;
+  const handleDeleteTeam = deleteTeamHook.handleDeleteTeam;
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+
+  const handleToggleAccordion = () => {
+    setIsAccordionOpen(!isAccordionOpen);
+  };
+
+  const canEditPositions = isAdmin || own?.id === team.member.id;
+
+  const handleSavePositions = (positions: EPosition[]) => {
+    updatePositions({
+      memberId: team.member.id,
+      positions,
+    });
+  };
+
   return (
-    <div className="flex h-full w-full items-center gap-2">
-      <div
-        key={team.id}
-        className={`relative flex w-full items-center justify-between rounded-lg border-2 border-gray-200 bg-gray-50 p-4 shadow-lg ${team.member.id === own?.id && "!border-orange-500"}`}
-      >
-        <MemberProfile member={team.member} />
-        <div className="flex h-full flex-col items-center justify-center">
-          {/* <Checkbox className="h-5 w-5" color="green" /> */}
-          <div className="flex h-full flex-col-reverse items-center justify-center">
-            {isAdmin && (
-              <Tooltip
-                content="참가비 확인 여부"
-                placement="top"
-                className="text-nowrap"
-              >
-                <div
-                  onClick={handleTogglePaidTeam}
-                  className="flex h-full flex-col items-center justify-between"
-                >
-                  <ToggleSwitch
-                    checked={team.isPaid}
-                    onChange={() => {}}
-                    disabled={isMutating}
-                  />
-                  <span className="w-full cursor-pointer text-center text-sm text-gray-500">
-                    참가비
-                  </span>
+    <div className="flex w-full flex-col gap-2">
+      {/* <KeywordAccordion
+        targetMemberId={team.member.id}
+        isOpen={isAccordionOpen}
+        onToggle={handleToggleAccordion}
+      /> */}
+      <PositionSelectModal
+        onSave={handleSavePositions}
+        currentPositions={team.member.positions || []}
+        isLoading={isUpdatingPositions}
+        trigger={
+          <div className="flex gap-2">
+            <div
+              key={team.id}
+              className={`relative flex flex-1 cursor-pointer items-center justify-between rounded-lg border-2 border-gray-200 bg-white p-4 shadow-lg transition-all hover:bg-gray-100 active:bg-gray-50 ${canEditPositions ? "" : "cursor-default"}`}
+            >
+              {isUpdatingPositions && (
+                <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/80 backdrop-blur-sm">
+                  <span className="h-5 w-5 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
                 </div>
-              </Tooltip>
+              )}
+              <div
+                className={`flex flex-col gap-1 ${isUpdatingPositions ? "opacity-50" : ""}`}
+              >
+                <div className="flex items-center gap-2">
+                  <MemberProfile member={team.member} />
+                  {/* <MdKeyboardArrowDown
+                className={`text-gray-600 transition-transform ${isAccordionOpen ? "rotate-180" : ""}`}
+              /> */}
+                </div>
+                {/* <MemberTopKeywords memberId={team.member.id} /> */}
+              </div>
+              <div className="flex items-center gap-2">
+                {isAdmin && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleTogglePaidTeamHook.handleTogglePaidTeam();
+                          }}
+                          className="flex h-full cursor-pointer flex-col items-center justify-between"
+                        >
+                          <Switch
+                            checked={team.isPaid}
+                            onChange={() => {}}
+                            disabled={isMutating}
+                            className="data-[state=checked]:bg-blue-600"
+                          />
+                          <span className="text-xs text-gray-500">참가비</span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>참가비 확인 여부</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+            </div>
+            {isAdmin && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      disabled={isMutating}
+                      onClick={handleDeleteTeam}
+                      className="flex h-auto min-h-[72px] items-center justify-center rounded-md bg-red-600 px-3 disabled:opacity-30"
+                    >
+                      <MdDelete className="text-lg text-white" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>팀 삭제</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
           </div>
-        </div>
-      </div>
-      {isAdmin && (
-        <Tooltip theme={{ target: "h-full" }} content="팀 삭제">
-          <button
-            disabled={isDeleting}
-            onClick={handleDeleteTeam}
-            className="flex h-full items-center rounded-md bg-red-600 px-1 disabled:opacity-30"
-          >
-            <MdDelete className="text-lg text-white" />
-          </button>
-        </Tooltip>
-      )}
+        }
+      />
     </div>
   );
 };
