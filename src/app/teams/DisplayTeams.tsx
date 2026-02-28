@@ -1,12 +1,12 @@
 "use client";
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { Button } from "@/app/share/ui/button";
 import { PlainTeam } from "@/entity/team.entity";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React from "react";
 import { AiOutlineTeam } from "react-icons/ai";
 
@@ -76,7 +76,7 @@ const TeamCard: React.FC<{ teams: PlainTeam[]; idx: number }> = ({
   const isOwnTeam = teams.some((t) => t.member.id === own?.id);
 
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div data-team-index={idx} className="flex w-full flex-col gap-2">
       <div className="flex w-full items-end gap-2">
         <div className="text-xl font-bold text-gray-800">{teamCharacter}팀</div>
         <div className="font-bold text-orange-500">{teamCnt}명</div>
@@ -101,7 +101,11 @@ const ShowTeams: React.FC<{}> = ({}) => {
   return (
     <div className="flex w-full flex-col gap-6">
       {groupedTeam.map((teams, idx) => (
-        <TeamCard key={idx} teams={teams} idx={idx} />
+        <TeamCard
+          key={idx}
+          teams={_.sortBy(teams, (t) => t.createdAt)}
+          idx={idx}
+        />
       ))}
     </div>
   );
@@ -112,14 +116,12 @@ interface ISaveTeamButtonProps {
 }
 
 const SaveTeamButton: React.FC<ISaveTeamButtonProps> = ({ eventsId }) => {
-  const router = useRouter();
   const teamEditUrl = `/teams/edit?${new URLSearchParams({ eventsId })}`;
   return (
-    <PrimaryButton
-      onClick={() => router.push(teamEditUrl)}
-      className="flex w-full items-center gap-2"
-    >
-      팀 구성하기 <AiOutlineTeam className="text-lg" />
-    </PrimaryButton>
+    <Button asChild className="flex w-full items-center gap-2">
+      <Link prefetch href={teamEditUrl}>
+        팀 구성하기 <AiOutlineTeam className="text-lg" />
+      </Link>
+    </Button>
   );
 };

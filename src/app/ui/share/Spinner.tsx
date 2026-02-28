@@ -1,6 +1,8 @@
+import { cn } from "@/share/utils";
 import React from "react";
 
 interface Props {
+  className?: string;
   children: React.ReactNode;
 }
 
@@ -9,9 +11,14 @@ interface SpinnerComponent extends React.FC<Props> {
   Spin: React.FC<{ className?: string }>;
 }
 
-const Spinner: SpinnerComponent = ({ children }) => {
+const Spinner: SpinnerComponent = ({ children, className }) => {
   return (
-    <div className="flex items-center justify-center gap-4 text-3xl font-bold text-center text-orange-500">
+    <div
+      className={cn(
+        "flex items-center justify-center gap-4 text-center text-sm font-bold text-orange-500",
+        className,
+      )}
+    >
       {children}
     </div>
   );
@@ -30,7 +37,10 @@ const Text: SpinnerComponent["Text"] = ({
 const Spin: SpinnerComponent["Spin"] = ({ className }) => {
   return (
     <div
-      className={`w-6 h-6 border-4 border-orange-500 rounded-full aspect-square animate-spin border-t-white ${className}`}
+      className={cn(
+        "aspect-square h-4 w-4 animate-spin rounded-full border-4 border-orange-500 border-t-white",
+        className,
+      )}
     />
   );
 };

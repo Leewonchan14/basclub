@@ -1,7 +1,7 @@
 "use client";
 
 import { LogoImage } from "@/app/ui/logo/LogoImage";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { Button } from "@/app/share/ui/button";
 import ProfileLogin from "@/app/ui/sidenav/Profile";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -59,7 +59,7 @@ export const Sidenav: NextPage<{ isLogin: boolean }> = ({}) => {
           <LogoImage />
         </div>
         <div className="flex flex-col gap-6">
-          <PrimaryButton>안녕하세요</PrimaryButton>
+          <Button>안녕하세요</Button>
           <Suspense>
             {Object.entries(NAV_LINKS).map(([k, v]) => (
               <SideLink key={k} item={v} />

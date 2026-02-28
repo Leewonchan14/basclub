@@ -20,6 +20,7 @@ export const DroppableNotJoinTeam: React.FC<{}> = () => {
             {teams.map((t, index) => (
               <DraggableMember
                 key={t.member.id}
+                isPinned={t.isPinned}
                 member={t.member}
                 index={index}
               />

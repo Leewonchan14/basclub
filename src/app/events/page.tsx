@@ -1,6 +1,7 @@
 "use client";
 
 import DayPickers from "@/app/events/DayPickers";
+import { ScrollToParticipants } from "@/app/events/ScrollToParticipants";
 import DisplayEvents from "@/app/events/DisplayEvents";
 import { UpsertEventButton } from "@/app/events/UpdateEventButton";
 import { DisplayTeams } from "@/app/teams/DisplayTeams";
@@ -25,6 +26,7 @@ const Page: NextPage<Props> = ({
   return (
     <div className="flex w-full flex-col gap-4">
       <DayPickers />
+      <ScrollToParticipants />
       <div className="flex w-full justify-center">
         {isAdmin && <UpsertEventButton />}
       </div>

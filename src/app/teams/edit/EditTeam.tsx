@@ -1,8 +1,10 @@
 "use client";
 
+import { Button } from "@/app/share/ui/button";
 import { useEditTeamContext } from "@/app/teams/edit/EditTeamContext";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { EPosition } from "@/entity/enum/position";
 import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
+import { produce } from "immer";
 import _ from "lodash";
 import { FaPlusCircle } from "react-icons/fa";
 import { FaShuffle } from "react-icons/fa6";
@@ -15,45 +17,85 @@ export const EditTeam: React.FC<{}> = () => {
   const onDragEnd: OnDragEndResponder<string> = (result) => {
     const { source, destination } = result;
     if (!destination) return;
+    setTeams(
+      produce((teams) => {
+        const sourceDI = Number(source.droppableId);
+        const desDI = Number(destination.droppableId);
 
-    const sourceDI = Number(source.droppableId);
-    const desDI = Number(destination.droppableId);
+        const select = teams[sourceDI][source.index];
 
-    const select = teams[sourceDI][source.index];
-
-    // source 제거
-    _.remove(teams[sourceDI], (_, i) => i === source.index);
-
-    // destination 추가
-    teams[desDI].splice(destination.index, 0, select);
-
-    setTeams(() => teams);
+        teams[sourceDI].splice(source.index, 1);
+        teams[desDI].splice(destination.index, 0, select);
+      }),
+    );
   };
 
   const handleClickRandomizeTeam = () => {
     if (teams.length <= 1) return;
 
-    const queue = _.shuffle(_.flatten(teams));
-    const newTeams = _.range(teams.length - 1).map(
-      () => [],
-    ) as (typeof teams)[number][];
+    setTeams((teams) => {
+      const newTeams = teams.map((team) => team.filter((t) => t.isPinned));
+      const notPinnedMembers = _.flatten(teams).filter((t) => !t.isPinned);
 
-    queue.forEach((item, idx) => {
-      const teamIndex = idx % newTeams.length;
-      newTeams[teamIndex].push(item);
+      let membersByPosition: Record<string, (typeof teams)[number]> = {
+        // 1st
+        [EPosition.CENTER]: [],
+        // 2nd
+        [EPosition.GUARD]: [],
+        // 3rd
+        [EPosition.FORWARD]: [],
+        OTHER: [],
+      };
+
+      notPinnedMembers.forEach((t) => {
+        if (t.member.positions.length === 0) {
+          membersByPosition["OTHER"].push(t);
+          return;
+        }
+        t.member.positions.forEach((p) => {
+          membersByPosition[p].push(t);
+        });
+      });
+
+      Object.keys(membersByPosition).forEach((key) => {
+        while (membersByPosition[key].length) {
+          const team = membersByPosition[key][0];
+
+          const countGroup = newTeams
+            // [pos count,mem count, group]
+            .map((t, idx) => [
+              t.filter((_t) => _t.member.positions.includes(key as EPosition))
+                .length,
+              t.length,
+              idx,
+            ]);
+
+          const group = _.sortBy(
+            countGroup.slice(1),
+            (t) => t[0] * 10000 + t[1] * 100 + t[2],
+          )[0][2];
+
+          // push team to teams
+          newTeams[group].push(team);
+          // remove team from membersByPosition
+          membersByPosition = Object.fromEntries(
+            Object.entries(membersByPosition).map(([pos, teams]) => [
+              pos,
+              teams.filter((t) => t.member.id !== team.member.id),
+            ]),
+          );
+        }
+      });
+
+      return newTeams;
     });
-
-    setTeams(() => [[], ...newTeams]);
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <PrimaryButton
-        onClick={handleClickRandomizeTeam}
-        className="flex w-full gap-2"
-      >
+      <Button onClick={handleClickRandomizeTeam} className="flex w-full gap-2">
         <FaShuffle className="text-lg" /> 무작위 팀 섞기
-      </PrimaryButton>
+      </Button>
 
       {/* Teams */}
       <Teams />
@@ -83,8 +125,8 @@ const Teams = () => {
 
 const AddTeamButton = ({ addTeam }: { addTeam: () => void }) => {
   return (
-    <PrimaryButton onClick={addTeam} className="flex w-full gap-2 font-bold">
+    <Button onClick={addTeam} className="flex w-full gap-2 font-bold">
       <FaPlusCircle className="text-lg" /> 팀추가
-    </PrimaryButton>
+    </Button>
   );
 };

@@ -1,4 +1,5 @@
 import { ERole } from "@/entity/enum/role";
+import { EPosition } from "@/entity/enum/position";
 import { Member } from "@/entity/member.entity";
 import {
   InjectRepository,
@@ -99,7 +100,46 @@ export class MemberService implements IService<Member> {
     return { originMember, members, memberIds };
   }
 
+  async searchKakaoFriends(nickname: string) {
+    // Mock implementation for KakaoTalk friend search
+    // In real implementation, this would call KakaoTalk API
+    try {
+      const response = await fetch(
+        `https://kapi.kakao.com/v1/friends/search?query=${encodeURIComponent(nickname)}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `KakaoAK ${process.env.KAKAO_REST_API_KEY}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to search KakaoTalk friends");
+      }
+
+      const data = await response.json();
+      return data.friends || [];
+    } catch (error) {
+      console.error("KakaoTalk friend search error:", error);
+      return [];
+    }
+  }
+
   async getRepository() {
     return this.memberRepository;
+  }
+
+  async updatePositions(memberId: string, positions: EPosition[]) {
+    const member = await this.memberRepository.findOne({
+      where: { id: memberId },
+    });
+
+    if (!member) {
+      throw new Error("Member not found");
+    }
+
+    member.positions = positions;
+    return this.memberRepository.save(member);
   }
 }

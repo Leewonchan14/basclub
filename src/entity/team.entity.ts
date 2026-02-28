@@ -45,6 +45,8 @@ export class Team extends TimeStampEntity {
       avgScore: this.avgScore,
       group: this.group,
       isPaid: this.isPaid,
+      isPinned: false,
+      createdAt: this.createdAt,
     };
   }
 }

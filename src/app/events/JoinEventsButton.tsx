@@ -1,8 +1,8 @@
 "use client";
 
-import { useConfirm } from "@/app/ui/share/ConfirmModal";
-import { useLoginConfirm } from "@/app/ui/share/LoginConfirmModal";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { Alert, AlertDescription } from "@/app/share/ui/alert";
+import { Badge } from "@/app/share/ui/badge";
+import { Button } from "@/app/share/ui/button";
 import {
   Select,
   SelectContent,
@@ -10,12 +10,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/app/share/ui/select";
+import { useConfirm } from "@/app/ui/share/ConfirmModal";
+import { useLoginConfirm } from "@/app/ui/share/LoginConfirmModal";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
+import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
-import { Alert, Badge } from "flowbite-react";
-import { useCallback, useState } from "react";
-import { HiInformationCircle } from "react-icons/hi";
+import { cn } from "@/share/utils";
 import _ from "lodash";
+import { useCallback, useState } from "react";
+import { MdInfo } from "react-icons/md";
+import { Card, CardContent, CardHeader } from "../share/ui/card";
+import { MemberProfile } from "../ui/member/MemberProfile";
 
 export const JoinEventsButton = () => {
   const [guestCnt, setGuestCnt] = useState<number>(0);
@@ -24,6 +29,8 @@ export const JoinEventsButton = () => {
   const { showConfirm, ConfirmComponent } = useConfirm();
   const { showLoginConfirm, LoginConfirmComponent } = useLoginConfirm();
   const { goToKakaoLogin } = useNeedLogin();
+
+  const { own } = useFetchOwn();
 
   const { isJoin, isEventEnd, isEventLimit, isPending, onJoin, isLoading } =
     useJoinEvents({
@@ -59,38 +66,51 @@ export const JoinEventsButton = () => {
 
   if (isEventEnd) {
     return (
-      <Alert color="failure" icon={HiInformationCircle}>
-        <span className="font-medium">참가 기한이 마감되었습니다.</span>
+      <Alert variant="destructive" className="flex items-center">
+        <div className="mr-4 h-4 w-4">
+          <MdInfo className="h-full w-full" />
+        </div>
+        <AlertDescription>참가 기한이 마감되었습니다.</AlertDescription>
       </Alert>
     );
   }
 
   return (
-    <>
-      <div className="join-button flex h-12 w-full items-center gap-2">
-        <InputGuest
-          className="h-full w-full"
-          guestCnt={guestCnt}
-          setGuestCnt={setGuestCnt}
-          disabled={isPending || isJoin}
-        />
-        <PrimaryButton
-          className="flex h-full w-full flex-col text-nowrap !p-0 font-semibold"
-          disabled={isPending || isEventEnd}
-          onClick={handleOnJoin}
-        >
-          {isJoin ? "참가취소" : "참가하기"}
-        </PrimaryButton>
-      </div>
+    <Card>
+      <CardHeader className="p-4">
+        {!isJoin && own && (
+          <div className="px-1">
+            <MemberProfile member={own} />
+          </div>
+        )}
+      </CardHeader>
+      <CardContent className="flex flex-col gap-6 p-4">
+        <div className="join-button flex w-full gap-2">
+          <InputGuest
+            className="h-full w-full"
+            guestCnt={guestCnt}
+            setGuestCnt={setGuestCnt}
+            disabled={isPending || isJoin}
+          />
+          <Button
+            className="flex h-auto w-full flex-col text-nowrap !p-0 font-semibold"
+            disabled={isPending || isEventEnd}
+            onClick={handleOnJoin}
+          >
+            {isJoin ? "참가취소" : "참가하기"}
+          </Button>
+        </div>
 
-      {error && (
-        <Alert color="failure" icon={HiInformationCircle}>
-          <span className="font-medium">{error}</span>
-        </Alert>
-      )}
-      <ConfirmComponent />
-      <LoginConfirmComponent />
-    </>
+        {error && (
+          <Alert variant="destructive" className="mt-2">
+            <MdInfo className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        <ConfirmComponent />
+        <LoginConfirmComponent />
+      </CardContent>
+    </Card>
   );
 };
 
@@ -113,13 +133,16 @@ const InputGuest: React.FC<InputGuestProps> = ({
       disabled={disabled}
       onValueChange={(v) => setGuestCnt(Number(v))}
     >
-      <SelectTrigger className={className}>
+      <SelectTrigger className={cn("", className)}>
         <SelectValue placeholder="게스트 수">
           <span className="flex gap-1">
-            <span className="absolute -mt-6 bg-white px-2 font-bold text-gray-400">
+            <span className="absolute -mt-5 bg-white px-2 font-bold text-gray-400">
               GUEST
             </span>{" "}
-            <Badge color="indigo">{guestCnt}명</Badge> 과 함께
+            <Badge className="bg-indigo-500 text-white hover:bg-indigo-600">
+              {guestCnt}명
+            </Badge>{" "}
+            과 함께
           </span>
         </SelectValue>
       </SelectTrigger>
@@ -127,7 +150,9 @@ const InputGuest: React.FC<InputGuestProps> = ({
         {_.range(0, 10).map((v) => (
           <SelectItem key={v} value={v.toString()}>
             <span className="flex gap-1">
-              <Badge color="indigo">{v}명</Badge>
+              <Badge className="bg-indigo-500 text-white hover:bg-indigo-600">
+                {v}명
+              </Badge>
             </span>
           </SelectItem>
         ))}

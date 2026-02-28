@@ -1,7 +1,7 @@
 "use client";
 
 import { useEditTeamContext } from "@/app/teams/edit/EditTeamContext";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { Button } from "@/app/share/ui/button";
 import Spinner from "@/app/ui/share/Spinner";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { teamMutateOption } from "@/feature/team/team-mutate";
@@ -20,7 +20,7 @@ export const MutateButton: React.FC<{ eventsId: string; date: string }> = ({
 
   return (
     <div className="flex justify-center">
-      <PrimaryButton
+      <Button
         disabled={isPending}
         className="min-w-40"
         onClick={async () => {
@@ -34,7 +34,7 @@ export const MutateButton: React.FC<{ eventsId: string; date: string }> = ({
             <Spinner.Spin />
           </Spinner>
         )}
-      </PrimaryButton>
+      </Button>
     </div>
   );
 };
