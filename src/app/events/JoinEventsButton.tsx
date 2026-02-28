@@ -77,13 +77,13 @@ export const JoinEventsButton = () => {
 
   return (
     <Card>
-      <CardHeader className="p-4">
-        {!isJoin && own && (
+      {!isJoin && own && (
+        <CardHeader className="p-4">
           <div className="px-1">
             <MemberProfile member={own} />
           </div>
-        )}
-      </CardHeader>
+        </CardHeader>
+      )}
       <CardContent className="flex flex-col gap-6 p-4">
         <div className="join-button flex w-full gap-2">
           <InputGuest
