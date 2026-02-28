@@ -1,22 +1,19 @@
 "use client";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { Button } from "@/app/share/ui/button";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React from "react";
 
 export const UpsertTeamButton = () => {
   const { events } = useFetchSelectedEvents();
-  const router = useRouter();
+
+  if (!events) return null;
+
+  const params = new URLSearchParams({ eventsId: events.id });
+
   return (
-    <PrimaryButton
-      onClick={() => {
-        if (!events) return;
-        const params = new URLSearchParams({ eventsId: events?.id });
-        router.push(`/teams/edit?${params}`);
-      }}
-      className="self-start"
-    >
-      팀 짜기 및 수정
-    </PrimaryButton>
+    <Button asChild className="self-start">
+      <Link href={`/teams/edit?${params}`}>팀 짜기 및 수정</Link>
+    </Button>
   );
 };

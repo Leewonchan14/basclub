@@ -2,6 +2,7 @@
 
 import { Alert, AlertDescription } from "@/app/share/ui/alert";
 import { Badge } from "@/app/share/ui/badge";
+import { Button } from "@/app/share/ui/button";
 import {
   Select,
   SelectContent,
@@ -11,7 +12,6 @@ import {
 } from "@/app/share/ui/select";
 import { useConfirm } from "@/app/ui/share/ConfirmModal";
 import { useLoginConfirm } from "@/app/ui/share/LoginConfirmModal";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import { useJoinEvents } from "@/feature/events/hooks/useJoinEvents";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { useNeedLogin } from "@/feature/member/hooks/useNeedLogin";
@@ -92,13 +92,13 @@ export const JoinEventsButton = () => {
             setGuestCnt={setGuestCnt}
             disabled={isPending || isJoin}
           />
-          <PrimaryButton
+          <Button
             className="flex h-auto w-full flex-col text-nowrap !p-0 font-semibold"
             disabled={isPending || isEventEnd}
             onClick={handleOnJoin}
           >
             {isJoin ? "참가취소" : "참가하기"}
-          </PrimaryButton>
+          </Button>
         </div>
 
         {error && (

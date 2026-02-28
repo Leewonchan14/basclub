@@ -1,15 +1,15 @@
 "use client";
 
+import { Button } from "@/app/share/ui/button";
 import { useEditTeamContext } from "@/app/teams/edit/EditTeamContext";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { EPosition } from "@/entity/enum/position";
 import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
+import { produce } from "immer";
 import _ from "lodash";
 import { FaPlusCircle } from "react-icons/fa";
 import { FaShuffle } from "react-icons/fa6";
 import { DroppableNotJoinTeam } from "./DroppableNotJoinTeam";
 import { DroppableTeam } from "./DroppableTeam";
-import { produce } from "immer";
-import { EPosition } from "@/entity/enum/position";
 
 export const EditTeam: React.FC<{}> = () => {
   const { teams, setTeams } = useEditTeamContext();
@@ -93,12 +93,9 @@ export const EditTeam: React.FC<{}> = () => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <PrimaryButton
-        onClick={handleClickRandomizeTeam}
-        className="flex w-full gap-2"
-      >
+      <Button onClick={handleClickRandomizeTeam} className="flex w-full gap-2">
         <FaShuffle className="text-lg" /> 무작위 팀 섞기
-      </PrimaryButton>
+      </Button>
 
       {/* Teams */}
       <Teams />
@@ -128,8 +125,8 @@ const Teams = () => {
 
 const AddTeamButton = ({ addTeam }: { addTeam: () => void }) => {
   return (
-    <PrimaryButton onClick={addTeam} className="flex w-full gap-2 font-bold">
+    <Button onClick={addTeam} className="flex w-full gap-2 font-bold">
       <FaPlusCircle className="text-lg" /> 팀추가
-    </PrimaryButton>
+    </Button>
   );
 };

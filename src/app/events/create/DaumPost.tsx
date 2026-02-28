@@ -1,14 +1,14 @@
 "use client";
 
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
-import type { GeoPoint } from "@/entity/transformer/point.transformer";
+import { Button } from "@/app/share/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/app/share/ui/tooltip";
+import type { GeoPoint } from "@/entity/transformer/point.transformer";
 import { NextPage } from "next";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import { TbMapSearch } from "react-icons/tb";
@@ -36,13 +36,10 @@ const DaumPost: NextPage<Props> = ({ buttonText, className }) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <PrimaryButton
-            className={`mt-2 w-full ${className}`}
-            onClick={handleClick}
-          >
+          <Button className={`mt-2 w-full ${className}`} onClick={handleClick}>
             <TbMapSearch className="mr-2 text-xl" />
             {buttonText}
-          </PrimaryButton>
+          </Button>
         </TooltipTrigger>
         <TooltipContent>주소 검색으로 일정장소 입력하기</TooltipContent>
       </Tooltip>

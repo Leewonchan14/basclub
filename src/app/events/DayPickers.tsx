@@ -1,15 +1,15 @@
 "use client";
 
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
-import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
-import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
-import { day_js } from "@/share/lib/dayjs";
+import { Button } from "@/app/share/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/app/share/ui/tooltip";
+import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
+import { useFetchEventsExist } from "@/feature/events/hooks/useFetchEventsExist";
+import { day_js } from "@/share/lib/dayjs";
 import React, { ButtonHTMLAttributes, useMemo, useRef, useState } from "react";
 import {
   CalendarDay,
@@ -105,12 +105,12 @@ const DayPickers: React.FC<DayPickersProps> = ({}) => {
               ),
             }}
           />
-          <PrimaryButton
+          <Button
             onClick={() => setIsOpen(false)}
             className="flex !h-auto w-full cursor-pointer items-center justify-center !py-0 focus:ring-0"
           >
             <MdKeyboardArrowDown className="rotate-180 text-2xl font-extrabold transition-all duration-300" />
-          </PrimaryButton>
+          </Button>
         </div>
       </div>
     </TooltipProvider>

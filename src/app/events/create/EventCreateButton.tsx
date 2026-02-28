@@ -1,9 +1,9 @@
 "use client";
 
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
+import { Button } from "@/app/share/ui/button";
 import { useConfirm } from "@/app/ui/share/ConfirmModal";
 import { DeleteButton } from "@/app/ui/share/DeleteButton";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
 import Spinner from "@/app/ui/share/Spinner";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { eventsMutateOption } from "@/feature/events/event-mutate";
@@ -45,7 +45,7 @@ export const EventCreateButton: React.FC<Props> = () => {
   return (
     <>
       <div className="flex items-center justify-center gap-4">
-        <PrimaryButton
+        <Button
           disabled={isPendingCreate}
           onClick={handleClick}
           className="inline-flex w-full justify-center gap-2 rounded-lg p-2 font-bold text-white disabled:opacity-80"
@@ -56,7 +56,7 @@ export const EventCreateButton: React.FC<Props> = () => {
               <Spinner.Spin />
             </Spinner>
           )}
-        </PrimaryButton>
+        </Button>
         {inputEvent?.id && (
           <DeleteButton
             disabled={isPendingDelete}

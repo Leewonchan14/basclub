@@ -1,12 +1,12 @@
 "use client";
 
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
-import PrimaryButton from "@/app/ui/share/PrimaryButton";
+import { Button } from "@/app/share/ui/button";
 import { PlainTeam } from "@/entity/team.entity";
 import { useFetchSelectedEvents } from "@/feature/events/hooks/useFetchEvents";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React from "react";
 import { AiOutlineTeam } from "react-icons/ai";
 
@@ -116,14 +116,12 @@ interface ISaveTeamButtonProps {
 }
 
 const SaveTeamButton: React.FC<ISaveTeamButtonProps> = ({ eventsId }) => {
-  const router = useRouter();
   const teamEditUrl = `/teams/edit?${new URLSearchParams({ eventsId })}`;
   return (
-    <PrimaryButton
-      onClick={() => router.push(teamEditUrl)}
-      className="flex w-full items-center gap-2"
-    >
-      팀 구성하기 <AiOutlineTeam className="text-lg" />
-    </PrimaryButton>
+    <Button asChild className="flex w-full items-center gap-2">
+      <Link href={teamEditUrl}>
+        팀 구성하기 <AiOutlineTeam className="text-lg" />
+      </Link>
+    </Button>
   );
 };
