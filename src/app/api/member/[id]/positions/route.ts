@@ -1,5 +1,5 @@
 import { EPosition } from "@/entity/enum/position";
-import { getPayload, getIsAdmin } from "@/feature/auth/auth-action";
+import { getIsAdmin, getPayload } from "@/feature/auth/auth-action";
 import { MemberService } from "@/feature/member/member.service";
 import { getService } from "@/share/lib/typeorm/DIContainer";
 import { NextRequest, NextResponse } from "next/server";
@@ -21,11 +21,16 @@ export const PUT = async (
     }
 
     const isAdmin = await getIsAdmin();
-    const isSelf = payload.id === memberId;
+    const findMember = await getService(MemberService).findById(memberId);
+    const isSelf = payload.id === findMember?.id;
+    const isGuest = findMember?.guestBy === payload.id;
 
-    if (!isAdmin && !isSelf) {
+    if (!isAdmin && !isSelf && !isGuest) {
       return NextResponse.json(
-        { error: "Forbidden: Only admin or member themselves can update" },
+        {
+          error:
+            "Forbidden: Only admin or member themselves or guest can update",
+        },
         { status: 403 },
       );
     }
