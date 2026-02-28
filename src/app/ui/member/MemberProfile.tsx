@@ -6,8 +6,11 @@ import { EPosition } from "@/entity/enum/position";
 import { ERole } from "@/entity/enum/role";
 import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { useShareProfile } from "@/feature/member/hooks/useShareProfile";
+import {
+  POSITION_BADGE,
+  POSITION_BADGE_COLORS,
+} from "@/share/constants/position";
 import React from "react";
-import { POSITION_BADGE, POSITION_BADGE_COLORS } from "./PositionSelectModal";
 
 export const MemberProfile: React.FC<{
   member: {
@@ -46,17 +49,8 @@ export const MemberProfile: React.FC<{
         <AvatarFallback>{getNickname().charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="flex flex-col gap-0.5">
-        <span className="text-sm font-bold text-gray-800">{getNickname()}</span>
-        <div className="flex flex-wrap gap-1">
-          {positions.map((position) => (
-            <Badge
-              key={position}
-              variant="outline"
-              className={`px-1.5 py-0 text-[10px] ${POSITION_BADGE_COLORS[position]}`}
-            >
-              {POSITION_BADGE[position]}
-            </Badge>
-          ))}
+        <span className="flex gap-2 text-sm font-bold text-gray-800">
+          {getNickname()}
           {isGuest && (
             <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
               GUEST
@@ -67,6 +61,17 @@ export const MemberProfile: React.FC<{
               나
             </Badge>
           )}
+        </span>
+        <div className="flex flex-wrap gap-1">
+          {positions.map((position) => (
+            <Badge
+              key={position}
+              variant="outline"
+              className={`px-1.5 py-0 text-[10px] ${POSITION_BADGE_COLORS[position]}`}
+            >
+              {POSITION_BADGE[position]}
+            </Badge>
+          ))}
         </div>
       </div>
       {/* {isOwn && (

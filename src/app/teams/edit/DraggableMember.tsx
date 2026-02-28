@@ -71,7 +71,7 @@ const PinComp = ({
       size={"icon"}
       onClick={onClick}
     >
-      <Pin fill={isPinned ? "black" : "white"} />
+      <Pin fill={isPinned ? "black" : "white"} className={cn(isPinned ? "" : "opacity-30")}/>
     </Button>
   );
 };
