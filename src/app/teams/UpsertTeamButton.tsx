@@ -13,7 +13,9 @@ export const UpsertTeamButton = () => {
 
   return (
     <Button asChild className="self-start">
-      <Link href={`/teams/edit?${params}`}>팀 짜기 및 수정</Link>
+      <Link prefetch href={`/teams/edit?${params}`}>
+        팀 짜기 및 수정
+      </Link>
     </Button>
   );
 };

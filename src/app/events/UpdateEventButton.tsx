@@ -24,6 +24,7 @@ export const UpsertEventButton: React.FC = () => {
       className={`mx-auto flex max-w-40 items-center gap-1 ${isLoading && "animate-pulse cursor-auto bg-gray-200 text-gray-200 hover:bg-gray-200 hover:text-gray-200"}`}
     >
       <Link
+        prefetch
         href={href}
         onClick={(e) => {
           if (isLoading) {

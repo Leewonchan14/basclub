@@ -119,7 +119,7 @@ const SaveTeamButton: React.FC<ISaveTeamButtonProps> = ({ eventsId }) => {
   const teamEditUrl = `/teams/edit?${new URLSearchParams({ eventsId })}`;
   return (
     <Button asChild className="flex w-full items-center gap-2">
-      <Link href={teamEditUrl}>
+      <Link prefetch href={teamEditUrl}>
         팀 구성하기 <AiOutlineTeam className="text-lg" />
       </Link>
     </Button>
