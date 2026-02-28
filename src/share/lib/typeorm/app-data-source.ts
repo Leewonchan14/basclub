@@ -1,6 +1,4 @@
 import { Events } from "@/entity/event.entity";
-import { Keyword } from "@/entity/keyword.entity";
-import { KeywordVote } from "@/entity/keyword-vote.entity";
 import { Member } from "@/entity/member.entity";
 import { Score } from "@/entity/score.entity";
 import { Team } from "@/entity/team.entity";
@@ -13,7 +11,7 @@ const originDataSource = new DataSource({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
-  entities: [Member, Team, Events, Score, Keyword, KeywordVote],
+  entities: [Member, Team, Events, Score],
   synchronize: false,
   logging: ["error"],
   migrations: [],

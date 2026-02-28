@@ -135,11 +135,6 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
 
   return (
     <div data-member-id={team.member.id} className="flex w-full flex-col gap-2">
-      {/* <KeywordAccordion
-        targetMemberId={team.member.id}
-        isOpen={isAccordionOpen}
-        onToggle={handleToggleAccordion}
-      /> */}
       <PositionSelectModal
         onSave={handleSavePositions}
         currentPositions={team.member.positions || []}
@@ -160,11 +155,7 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
               >
                 <div className="flex items-center gap-2">
                   <MemberProfile member={team.member} />
-                  {/* <MdKeyboardArrowDown
-                className={`text-gray-600 transition-transform ${isAccordionOpen ? "rotate-180" : ""}`}
-              /> */}
                 </div>
-                {/* <MemberTopKeywords memberId={team.member.id} /> */}
               </div>
               <div className="flex items-center gap-2">
                 {isAdmin && (
