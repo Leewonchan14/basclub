@@ -1,5 +1,12 @@
 "use client";
 
+import { Switch } from "@/app/share/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/app/share/ui/tooltip";
 import { MemberProfile } from "@/app/ui/member/MemberProfile";
 import { PositionSelectModal } from "@/app/ui/member/PositionSelectModal";
 import { EPosition } from "@/entity/enum/position";
@@ -11,18 +18,9 @@ import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
 import { useUpdatePositions } from "@/feature/member/hooks/useUpdatePositions";
 import { useDeleteTeam } from "@/feature/team/hooks/useDeleteTeam";
 import { useHandleHasPaidTeam } from "@/feature/team/hooks/useHandleHasPaidTeam";
-import { Switch } from "@/app/share/ui/switch";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/app/share/ui/tooltip";
 import _ from "lodash";
 import React, { useState } from "react";
-import { MdDelete, MdKeyboardArrowDown } from "react-icons/md";
-import { KeywordAccordion } from "./keyword/KeywordAccordion";
-import { MemberTopKeywords } from "./keyword/MemberTopKeywords";
+import { MdDelete } from "react-icons/md";
 
 export const DisplayParticipants = () => {
   const { isAdmin } = useFetchOwn();
@@ -136,7 +134,7 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div data-member-id={team.member.id} className="flex w-full flex-col gap-2">
       {/* <KeywordAccordion
         targetMemberId={team.member.id}
         isOpen={isAccordionOpen}
@@ -202,7 +200,7 @@ const ParticipantListItem: React.FC<IParticipantListItemProps> = ({ team }) => {
                     <button
                       disabled={isMutating}
                       onClick={handleDeleteTeam}
-                      className="flex h-auto min-h-[72px] items-center justify-center rounded-md bg-red-600 px-3 disabled:opacity-30"
+                      className="flex h-auto min-h-[72px] items-center justify-center rounded-md bg-red-600 px-2 disabled:opacity-30"
                     >
                       <MdDelete className="text-lg text-white" />
                     </button>

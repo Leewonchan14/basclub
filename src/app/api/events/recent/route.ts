@@ -8,7 +8,7 @@ export const GET = async () => {
   try {
     const eventService = getService(EventsService);
     const recentEvents = await eventService.findRecentByNow();
-    const event = recentEvents[0]?.toPlain() ?? null;
+    const event = await recentEvents[0]?.toPlain() ?? null;
 
     return NextResponse.json(event);
   } catch (error) {

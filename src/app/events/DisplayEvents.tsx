@@ -184,7 +184,7 @@ const DisplayEvents: NextPage<Props> = ({}) => {
           </Button>
         </div>
       </div>
-      <div className="flex flex-col gap-6 rounded-lg bg-white p-4 shadow-md">
+      <div id="participants" className="flex flex-col gap-6 rounded-lg bg-white p-4 shadow-md">
         <DisplayParticipants />
         <JoinEventsButton />
       </div>

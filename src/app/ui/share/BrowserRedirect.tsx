@@ -6,6 +6,13 @@ import {
   isMobileDevice,
   openInDefaultBrowser,
 } from "./browserDetector";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogDescription,
+} from "@/app/share/ui/dialog";
+import { Button } from "@/app/share/ui/button";
 
 interface BrowserRedirectProps {
   showDelay?: number; // 모달을 보여주기까지의 지연 시간 (ms)
@@ -83,37 +90,9 @@ export const BrowserRedirect: React.FC<BrowserRedirectProps> = ({
   };
 
   return (
-    <>
-      {/* 백드롭 */}
-      <div
-        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50 p-4"
-        onClick={handleClose}
-      >
-        {/* 모달 */}
-        <div
-          className="relative w-full max-w-sm rounded-lg bg-white p-6 shadow-xl"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* 닫기 버튼 */}
-          <button
-            onClick={handleClose}
-            className="absolute right-4 top-4 text-gray-400 transition-colors hover:text-gray-600"
-          >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-
+    <Dialog open={showModal} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader className="items-center">
           {/* 아이콘 */}
           <div className="mb-4 flex justify-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">
@@ -133,36 +112,36 @@ export const BrowserRedirect: React.FC<BrowserRedirectProps> = ({
             </div>
           </div>
 
-          {/* 설명 */}
-          <p className="mb-6 text-center text-sm leading-relaxed text-gray-600">
+          <DialogDescription className="mb-6 text-center text-sm leading-relaxed text-gray-600">
             {getBrowserDisplayName(browserInfo.browserName)} 앱에서는 로그인이
+            <br />
             지속되지 않을 수 있습니다.
             <br />
             기본 브라우저에서 열면 더 안정적으로 이용하실 수 있습니다.
-          </p>
+          </DialogDescription>
+        </DialogHeader>
 
-          {/* 버튼들 */}
-          <div className="flex flex-col gap-3">
-            <button
-              onClick={handleOpenInBrowser}
-              className="w-full rounded-lg bg-orange-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-orange-700"
-            >
-              브라우저에서 열기
-            </button>
-            <button
-              onClick={handleClose}
-              className="w-full rounded-lg bg-gray-100 px-4 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-200"
-            >
-              계속 사용하기
-            </button>
-          </div>
-
-          {/* 하단 안내 */}
-          <p className="mt-4 text-center text-xs text-gray-500">
-            24시간 동안 다시 보지 않습니다
-          </p>
+        <div className="flex flex-col gap-3">
+          <Button
+            onClick={handleOpenInBrowser}
+            className="w-full bg-orange-600 font-semibold hover:bg-orange-700"
+          >
+            브라우저에서 열기
+          </Button>
+          <Button
+            onClick={handleClose}
+            variant="outline"
+            className="w-full font-semibold"
+          >
+            계속 사용하기
+          </Button>
         </div>
-      </div>
-    </>
+
+        {/* 하단 안내 */}
+        <p className="mt-4 text-center text-xs text-gray-500">
+          24시간 동안 다시 보지 않습니다
+        </p>
+      </DialogContent>
+    </Dialog>
   );
 };

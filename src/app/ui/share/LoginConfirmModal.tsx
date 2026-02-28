@@ -1,6 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/app/share/ui/dialog";
+import { Button } from "@/app/share/ui/button";
 
 interface LoginConfirmModalProps {
   isOpen: boolean;
@@ -13,12 +22,10 @@ export const LoginConfirmModal = ({
   onClose,
   onConfirm,
 }: LoginConfirmModalProps) => {
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
-      <div className="mx-4 w-full max-w-md rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
-        <div className="text-center">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-md">
+        <DialogHeader className="items-center">
           <div className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200">
             <svg
               className="mx-auto h-14 w-14 text-yellow-400"
@@ -34,10 +41,10 @@ export const LoginConfirmModal = ({
               />
             </svg>
           </div>
-          <h3 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
+          <DialogTitle className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
             로그인이 필요합니다
-          </h3>
-          <div className="mb-5 space-y-3 text-sm text-gray-500 dark:text-gray-400">
+          </DialogTitle>
+          <DialogDescription className="mb-5 space-y-3 text-sm text-gray-500 dark:text-gray-400">
             <p>이벤트에 참가하시려면 카카오 로그인이 필요합니다.</p>
             <div className="rounded-lg bg-blue-50 p-3 text-left dark:bg-blue-900/30">
               <div className="flex items-start space-x-2">
@@ -60,24 +67,25 @@ export const LoginConfirmModal = ({
                 </div>
               </div>
             </div>
-          </div>
-          <div className="flex justify-center gap-4">
-            <button
-              onClick={onConfirm}
-              className="rounded-lg bg-yellow-400 px-6 py-2.5 text-sm font-medium text-black hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300"
-            >
-              카카오로 로그인
-            </button>
-            <button
-              onClick={onClose}
-              className="rounded-lg bg-gray-500 px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-600 focus:ring-4 focus:ring-gray-300"
-            >
-              취소
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="justify-center gap-4">
+          <Button
+            onClick={onConfirm}
+            className="bg-yellow-400 text-black hover:bg-yellow-500"
+          >
+            카카오로 로그인
+          </Button>
+          <Button
+            onClick={onClose}
+            variant="secondary"
+            className="bg-gray-500 hover:bg-gray-600"
+          >
+            취소
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
