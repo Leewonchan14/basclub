@@ -1,10 +1,10 @@
 "use client";
 
 import { useEventCreateContext } from "@/app/events/create/EventCreateContext";
-import { DeleteButton } from "@/app/ui/share/DeleteButton";
 import { useConfirm } from "@/app/ui/share/ConfirmModal";
+import { DeleteButton } from "@/app/ui/share/DeleteButton";
 import PrimaryButton from "@/app/ui/share/PrimaryButton";
-import { Spinner } from "@/app/share/ui/spinner";
+import Spinner from "@/app/ui/share/Spinner";
 import { useSelectedDate } from "@/app/ui/share/useSelectedDate";
 import { eventsMutateOption } from "@/feature/events/event-mutate";
 import { useMutation } from "@tanstack/react-query";
@@ -51,7 +51,11 @@ export const EventCreateButton: React.FC<Props> = () => {
           className="inline-flex w-full justify-center gap-2 rounded-lg p-2 font-bold text-white disabled:opacity-80"
         >
           저장하기
-          {isPendingCreate && <Spinner />}
+          {isPendingCreate && (
+            <Spinner>
+              <Spinner.Spin />
+            </Spinner>
+          )}
         </PrimaryButton>
         {inputEvent?.id && (
           <DeleteButton
@@ -66,7 +70,11 @@ export const EventCreateButton: React.FC<Props> = () => {
             className="w-full justify-center"
           >
             일정 삭제
-            {isPendingDelete && <Spinner />}
+            {isPendingDelete && (
+              <Spinner>
+                <Spinner.Spin />
+              </Spinner>
+            )}
           </DeleteButton>
         )}
       </div>
