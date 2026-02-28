@@ -15,7 +15,7 @@ const Spinner: SpinnerComponent = ({ children, className }) => {
   return (
     <div
       className={cn(
-        "flex items-center justify-center gap-4 text-center text-3xl font-bold text-orange-500",
+        "flex items-center justify-center gap-4 text-center text-sm font-bold text-orange-500",
         className,
       )}
     >
@@ -38,7 +38,7 @@ const Spin: SpinnerComponent["Spin"] = ({ className }) => {
   return (
     <div
       className={cn(
-        "aspect-square h-6 w-6 animate-spin rounded-full border-4 border-orange-500 border-t-white",
+        "aspect-square h-4 w-4 animate-spin rounded-full border-4 border-orange-500 border-t-white",
         className,
       )}
     />

@@ -20,15 +20,15 @@ interface Props {
 const Page: NextPage<Props> = async ({ searchParams: { eventsId } }) => {
   const isAdmin = await getIsAdmin();
   if (!eventsId) redirect("/events");
-  
+
   const eventsService = getService(EventsService);
   const teamService = getService(TeamService);
-  
+
   const events = await eventsService.findById(eventsId);
   if (!events) redirect("/events");
 
   const teamsArr = await teamService.findTeamsByEventId(eventsId);
-  const teamsData = teamsArr.map(t => t.toPlain());
+  const teamsData = teamsArr.map((t) => t.toPlain());
   const grouped = { ..._.groupBy(teamsData, (t) => t.group) };
 
   let max = Math.max(...Object.keys(grouped).map(Number));
@@ -40,13 +40,18 @@ const Page: NextPage<Props> = async ({ searchParams: { eventsId } }) => {
   });
 
   return (
-    <div className="flex w-full flex-col justify-center gap-4 rounded-lg bg-white p-4 shadow-lg">
+    <div className="flex w-full flex-col gap-4 rounded-lg bg-white p-4 shadow-lg">
       <Suspense fallback={null}>
         <EditTeamProvider initTeams={teams}>
           <EditTeam />
           <div className="flex w-full justify-center gap-4">
             <BackButton />
-            {isAdmin && <MutateButton date={events.date.toISOString()} eventsId={eventsId} />}
+            {isAdmin && (
+              <MutateButton
+                date={events.date.toISOString()}
+                eventsId={eventsId}
+              />
+            )}
           </div>
         </EditTeamProvider>
       </Suspense>
