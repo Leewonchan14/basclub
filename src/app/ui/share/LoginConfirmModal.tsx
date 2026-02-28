@@ -76,11 +76,7 @@ export const LoginConfirmModal = ({
           >
             카카오로 로그인
           </Button>
-          <Button
-            onClick={onClose}
-            variant="secondary"
-            className="bg-gray-500 hover:bg-gray-600"
-          >
+          <Button onClick={onClose} variant="outline">
             취소
           </Button>
         </DialogFooter>
