@@ -12,6 +12,17 @@ const nextConfig = {
     ],
   },
 
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = [...(config.externals || []), "typeorm"];
+    }
+    return config;
+  },
+  // 또는 실험적으로
+  experimental: {
+    serverMinification: false,
+  },
+
   eslint: {
     dirs: ["src"],
   },
