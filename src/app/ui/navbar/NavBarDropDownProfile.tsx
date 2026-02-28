@@ -1,40 +1,41 @@
 "use client";
 
-import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
-import { authMutateOption } from "@/feature/auth/auth-mutation";
-import { memberMutateOption } from "@/feature/member/member-mutation";
-import { POSITION_BADGE, POSITION_BADGE_COLORS } from "@/share/constants/position";
-import { useMutation } from "@tanstack/react-query";
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/share/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/app/share/ui/dropdown-menu";
 import { PositionSelectModal } from "@/app/ui/member/PositionSelectModal";
+import { authMutateOption } from "@/feature/auth/auth-mutation";
+import { useFetchOwn } from "@/feature/member/hooks/useFetchOwn";
+import { useUpdatePosition } from "@/feature/member/hooks/useUpdatePosition";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { FaSignOutAlt, FaBasketballBall } from "react-icons/fa";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import { Avatar, AvatarImage, AvatarFallback } from "@/app/share/ui/avatar";
 import { useState } from "react";
+import { FaBasketballBall, FaSignOutAlt } from "react-icons/fa";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { PositionBadges } from "../member/PositionBagdes";
+import Spinner from "../share/Spinner";
 
 const NavBarDropDownProfile = () => {
   const router = useRouter();
   const { mutateAsync: logoutAsync, isPending: isLogoutPending } = useMutation(
     authMutateOption.logout,
   );
-  const { own } = useFetchOwn();
+  const { own, isLoading: isOwnLoading } = useFetchOwn();
 
   const [isPositionModalOpen, setIsPositionModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const selectedPositions = own?.positions ?? [];
-  const { mutate: updatePositions, isPending: isPositionPending } = useMutation(
-    memberMutateOption.updatePositions(own?.id ?? ""),
-  );
+  const { updatePositions, isPositionPending } = useUpdatePosition(own?.id);
 
   const handleSavePositions = (positions: typeof selectedPositions) => {
     updatePositions(positions);
+    setIsDropdownOpen(false);
   };
 
   const handleLogout = async () => {
@@ -43,10 +44,12 @@ const NavBarDropDownProfile = () => {
     router.replace(redirectUri || "/");
   };
 
+  const isPending = isLogoutPending || isPositionPending || isOwnLoading;
+
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+      <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+        <DropdownMenuTrigger disabled={isPending} asChild>
           <button className="flex items-center gap-2 rounded-full px-3 py-1.5 transition-transform hover:scale-105 hover:bg-gray-100">
             <Avatar className="h-8 w-8">
               <AvatarImage
@@ -62,18 +65,12 @@ const NavBarDropDownProfile = () => {
                 <span className="text-sm font-semibold text-gray-700">
                   {own?.nickname || "사용자"}
                 </span>
-                {selectedPositions.length > 0 && (
-                  <div className="flex gap-1">
-                    {selectedPositions.map((pos) => (
-                      <span
-                        key={pos}
-                        className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${POSITION_BADGE_COLORS[pos]}`}
-                      >
-                        {POSITION_BADGE[pos]}
-                      </span>
-                    ))}
-                  </div>
+                {isPending && (
+                  <Spinner className="text-smr mx-auto">
+                    <Spinner.Spin className="h-4 w-4" />
+                  </Spinner>
                 )}
+                {!isPending && own && <PositionBadges member={own} isNav />}
               </div>
               <MdKeyboardArrowDown className="text-gray-500" />
             </div>
