@@ -62,7 +62,7 @@ export const EditTeam: React.FC<{}> = () => {
           const team = membersByPosition[key][0];
 
           const countGroup = newTeams
-            // [pos count,mem count, group]
+            // [pos count, mem count, group]
             .map((t, idx) => [
               t.filter((_t) => _t.member.positions.includes(key as EPosition))
                 .length,
@@ -70,10 +70,7 @@ export const EditTeam: React.FC<{}> = () => {
               idx,
             ]);
 
-          const group = _.sortBy(
-            countGroup.slice(1),
-            (t) => t[0] * 10000 + t[1] * 100 + t[2],
-          )[0][2];
+          const group = _.sortBy(countGroup.slice(1), [0, 1, 2])[0][2];
 
           // push team to teams
           newTeams[group].push(team);
