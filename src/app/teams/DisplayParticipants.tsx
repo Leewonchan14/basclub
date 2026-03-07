@@ -63,7 +63,10 @@ export const DisplayParticipants = () => {
             <Switch
               className="-ml-1"
               checked={events?.isDone}
-              onChange={() => toggleDone(events)}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleDone(events);
+              }}
               disabled={isPendingDone}
             />
           </div>
